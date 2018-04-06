@@ -1,0 +1,85 @@
+.current-date-label {
+    font-size: large;
+}
+
+.schedule-list-item-content {
+    margin: 20px 0 20px 0;
+}
+
+.calendar-header {
+    margin: 10px 0 10px 0;
+}
+
+.selected-day-list-wrapper {
+    height: 200px;
+    overflow: auto;
+}
+
+.selected-cell {
+    background: lightblue;
+}
+
+/deep/ .cal-has-events {
+    position: relative;
+}
+
+/deep/ .cal-day-badge {
+    display: none !important;
+}
+
+.work-day-calendar-cell-time {
+    text-align: center;
+    background: #e91405;
+}
+
+.work-day-calendar-cell-time small {
+    color: white;
+    font-weight: 900;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.breaks-and-holiday {
+    min-height: 60px;
+}
+
+mat-chip-list {
+    margin: 0px 0 20px 0px;
+}
+
+.work-day-cell {
+    width: 13.9%;
+    margin: auto;
+    background: #d3d3d373;
+    border: solid 1px #fff;
+    float: left;
+    text-align: center;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.selected-weekday {
+    background: gray;
+}
+
+.cal-overlay {
+    position: absolute;
+    background: #ffffff57;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    box-shadow: 0px 0px 5px 0px lightgrey;
+}
+
+.apply-schedule-period-button {
+    margin-top: 20px;
+}
+
+.holiday {
+    background: #08a620 !important;
+    color: white;
+}

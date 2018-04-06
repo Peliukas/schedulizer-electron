@@ -1,0 +1,51 @@
+.crud-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.crud-control-mark-all-checkbox {
+    margin: 10px 20px 0px 0px;
+}
+
+.crud-control-mark-all-checkbox mat-checkbox {
+    float: right;
+
+}
+
+.employee-list-item:hover {
+    background: #d3d3d359;
+}
+
+.employee-list-item-content {
+    border-top: solid 1px lightgray;
+}
+
+.employee-list-item-input-field-container {
+    margin-top: 20px;
+}
+
+mat-panel-description {
+    display: flex;
+    justify-content: flex-end;
+}
+
+mat-panel-description i {
+    color: red;
+}
+
+.mat-expansion-panel-body {
+    border-top: solid 2px lightgray !important;
+    margin: 0 !important;
+}
+
+.input-field-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.crud-button-wrapper {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

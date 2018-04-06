@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-2">
+        <div>
+            <button mat-button name="workers" (click)="selectedModelName = 'employee'">
+                <i class="material-icons">&#xE853;</i>
+                Darbuotojai
+            </button>
+        </div>
+        <div>
+            <button mat-button name="positions" (click)="selectedModelName = 'position'">
+                <i class="material-icons">&#xE8F9;</i>
+                Pareigos
+            </button>
+        </div>
+        <div>
+            <button mat-button name="schedules" (click)="selectedModelName = 'schedule'">
+                <i class="material-icons">&#xE8B5;</i>
+                Tvarkaraščiai
+            </button>
+        </div>
+        <hr>
+        <div>
+            <button mat-button name="calendar" (click)="selectedModelName = 'free_days'">
+                <i class="material-icons">&#xE916;</i>
+                Šventės
+            </button>
+        </div>
+    </div>
+    <div class="col-10">
+        <div class="content-wrapper-container">
+            <app-page-content-wrapper *ngIf="selectedModelName === 'employee'"
+                                      [modelName]="selectedModelName"></app-page-content-wrapper>
+            <app-page-content-wrapper *ngIf="selectedModelName === 'position'"
+                                      [modelName]="selectedModelName"></app-page-content-wrapper>
+            <app-page-content-wrapper *ngIf="selectedModelName === 'schedule'"
+                                      [modelName]="selectedModelName"></app-page-content-wrapper>
+            <app-calendar-free-day-settings *ngIf="selectedModelName === 'free_days'"></app-calendar-free-day-settings>
+        </div>
+    </div>
+</div>

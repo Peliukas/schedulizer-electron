@@ -1,0 +1,12 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-header {
+    border-bottom: solid 1px lightgray;
+}
+
+.table-row {
+
+}

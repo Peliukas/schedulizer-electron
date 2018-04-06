@@ -1,0 +1,42 @@
+<mat-card>
+    <mat-card-content>
+        <h5>Šventės</h5>
+        <div class="row">
+            <div class="col-12 flex">
+                <mat-form-field>
+                    <input matInput placeholder="Šventės pavadinimas" [formControl]="holidayNameControl">
+                </mat-form-field>
+                <div [formGroup]="freeDayDateControl">
+                    <mat-form-field>
+                        <input matInput [formControlName]="'holiday_month'" type="number"
+                               placeholder="Mėnuo">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput [formControlName]="'holiday_day'" type="number"
+                               placeholder="Diena">
+                    </mat-form-field>
+                    <button mat-raised-button
+                            [disabled]="!holidayNameControl.value && !freeDayDateControl.get('holiday_month').value && !freeDayDateControl.get('holiday_day').value"
+                            (click)="addHoliday()">Pridėti
+                    </button>
+
+                </div>
+            </div>
+            <div class="col-12">
+                <table *ngIf="holidayList">
+                    <tr class="table-header">
+                        <th class="text-left"><strong>Šventės pavadinimas</strong></th>
+                        <th class="text-left"><strong>Data (MM/dd)</strong></th>
+                        <th class="text-center"><strong>Veiksmas</strong></th>
+                    </tr>
+                    <tr *ngFor="let holiday of holidayList" class="table-row">
+                        <td>{{holiday.id}}</td>
+                        <td>{{holiday.doc.holiday_month}}/{{holiday.doc.holiday_day}}</td>
+                        <td class="flex-center"><i class="material-icons"
+                                                   (click)="deleteHoliday(holiday.id)">&#xE92B;</i></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

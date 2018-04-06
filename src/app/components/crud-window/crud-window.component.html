@@ -1,0 +1,67 @@
+<div class="container">
+    <div class="row">
+        <div *ngIf="modelName === 'employee'">
+            <h4>Naujas darbuotojas</h4>
+            <div [formGroup]="employeeFormControlGroup">
+                <mat-form-field>
+                    <input matInput [formControlName]="'firstname'" type="text" #firstname required
+                           placeholder="Vardas">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput [formControlName]="'lastname'" type="text" #lastname required placeholder="Pavardė">
+                </mat-form-field>
+                <!--<mat-form-field>-->
+                <!--<input matInput [formControlName]="'work_hours_cap'" type="number" #work_hours_cap required-->
+                <!--placeholder="Maks. dirbamų valandų skaičius">-->
+                <!--</mat-form-field>-->
+            </div>
+            <mat-form-field *ngIf="positionList">
+                <mat-select placeholder="Pareigos" [value]="" [formControl]="positionControl">
+                    <mat-option [value]=""></mat-option>
+                    <mat-option *ngFor="let position of positionList" [value]="position.id">{{position.id}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+                <mat-form-field *ngIf="scheduleList">
+                    <mat-select placeholder="Tvarkaraštis" [value]="" [formControl]="scheduleControl">
+                        <mat-option [value]=""></mat-option>
+                        <mat-option *ngFor="let schedule of scheduleList" [value]="schedule.id">{{schedule.id}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-checkbox [(ngModel)]="privateSchedule"
+                              (change)="scheduleControl.disabled ? scheduleControl.enable() : scheduleControl.disable()">
+                    Privatus tvarkaraštis
+                </mat-checkbox>
+            </div>
+        </div>
+        <div *ngIf="modelName === 'position'">
+            <h4>Nauja pareiga</h4>
+            <div [formGroup]="positionFormControlGroup">
+                <mat-form-field>
+                    <input [formControlName]="'job_title'" matInput type="text" #job_title required
+                           placeholder="Pareigos pavadinimas">
+                </mat-form-field>
+                <mat-form-field>
+                    <input [formControlName]="'pay'" matInput type="text" #pay required
+                           placeholder="Uždarbis per valandą">
+                </mat-form-field>
+            </div>
+        </div>
+        <div *ngIf="modelName === 'schedule'">
+            <h4>Naujas tvarkaraštis</h4>
+            <div [formGroup]="scheduleFormControlGroup">
+                <mat-form-field>
+                    <input [formControlName]="'schedule_name'" matInput type="text" #schedule_name required
+                           placeholder="Tvarkaraščio pavadinimas">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput [formControlName]="'work_hours_cap'" type="number" #work_hours_cap required
+                           placeholder="Maks. dirbamų valandų skaičius">
+                </mat-form-field>
+            </div>
+        </div>
+        <button mat-button class="button-submit" (click)="addObject()">Pridėti</button>
+    </div>
+</div>

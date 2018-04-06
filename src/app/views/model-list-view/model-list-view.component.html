@@ -1,0 +1,39 @@
+<div>
+    <div class="col-12">
+        <div class="crud-controls">
+            <div class="crud-control-button-group">
+                <button mat-raised-button (click)="showAddObjectModal()">
+                    <i *ngIf="modelName === 'employee'" class="material-icons">&#xE853;</i>
+                    <i *ngIf="modelName === 'position'" class="material-icons">&#xE8F9;</i>
+                    <i *ngIf="modelName === 'schedule'" class="material-icons">&#xE8B5;</i>
+                    Pridėti naują
+                </button>
+                <!--<button mat-raised-button *ngIf="bulkActions === true" (click)="deleteSelectedObject()">-->
+                <!--<i class="material-icons">&#xE92B;</i>-->
+                <!--Panaikinti-->
+                <!--</button>-->
+            </div>
+            <!--<div class="crud-control-bulk-actions-wrapper">-->
+            <!--<mat-slide-toggle [(ngModel)]="bulkActions">Masinis veiksmas</mat-slide-toggle>-->
+            <!--</div>-->
+        </div>
+    </div>
+    <hr>
+    <div class="col-12">
+        <div *ngIf="objectList !== '' && !bulkActions && modelName === 'employee'">
+            <app-employees-main [employeeList]="objectList" [bulkActions]="bulkActions"></app-employees-main>
+        </div>
+        <div *ngIf="objectList !== '' && !bulkActions && modelName === 'position'">
+            <app-positions-main [positionList]="objectList" [bulkActions]="bulkActions"></app-positions-main>
+        </div>
+        <div *ngIf="objectList !== '' && !bulkActions && modelName === 'schedule'">
+            <app-schedules-main [scheduleList]="objectList" [bulkActions]="bulkActions"></app-schedules-main>
+        </div>
+    </div>
+    <!--<div *ngIf="bulkActions">-->
+    <!--<hr>-->
+    <!--<div class="col-12 crud-control-mark-all-checkbox">-->
+    <!--<mat-checkbox labelPosition="before">Pasirinkti visus</mat-checkbox>-->
+    <!--</div>-->
+    <!--</div>-->
+</div>

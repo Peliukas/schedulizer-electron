@@ -1,0 +1,19 @@
+<mat-selection-list *ngIf="bulkActions === true">
+    <mat-list-option *ngFor="let employee of employeeList">{{employee.firstname}} {{employee.lastname}}
+    </mat-list-option>
+</mat-selection-list>
+<div *ngIf="!bulkActions">
+    <mat-accordion [multi]="false">
+        <mat-expansion-panel *ngFor="let employee of employeeList">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <strong>{{employee.doc.firstname}} {{employee.doc.lastname}}</strong>
+                </mat-panel-title>
+                <mat-panel-description>
+
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <app-employee-editor (onEmployeeDeleted)="refreshList($event)" [employee]="employee"></app-employee-editor>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

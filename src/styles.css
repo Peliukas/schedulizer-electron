@@ -1,0 +1,65 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+app-root {
+    height: 100vh;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.flex-space-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flex-space-around {
+    display: flex;
+    justify-content: space-around;
+}
+
+.flex-baseline-vertical {
+    display: flex;
+    align-items: baseline;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.text-left {
+    text-align: left;
+}
+
+simple-snack-bar {
+    color: white;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.medium-margin-horizontal {
+    margin-left: 20px;
+    margin-right: 20px;
+}

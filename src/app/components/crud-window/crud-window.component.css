@@ -1,0 +1,9 @@
+.button-submit {
+    width: 100%;
+    background: #05ee1e;
+}
+
+.button-submit span {
+    color: white !important;
+    font-weight: 900 !important;
+}
