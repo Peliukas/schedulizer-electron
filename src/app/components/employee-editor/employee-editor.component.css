@@ -49,3 +49,21 @@ mat-panel-description i {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.show-calendar-window-button i {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.show-calendar-window-button {
+    margin: auto;
+    width: 10%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.employee-schedule-selector {
+    width: 89%;
+    margin: auto;
+}

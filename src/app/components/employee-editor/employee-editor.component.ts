@@ -16,8 +16,11 @@ export class EmployeeEditorComponent implements OnInit {
     @Input() employee: any;
     @Input() bulkActions: any;
     @Output() onEmployeeDeleted: EventEmitter<any> = new EventEmitter();
+    employeeWorkingHours: number = 0;
+    employeeWorkingHoursPerMonth: any;
     scheduleList: any = '';
     positionList: any = '';
+
 
     positionRef: Position = new Position();
     scheduleRef: Schedule = new Schedule();
@@ -28,6 +31,12 @@ export class EmployeeEditorComponent implements OnInit {
     ngOnInit() {
         this.getPositionList();
         this.getScheduleList();
+        if (this.employee.doc.schedule_id) {
+            this.changeSchedule(this.employee.doc.schedule_id);
+        }
+        if (this.employee.doc.position_id) {
+            this.changePosition(this.employee.doc.position_id);
+        }
     }
 
 
@@ -60,7 +69,6 @@ export class EmployeeEditorComponent implements OnInit {
                         publicSchedules.push(schedule);
                     }
                 }
-                console.log(publicSchedules);
                 this.scheduleList = publicSchedules;
             });
 
@@ -83,16 +91,30 @@ export class EmployeeEditorComponent implements OnInit {
             });
     }
 
-    public openCalendarWindow() {
-        new Schedule().find(this.employee.id)
+    public changeSchedule(scheduleID: any) {
+        this.scheduleRef.find(scheduleID)
             .then(schedule => {
-                console.log('Schedule passed: ', schedule);
+                this.scheduleRef.data = {
+                    _id: schedule.id,
+                    work_days: schedule.work_days,
+                    schedule_name: '',
+                    work_hours_cap: schedule.work_hours_cap,
+                    is_private: schedule.is_private,
+                };
+                this.employeeWorkingHours = this.scheduleRef.getTotalWorkingHours();
+                this.employeeWorkingHoursPerMonth = this.scheduleRef.getWorkingHoursPerMonth();
+            });
+    }
+
+    public openCalendarWindow() {
+        new Schedule().find(this.employee.doc.schedule_id)
+            .then(schedule => {
                 let tempSchedule = {
                     doc: schedule,
                     id: schedule._id,
                     rev: schedule.rev,
                 };
-                let dialogRef = this.matDialog.open(CalendarWrapperComponent, {
+                this.matDialog.open(CalendarWrapperComponent, {
                     height: '95vh',
                     width: '80vw',
                     data: {schedule: tempSchedule}
@@ -101,5 +123,15 @@ export class EmployeeEditorComponent implements OnInit {
             });
     }
 
+    public changePosition(positionID: any) {
+        this.positionRef.find(positionID)
+            .then(position => {
+                this.positionRef.data = {
+                    _id: position._id,
+                    job_title: position.job_title,
+                    pay: position.pay
+                };
+            });
+    }
 
 }

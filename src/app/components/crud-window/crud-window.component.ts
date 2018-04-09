@@ -1,9 +1,10 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {Employee} from '../../models/employee';
 import {Position} from '../../models/position';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
+import {MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
 import {Schedule} from '../../models/schedule';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Http} from '@angular/http';
 
 @Component({
     selector: 'app-crud-window',
@@ -23,7 +24,7 @@ export class CrudWindowComponent implements OnInit {
 
     modelName: any;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private  dialogRef: MatDialogRef<CrudWindowComponent>, private snackBar: MatSnackBar) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, private  dialogRef: MatDialogRef<CrudWindowComponent>, private snackBar: MatSnackBar, private http: Http) {
     }
 
     ngOnInit() {
@@ -133,6 +134,22 @@ export class CrudWindowComponent implements OnInit {
             .then(data => {
                 this.scheduleList = data.rows;
             });
+    }
+
+    public fileUploaded(event: any) {
+        console.log(event.srcElement.files[0]);
+        let fileReader = new FileReader();
+        fileReader.readAsText(event.srcElement.files[0]);
+        fileReader.onload = function () {
+            var dataURL = fileReader.result;
+            let scheduleRef = new Schedule();
+            scheduleRef.data = {
+                _id: fileReader.result._id,
+                schedule_name: fileReader.result.schedule_name,
+                work_days: fileReader.result.work_days,
+            };
+            console.log(dataURL);
+        };
     }
 
 

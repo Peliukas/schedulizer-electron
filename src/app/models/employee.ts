@@ -13,7 +13,6 @@ export class Employee {
             lastname: '',
             position_id: '',
             schedule_id: '',
-            work_hours_cap: ''
         };
         this.db = new PouchDB('Employees');
     }
@@ -24,7 +23,6 @@ export class Employee {
         this.data.lastname = data.lastname;
         this.data.position_id = data.position_id;
         this.data.schedule_id = data.schedule_id;
-        this.data.work_hours_cap = data.work_hours_cap;
         return true;
     }
 

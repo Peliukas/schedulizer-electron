@@ -60,6 +60,7 @@
                     <input matInput [formControlName]="'work_hours_cap'" type="number" #work_hours_cap required
                            placeholder="Maks. dirbamų valandų skaičius">
                 </mat-form-field>
+                <input type="file" #importedSchedule (change)="fileUploaded($event)" placeholder="Importas"/>
             </div>
         </div>
         <button mat-button class="button-submit" (click)="addObject()">Pridėti</button>

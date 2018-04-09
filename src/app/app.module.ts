@@ -26,6 +26,9 @@ import {ScheduleEditorComponent} from './components/schedule-editor/schedule-edi
 import {EmployeeEditorComponent} from './components/employee-editor/employee-editor.component';
 import {LocalVariablesDirective} from './directives/local-variables.directive';
 import {CalendarFreeDaySettingsComponent} from './views/calendar-free-day-settings/calendar-free-day-settings.component';
+import {ExportImportWindowComponent} from './views/export-import-window/export-import-window.component';
+import {HttpModule} from '@angular/http';
+import {Ng2FileInputModule} from 'ng2-file-input';
 
 
 const routes: Routes = [
@@ -50,7 +53,8 @@ const routes: Routes = [
         ScheduleEditorComponent,
         EmployeeEditorComponent,
         LocalVariablesDirective,
-        CalendarFreeDaySettingsComponent
+        CalendarFreeDaySettingsComponent,
+        ExportImportWindowComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -58,6 +62,9 @@ const routes: Routes = [
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
+        HttpModule,
+        BrowserModule,
+        Ng2FileInputModule.forRoot(),
         BrowserAnimationsModule,
         MatDatepickerModule, MatMenuModule, MatButtonModule, MatCardModule, MatTabsModule, MatStepperModule,
         MatTableModule, MatPaginatorModule, MatInputModule, MatSnackBarModule, MatSortModule, MatCheckboxModule,

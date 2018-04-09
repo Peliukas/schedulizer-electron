@@ -37,16 +37,70 @@
         </div>
         <div class="col-8">
             <mat-card>
-                <mat-card-content>
-                    <mat-form-field>
-                        <mat-select placeholder="Tvarkaraštis" #scheduleSelect [value]="employee.doc.schedule_id">
-                            <mat-option [value]="''"></mat-option>
-                            <mat-option *ngFor="let schedule of scheduleList" [value]="schedule.id">
-                                {{schedule.id}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <button mat-button (click)="openCalendarWindow()">Redaguoti</button>
+                <mat-card-content class="row">
+                    <div class="col-12 flex flex-center">
+                        <mat-form-field class="employee-schedule-selector">
+                            <mat-select placeholder="Tvarkaraštis" #scheduleSelect
+                                        (valueChange)="changeSchedule($event)" [value]="employee.doc.schedule_id">
+                                <mat-option *ngFor="let schedule of scheduleList" [value]="schedule.id">
+                                    {{schedule.id}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="show-calendar-window-button">
+                            <i matPrefix class="material-icons" (click)="openCalendarWindow()">&#xE254;</i>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="flex-space-between">
+                            <strong>Darbo dienų skaičius</strong>
+                            <span *ngIf="scheduleRef.data">{{scheduleRef.data.work_days.length}}</span>
+                        </div>
+                        <div class="flex-space-between">
+                            <strong>Darbo valandų skaičius</strong>
+                            <span *ngIf="employeeWorkingHours">{{employeeWorkingHours | number:'1.2-2'}}</span>
+                        </div>
+                        <div class="flex-space-between">
+                            <strong>Bendras uždarbis</strong>
+                            <span *ngIf="positionRef.data">{{employeeWorkingHours * positionRef.data.pay | number:'1.2-2' }}</span>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h5>
+                            Darbo dienos
+                        </h5>
+                        <div *ngFor="let year of employeeWorkingHoursPerMonth">
+                            <div *ngFor="let month of year">
+                                <mat-expansion-panel *ngIf="month">
+                                    <mat-expansion-panel-header>
+                                        <h5 *ngIf="month">{{month[0].date | date:'yyyy'}} / {{month[0].date |
+                                            date:'MMMM'}}</h5>
+                                    </mat-expansion-panel-header>
+                                    <div *ngFor="let day of month" class="flex-space-between">
+                                    <span>
+                                        {{day.date | date:'mediumDate'}}
+                                    </span>
+                                        <strong *ngIf="!day.isHoliday">
+                                            {{day.start_time}} - {{day.end_time}}
+                                        </strong>
+                                        <strong *ngIf="day.isHoliday">
+                                            Išeiginė
+                                        </strong>
+                                    </div>
+                                    <hr *ngIf="month">
+                                    <div class="flex-space-between">
+                                        <span *ngIf="month">Darbo valandų per mėnesį</span>
+                                        <strong *ngIf="month">{{month.work_hours | number:'1.2-2'}}</strong>
+                                    </div>
+                                    <div class="flex-space-between">
+                                        <span *ngIf="month">Uždarbis per mėnesį</span>
+                                        <strong *ngIf="month">{{month.work_hours * positionRef.data.pay |
+                                            number:'1.2-2'}}</strong>
+                                    </div>
+                                </mat-expansion-panel>
+                            </div>
+                        </div>
+                    </div>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -61,7 +115,7 @@
                 schedule_id: scheduleSelect.selected ? scheduleSelect.selected.value : ''})
           ">
                 <i class="material-icons">&#xE161;</i>
-                Įsaugoti pakeitimus
+                Išsaugoti pakeitimus
             </button>
             <button (click)="deleteSelectedEmployee(employee.id)" mat-raised-button><i
                     class="material-icons">&#xE92B;</i>Šalinti darbuotuoją

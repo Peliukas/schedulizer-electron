@@ -1,6 +1,6 @@
 @import '../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
-
+@import "../node_modules/ng2-file-input/ng2-file-input.scss";
 app-root {
     height: 100vh;
 }
@@ -62,4 +62,17 @@ simple-snack-bar {
 .medium-margin-horizontal {
     margin-left: 20px;
     margin-right: 20px;
+}
+
+.warning-text {
+    color: red;
+}
+
+.success-text {
+    color: limegreen;
+}
+
+.medium-margin-vertical {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }

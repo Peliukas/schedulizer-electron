@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-4">
+    <div class="col-12">
         <mat-form-field>
             <input placeholder="Tvarkaraščio pavadinimas" matInput id="schedule_name"
                    [(ngModel)]="schedule.doc.schedule_name">
@@ -14,9 +14,6 @@
 <div class="row">
     <div class="col-12">
         <mat-card>
-            <mat-card-title>
-
-            </mat-card-title>
             <mat-card-content>
                 <div class="row">
                     <h5>Darbo dienos nustatymai</h5>
@@ -96,6 +93,25 @@
             <mat-card-content>
                 <div class="row">
                     <h5>Termino konfigūravimas</h5>
+                    <div class="col-12">
+                        <mat-form-field>
+                            <mat-select placeholder="Terminų šablonai" (valueChange)="applyPeriodTemplate($event)">
+                                <mat-option [value]="''"></mat-option>
+                                <mat-option *ngFor="let periodTemplate of periodTemplateList"
+                                            [value]="periodTemplate.id">
+                                    <div class="row">
+                                        <div class="col-11">
+                                            <strong>{{periodTemplate.id}}</strong>
+                                        </div>
+                                        <div>
+                                            <button mat-icon-button (click)="removePeriodTemplate(periodTemplate)"><i
+                                                    class="material-icons">&#xE872;</i></button>
+                                        </div>
+                                    </div>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                     <div class="col-6">
                         <mat-form-field>
                             <input matInput [matDatepicker]="periodStartPicker" [formControl]="periodStartDateControl"
@@ -131,17 +147,54 @@
                     </div>
                 </div>
                 <div class="row">
-                    <button class="apply-schedule-period-button"
-                            [disabled]="!periodEndDate.value && !periodStartDate.value && !startTimeInputControl.value && !endTimeInputControl.value"
-                            (click)="setPeriod()" mat-raised-button>
-                        Pritaikyti terminą
-                    </button>
+                    <div class="flex">
+                        <div>
+                            <button class="apply-schedule-period-button"
+                                    [disabled]="!periodEndDate.value && !periodStartDate.value && !startTimeInputControl.value && !endTimeInputControl.value"
+                                    (click)="setPeriod()" mat-raised-button>
+                                Pritaikyti terminą
+                            </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-6" *ngIf="displayPeriodTemplateNameField">
+                                <mat-form-field>
+                                    <input placeholder="Termino šablono pavadinimas" matInput
+                                           [(ngModel)]="newPeriodTemplateName">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6 period-template-button-group">
+                                <button mat-icon-button matTooltip="Išsaugoti kaip šabloną"
+                                        *ngIf="!displayPeriodTemplateNameField"
+                                        (click)="displayPeriodTemplateNameField = !displayPeriodTemplateNameField"><i
+                                        class="material-icons">&#xE161;</i></button>
+                                <button mat-icon-button matTooltip="Išsaugoti" *ngIf="displayPeriodTemplateNameField"
+                                        (click)="createPeriodTemplate(newPeriodTemplateName)"><i
+                                        class="material-icons">&#xE5CA;</i></button>
+                                <button *ngIf="displayPeriodTemplateNameField"
+                                        (click)="displayPeriodTemplateNameField = false" mat-icon-button
+                                        matTooltip="Atšaukti"><i class="material-icons">&#xE5C9;</i></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </mat-card-content>
         </mat-card>
     </div>
 </div>
 <div class="row">
+    <div class="col-12">
+        <div class="col-6 flex-space-around">
+            <span>Maks. dirbamų valandų skaičius: </span>
+            <strong>{{schedule.doc.work_hours_cap}}</strong>
+        </div>
+        <div class="col-6 flex-space-around">
+            <span>Dabartinis valandų skaičius: </span>
+            <strong [class.warning-text]="totalWorkingHours >= schedule.doc.work_hours_cap"
+                    [class.success-text]="totalWorkingHours < schedule.doc.work_hours_cap">
+                {{totalWorkingHours | number}}
+            </strong>
+        </div>
+    </div>
     <div class="col-12">
         <div>
             <div class="calendar-header flex-space-between">
@@ -183,6 +236,13 @@
                     [refresh]="refresh">
             </mwl-calendar-month-view>
             <div [class.cal-overlay]="weekDaySelectionMode"></div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <button class="medium-margin-vertical" mat-button (click)="storeSchedule()"><i class="material-icons">&#xE2C4;</i>Eksportuoti
+                    ir šalinti
+                </button>
+            </div>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatDialog, MatSnackBar, MatChipList} from '@angular/material';
 import {Schedule} from '../../models/schedule';
@@ -6,6 +6,8 @@ import {AddBreakComponent} from '../add-break/add-break.component';
 import {ConfirmationBoxComponent} from '../confirmation-box/confirmation-box.component';
 import {Subject} from 'rxjs/Subject';
 import {Holiday} from '../../models/holiday';
+import {PeriodTemplate} from '../../models/period-template';
+import {saveAs} from 'file-saver';
 
 
 @Component({
@@ -21,17 +23,21 @@ export class ScheduleEditorComponent implements OnInit {
     viewDate: Date = new Date();
     breakList: any[] = [];
     weekDayList: any[] = [];
+    periodTemplateList: any[] = [];
     selectedWorkDayList: any[] = [];
     calendarWorkDays: any[] = [];
     selectMultipleDays: boolean = false;
+    isHoliday: boolean = false;
+    weekDaySelectionMode: boolean = false;
+    displayPeriodTemplateNameField = false;
     selectedCalendarDay: any = '';
     startTimeInputControl: FormControl;
     endTimeInputControl: FormControl;
     periodStartDateControl: FormControl;
     periodEndDateControl: FormControl;
     refresh: Subject<any> = new Subject();
-    isHoliday: boolean = false;
-    weekDaySelectionMode: boolean = false;
+    totalWorkingHours: number = 0;
+    newPeriodTemplateName: any = '';
 
     constructor(private snackBar: MatSnackBar, private matDialog: MatDialog) {
     }
@@ -43,6 +49,7 @@ export class ScheduleEditorComponent implements OnInit {
         this.endTimeInputControl = new FormControl();
         this.periodStartDateControl = new FormControl();
         this.periodEndDateControl = new FormControl();
+        this.getPeriodTemplates();
         this.refresh.next();
     }
 
@@ -174,16 +181,28 @@ export class ScheduleEditorComponent implements OnInit {
         let workPeriod = [];
         let periodStart = new Date(this.periodStartDateControl.value);
         let periodEnd = new Date(this.periodEndDateControl.value);
+        console.log('weekday list: ', this.weekDayList);
         while (periodStart.toISOString() < periodEnd.toISOString()) {
             for (let weekDay of this.weekDayList) {
                 if (periodStart.getDay() === weekDay.weekDayNumber && weekDay.selected) {
-                    let tempPeriodWeekDay = {
-                        start_time: this.isHoliday ? '' : this.startTimeInputControl.value,
-                        end_time: this.isHoliday ? '' : this.endTimeInputControl.value,
-                        date: new Date(periodStart),
-                        breaks: this.breakList,
-                        isHoliday: this.isHoliday
-                    };
+                    let tempPeriodWeekDay = {};
+                    if (weekDay.start_time && weekDay.end_time) {
+                        tempPeriodWeekDay = {
+                            start_time: weekDay.start_time,
+                            end_time: weekDay.end_time,
+                            date: new Date(periodStart),
+                            breaks: this.breakList,
+                            isHoliday: this.isHoliday
+                        };
+                    } else {
+                        tempPeriodWeekDay = {
+                            start_time: this.startTimeInputControl.value,
+                            end_time: this.endTimeInputControl.value,
+                            date: new Date(periodStart),
+                            breaks: this.breakList,
+                            isHoliday: this.isHoliday
+                        };
+                    }
                     workPeriod.push(tempPeriodWeekDay);
                     periodStart.setDate(periodStart.getDate() + 1);
                 }
@@ -193,25 +212,29 @@ export class ScheduleEditorComponent implements OnInit {
         let scheduleRef = new Schedule();
         scheduleRef.setValues(this.schedule.doc);
         let tempWorkDayList = [];
-        for (let periodWorkDay of workPeriod) {
-            let dayFound = false;
-            for (let existingWorkDay of scheduleRef.data.work_days) {
-                if (new Date(existingWorkDay.date).toISOString() === new Date(periodWorkDay.date).toISOString()) {
-                    dayFound = existingWorkDay;
-                    for (let i = 0; i < scheduleRef.data.work_days.length; i++) {
-                        if (new Date(scheduleRef.data.work_days[i].date).toISOString() === new Date(existingWorkDay.date).toISOString()) {
-                            scheduleRef.data.work_days.splice(i, 1);
-                            break;
+        if (this.schedule.doc.work_days && this.schedule.doc.work_days[0] !== '') {
+            for (let periodWorkDay of workPeriod) {
+                let dayFound = false;
+                for (let existingWorkDay of scheduleRef.data.work_days) {
+                    if (new Date(existingWorkDay.date).toISOString() === new Date(periodWorkDay.date).toISOString()) {
+                        dayFound = existingWorkDay;
+                        for (let i = 0; i < scheduleRef.data.work_days.length; i++) {
+                            if (new Date(scheduleRef.data.work_days[i].date).toISOString() === new Date(existingWorkDay.date).toISOString()) {
+                                scheduleRef.data.work_days.splice(i, 1);
+                                break;
+                            }
                         }
+                        break;
                     }
-                    break;
+                }
+                if (!dayFound) {
+                    tempWorkDayList.push(periodWorkDay);
+                } else {
+                    tempWorkDayList.push(dayFound);
                 }
             }
-            if (!dayFound) {
-                tempWorkDayList.push(periodWorkDay);
-            } else {
-                tempWorkDayList.push(dayFound);
-            }
+        } else {
+            tempWorkDayList = workPeriod;
         }
         let combined = tempWorkDayList.concat(scheduleRef.data.work_days);
         this.schedule.doc.work_days = combined;
@@ -364,8 +387,8 @@ export class ScheduleEditorComponent implements OnInit {
                         });
                     }
                 }
+                this.getTotalWorkingHours();
                 this.refresh.next();
-                console.log('calendar workdays: ', this.calendarWorkDays);
             }, cause => {
                 this.calendarWorkDays = [];
                 for (let workDay of this.schedule.doc.work_days) {
@@ -383,6 +406,7 @@ export class ScheduleEditorComponent implements OnInit {
                         });
                     }
                 }
+                this.getTotalWorkingHours();
                 this.refresh.next();
             });
     }
@@ -440,18 +464,14 @@ export class ScheduleEditorComponent implements OnInit {
         }
     }
 
-    private dayTaken(day: Date) {
-        for (let workDay of this.schedule.doc.work_days) {
-            if (workDay.date.toISOString() === day.toISOString()) {
-                return true;
+    public deleteBreak(breakStart: any, breakEnd: any) {
+        for (let tempBreak of this.breakList) {
+            if (tempBreak.start === breakStart && tempBreak.end === breakEnd) {
+                this.breakList.splice(this.breakList.indexOf(tempBreak), 1);
             }
         }
-        return false;
-    }
-
-    public deleteBreak(breakStart: any, breakEnd: any) {
         for (let i = 0; i < this.schedule.doc.work_days.length; i++) {
-            if (new Date(this.schedule.doc.work_days[i].date).getDate() === new Date(this.selectedCalendarDay.date).getDate()) {
+            if (new Date(this.schedule.doc.work_days[i].date).toUTCString() === new Date(this.selectedCalendarDay.date).toUTCString()) {
                 for (let j = 0; j < this.schedule.doc.work_days[i].breaks.length; j++) {
                     if (this.schedule.doc.work_days[i].breaks[j].start === breakStart && this.schedule.doc.work_days[i].breaks[j].end === breakEnd) {
                         this.schedule.doc.work_days[i].breaks.splice(j, 1);
@@ -460,6 +480,83 @@ export class ScheduleEditorComponent implements OnInit {
                 }
             }
         }
+    }
+
+    public getTotalWorkingHours() {
+        let totalHours = 0;
+        for (let workDay of this.schedule.doc.work_days) {
+            if (workDay.start_time && workDay.end_time) {
+                let startDateTime = new Date(workDay.date);
+                let endDateTime = new Date(workDay.date);
+                startDateTime.setHours(workDay.start_time.substr(0, 2));
+                startDateTime.setMinutes(workDay.start_time.substr(3, 2));
+                endDateTime.setHours(workDay.end_time.substr(0, 2));
+                endDateTime.setMinutes(workDay.end_time.substr(3, 2));
+                totalHours += Math.abs(startDateTime.getTime() - endDateTime.getTime());
+            }
+        }
+        this.totalWorkingHours = totalHours / 36e5;
+    }
+
+    public getPeriodTemplates() {
+        new PeriodTemplate().findAll()
+            .then(periodTemplateList => {
+                this.periodTemplateList = periodTemplateList.rows;
+            });
+
+    }
+
+    public createPeriodTemplate(newPeriodTemplateName: any) {
+        let periodTemplateRef = new PeriodTemplate();
+        periodTemplateRef.data = {
+            _id: newPeriodTemplateName,
+            start_date: this.periodStartDateControl.value,
+            end_date: this.periodEndDateControl.value,
+            breaks: this.breakList,
+            week_days: this.weekDayList
+        };
+        periodTemplateRef.save();
+        this.getPeriodTemplates();
+        this.displayPeriodTemplateNameField = false;
+        this.snackBar.open('Termino šablonas sėkmingai pridėtas', 'OK', {duration: 3000});
+    }
+
+    public applyPeriodTemplate(periodTemplateID: any) {
+        if (periodTemplateID) {
+            let periodTemplateRef = new PeriodTemplate();
+            this.periodTemplateList.forEach(periodTemplate => {
+                if (periodTemplateID === periodTemplate.id) {
+                    periodTemplateRef.data = periodTemplate.doc;
+                }
+            });
+            this.periodStartDateControl.setValue(periodTemplateRef.data.start_date);
+            this.periodEndDateControl.setValue(periodTemplateRef.data.end_date);
+            this.weekDayList = periodTemplateRef.data.week_days;
+        } else {
+            this.resetSelection();
+        }
+    }
+
+    public removePeriodTemplate(periodTemplate: any) {
+        let periodTemplateRef = new PeriodTemplate();
+        new PeriodTemplate().find(periodTemplate.id)
+            .then(periodTemplate => {
+                periodTemplateRef.data._id = periodTemplate.doc._id;
+                periodTemplateRef.delete();
+                for (let period of this.periodTemplateList) {
+                    if (period.id === periodTemplate.id) {
+                        periodTemplate.splice(periodTemplate.indexOf(period), 1);
+                        break;
+                    }
+                }
+                this.snackBar.open('Termino šablonas sėkmingai pašalintas', 'OK', {duration: 3000});
+            });
+    }
+
+
+    public storeSchedule() {
+        var file = new File([JSON.stringify(this.schedule)], this.schedule.id + '.json', {type: 'text/plain;charset=utf-8'});
+        saveAs(file);
     }
 
 }

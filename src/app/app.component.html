@@ -25,6 +25,12 @@
                 Šventės
             </button>
         </div>
+        <!--<div>-->
+        <!--<button mat-button name="calendar" (click)="selectedModelName = 'export_import'">-->
+        <!--<i class="material-icons">&#xE0C3;</i>-->
+        <!--Eksport./Import.-->
+        <!--</button>-->
+        <!--</div>-->
     </div>
     <div class="col-10">
         <div class="content-wrapper-container">
@@ -34,6 +40,7 @@
                                       [modelName]="selectedModelName"></app-page-content-wrapper>
             <app-page-content-wrapper *ngIf="selectedModelName === 'schedule'"
                                       [modelName]="selectedModelName"></app-page-content-wrapper>
+            <!--<app-export-import-window *ngIf="selectedModelName === 'export_import'"></app-export-import-window>-->
             <app-calendar-free-day-settings *ngIf="selectedModelName === 'free_days'"></app-calendar-free-day-settings>
         </div>
     </div>

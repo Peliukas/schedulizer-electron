@@ -83,3 +83,11 @@ mat-chip-list {
     background: #08a620 !important;
     color: white;
 }
+
+.period-template-button-group button {
+    margin-top: 10px;
+}
+
+/deep/ .mat-option-text {
+    width: 100% !important;
+}

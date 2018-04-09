@@ -71,12 +71,50 @@ export class Schedule {
 
     public getTotalWorkingHours() {
         let totalHours = 0;
-        // for(let workDay of this.data.work_days){
-        //     let startDateTime = workDay.date.
-        //     // var hours = Math.abs(date1 - date2) / 36e5;
-        // }
-        console.log('Total hours: ', totalHours);
+        for (let workDay of this.data.work_days) {
+            let startDateTime = new Date(workDay.date);
+            let endDateTime = new Date(workDay.date);
+            startDateTime.setHours(workDay.start_time.substr(0, 2));
+            startDateTime.setMinutes(workDay.start_time.substr(3, 2));
+            endDateTime.setHours(workDay.end_time.substr(0, 2));
+            endDateTime.setMinutes(workDay.end_time.substr(3, 2));
+            totalHours += Math.abs(startDateTime.getTime() - endDateTime.getTime());
+        }
+        totalHours = totalHours / 36e5;
         return totalHours;
+    }
+
+    public getWorkingHoursByDay(workDay: any) {
+        let startDateTime = new Date(workDay.date);
+        let endDateTime = new Date(workDay.date);
+        startDateTime.setHours(workDay.start_time.substr(0, 2));
+        startDateTime.setMinutes(workDay.start_time.substr(3, 2));
+        endDateTime.setHours(workDay.end_time.substr(0, 2));
+        endDateTime.setMinutes(workDay.end_time.substr(3, 2));
+        return Math.abs(startDateTime.getTime() - endDateTime.getTime()) / 36e5;
+    }
+
+    public getWorkingHoursPerMonth() {
+        let groupedWorkDays = [];
+        for (let workDay of this.data.work_days) {
+            let workDayYear = new Date(workDay.date).getFullYear();
+            let workDayMonth = new Date(workDay.date).getMonth();
+            if (groupedWorkDays[workDayYear]) {
+                if (groupedWorkDays[workDayYear][workDayMonth]) {
+                    groupedWorkDays[workDayYear][workDayMonth].push(workDay);
+                    groupedWorkDays[workDayYear][workDayMonth]['work_hours'] += this.getWorkingHoursByDay(workDay);
+                } else {
+                    groupedWorkDays[workDayYear][workDayMonth] = [workDay];
+                    groupedWorkDays[workDayYear][workDayMonth]['work_hours'] = this.getWorkingHoursByDay(workDay);
+                }
+            } else {
+                groupedWorkDays[workDayYear] = [];
+                groupedWorkDays[workDayYear][workDayMonth] = [workDay];
+                groupedWorkDays[workDayYear][workDayMonth]['work_hours'] = this.getWorkingHoursByDay(workDay);
+            }
+        }
+        console.log('groupped work days: ', groupedWorkDays);
+        return groupedWorkDays;
     }
 
 }
