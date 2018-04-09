@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
 import {Employee} from '../../models/employee';
 import {Position} from '../../models/position';
 import {MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
@@ -21,6 +21,8 @@ export class CrudWindowComponent implements OnInit {
     privateSchedule = false;
     positionList: any[] = [];
     scheduleList: any[] = [];
+    scheduleRef: any;
+
 
     modelName: any;
 
@@ -143,13 +145,19 @@ export class CrudWindowComponent implements OnInit {
         fileReader.onload = function () {
             var dataURL = fileReader.result;
             let scheduleRef = new Schedule();
+            let parsedData = JSON.parse(dataURL);
             scheduleRef.data = {
-                _id: fileReader.result._id,
-                schedule_name: fileReader.result.schedule_name,
-                work_days: fileReader.result.work_days,
+                _id: parsedData.doc._id,
+                schedule_name: parsedData.doc.schedule_name,
+                work_days: parsedData.doc.work_days,
+                is_private: parsedData.doc.is_private,
+                work_hours_cap: parsedData.doc.work_hours_cap,
             };
-            console.log(dataURL);
+            console.log('saving schedule: ', parsedData);
+            scheduleRef.save();
         };
+        this.snackBar.open('Tvarkaraštis sėkmingai importuotas', 'OK', {duration: 3000});
+        // this.dialogRef.close();
     }
 
 
