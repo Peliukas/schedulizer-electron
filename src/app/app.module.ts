@@ -12,7 +12,7 @@ import {AppComponent} from './app.component';
 import {StorageAdapterService} from './services/storage-adapter.service';
 import {CalendarModule} from 'angular-calendar';
 
-import {PageContentWrapperComponent} from './components/page-content-wrapper/page-content-wrapper.component';
+import {PageContentWrapperComponent} from './views/page-content-wrapper/page-content-wrapper.component';
 import {CrudWindowComponent} from './components/crud-window/crud-window.component';
 import {CalendarWrapperComponent} from './components/calendar-wrapper/calendar-wrapper.component';
 import {EmployeesMainComponent} from './views/employees-main/employees-main.component';
@@ -29,6 +29,7 @@ import {CalendarFreeDaySettingsComponent} from './views/calendar-free-day-settin
 import {ExportImportWindowComponent} from './views/export-import-window/export-import-window.component';
 import {HttpModule} from '@angular/http';
 import {Ng2FileInputModule} from 'ng2-file-input';
+import {DocumentPreviewComponent} from './components/document-preview/document-preview.component';
 
 
 const routes: Routes = [
@@ -54,7 +55,8 @@ const routes: Routes = [
         EmployeeEditorComponent,
         LocalVariablesDirective,
         CalendarFreeDaySettingsComponent,
-        ExportImportWindowComponent
+        ExportImportWindowComponent,
+        DocumentPreviewComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -72,7 +74,7 @@ const routes: Routes = [
         MatTooltipModule, MatSlideToggleModule, MatChipsModule, MatNativeDateModule
     ],
     providers: [StorageAdapterService],
-    entryComponents: [CrudWindowComponent, ConfirmationBoxComponent, AddBreakComponent],
+    entryComponents: [CrudWindowComponent, ConfirmationBoxComponent, AddBreakComponent, DocumentPreviewComponent],
     bootstrap: [AppComponent]
 })
 

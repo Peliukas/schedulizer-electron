@@ -102,7 +102,7 @@ export class EmployeeEditorComponent implements OnInit {
                     is_private: schedule.is_private,
                 };
                 this.employeeWorkingHours = this.scheduleRef.getTotalWorkingHours();
-                this.employeeWorkingHoursPerMonth = this.scheduleRef.getWorkingHoursPerMonth();
+                this.employeeWorkingHoursPerMonth = this.scheduleRef.getGroupedWorkDays();
             });
     }
 

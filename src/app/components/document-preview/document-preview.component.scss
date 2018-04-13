@@ -1,17 +1,3 @@
-.employee-selection-list {
-  max-height: 250px;
-  overflow: auto;
-}
-
-.employee-selection-list mat-form-field, table {
-  width: 100%;
-}
-
-.doc-preview-window, /deep/ .doc-preview-window .mat-dialog-container {
-  max-width: 100vw !important;
-  width: 100vw;
-}
-
 .day-cell-header {
   width: 35px;
   text-align: center;
@@ -23,6 +9,10 @@
 
 .common-schedule-work-day-cell, table, table strong, .day-cell-header {
   font-size: 11px;
+}
+
+.common-schedule-work-day-cell {
+
 }
 
 td {

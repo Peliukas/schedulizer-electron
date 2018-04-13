@@ -2,6 +2,12 @@
     position: relative;
 }
 
+.panel-grid {
+    display: grid;
+    column-count: 2;
+    grid-template-columns: 1fr 6fr;
+}
+
 .mat-card {
     padding: 20px;
 }

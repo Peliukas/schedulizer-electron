@@ -1,7 +1,86 @@
 <div>
     <mat-card>
         <mat-card-content>
-            <h5>Importas / Eksportas</h5>
+            <h4>Bendras vaizdas</h4>
+            <div class="row">
+                <div class="col-12 employee-selection-list" *ngIf="employeeList">
+                    <mat-form-field>
+                        <mat-select (valueChange)="employeeSelectionChange()" placeholder="Pasirinkite darbuotojus"
+                                    [formControl]="employeeSelectorControl" multiple>
+                            <mat-option *ngFor="let employee of employeeList" [value]="employee.id">
+                                {{employee.doc.firstname}} {{employee.doc.lastname}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="row" *ngIf="calendarData">
+                <div class="col-12">
+                    <button (click)="savePDF()">Peržiūra</button>
+                </div>
+                <div class="col-12">
+                    <div *ngFor="let year of calendarData.years">
+                        <div *ngIf="year && year.months">
+                            <div *ngFor="let month of year.months">
+                                <div *ngIf="month && month.employees">
+                                    <h5 class="text-center">{{month.month}}/{{year.year}}</h5>
+                                    <table>
+                                        <tr>
+                                            <td><strong>Darbuotojas(a)</strong></td>
+                                            <td><strong>Pareigos</strong></td>
+                                            <td *ngFor="let dayNumber of calendarDayNumbers" class="day-cell-header">
+                                                <strong>{{dayNumber}}</strong></td>
+                                            <td>Darbo valandų</td>
+                                            <td>Uždarbis</td>
+                                        </tr>
+                                        <tr *ngFor="let employee of month['employees']" class="employee-row ">
+                                            <td>{{employee.firstname}} {{employee.lastname}}</td>
+                                            <td>{{employee.position.job_title}}</td>
+                                            <td *ngFor="let dayNumber of calendarDayNumbers">
+                                                <div *ngFor="let workDay of employee.work_days">
+                                                    <div class="common-schedule-work-day-cell"
+                                                         *ngIf="getDay(workDay.date) === dayNumber">
+                                                        <div class="work-hours-container">
+                                                <span>
+                                                    {{workDay.start_time}}
+                                                </span><br>
+                                                            <span>
+                                                    {{workDay.end_time}}
+                                                </span>
+                                                        </div>
+                                                        <div *ngIf="workDay.breaks">
+                                                            <div *ngFor="let break of workDay.breaks"
+                                                                 class="break-label">
+                                                                    <span>
+                                                                        {{break.start}}
+                                                                    </span><br>
+                                                                <span>
+                                                                        {{break.end}}
+                                                                    </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{employee.work_days.work_hours | number:"1.2-2"}}
+                                            </td>
+                                            <td>
+                                                {{employee.month_salary | number:"1.2-2"}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div>
+                                        <strong class="red-square">Darbo valandos</strong>
+                                        <strong class="green-square">Pertraukos</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </mat-card-content>
     </mat-card>
 </div>

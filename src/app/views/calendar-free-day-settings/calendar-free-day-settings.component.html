@@ -1,26 +1,53 @@
 <mat-card>
     <mat-card-content>
-        <h5>Šventės</h5>
+        <div class="row" [formGroup]="configControl">
+            <h5>Tarifų nustatymai</h5>
+            <div class="col-12">
+                <mat-form-field>
+                    <input matInput type="number" formControlName="holiday_rate" placeholder="Šventinės dienos tarifas">
+                </mat-form-field>
+            </div>
+            <div class="col-12">
+                <mat-form-field>
+                    <input matInput type="time" formControlName="night_time_start" placeholder="Nakties pradžia">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="time" formControlName="night_time_end" placeholder="Nakties pabaiga">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="number" formControlName="night_time_rate" placeholder="Naktinis tarifas">
+                </mat-form-field>
+            </div>
+            <div class="col-12">
+                <button mat-raised-button (click)="saveConfig()">
+                    Išsaugoti pakeitimus
+                </button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-card>
+    <mat-card-content>
         <div class="row">
-            <div class="col-12 flex">
+            <h5>Šventės</h5>
+            <div class="col-12">
                 <mat-form-field>
                     <input matInput placeholder="Šventės pavadinimas" [formControl]="holidayNameControl">
                 </mat-form-field>
                 <div [formGroup]="freeDayDateControl">
                     <mat-form-field>
-                        <input matInput [formControlName]="'holiday_month'" type="number"
+                        <input matInput formControlName="holiday_month" type="number"
                                placeholder="Mėnuo">
                     </mat-form-field>
                     <mat-form-field>
-                        <input matInput [formControlName]="'holiday_day'" type="number"
+                        <input matInput formControlName="holiday_day" type="number"
                                placeholder="Diena">
                     </mat-form-field>
-                    <button mat-raised-button
-                            [disabled]="!holidayNameControl.value && !freeDayDateControl.get('holiday_month').value && !freeDayDateControl.get('holiday_day').value"
-                            (click)="addHoliday()">Pridėti
-                    </button>
-
                 </div>
+                <button mat-raised-button
+                        [disabled]="!holidayNameControl.value && !freeDayDateControl.get('holiday_month').value && !freeDayDateControl.get('holiday_day').value"
+                        (click)="addHoliday()">Pridėti
+                </button>
             </div>
             <div class="col-12">
                 <table *ngIf="holidayList">

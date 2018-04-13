@@ -204,7 +204,7 @@
                 </button>
                 <div class="current-date-label">
                     <strong *ngIf="viewDate">{{viewDate |
-                        date:'mediumDate'}}</strong>
+                        date:"mediumDate"}}</strong>
                 </div>
                 <button mat-button class="next-month" (click)="nextMonth()">Sekantis mėnuo <i
                         class="material-icons">&#xE315;</i></button>
@@ -240,7 +240,10 @@
         <div class="row">
             <div class="col-12">
                 <button class="medium-margin-vertical" mat-button (click)="storeSchedule()"><i class="material-icons">&#xE2C4;</i>Eksportuoti
-                    ir šalinti
+                    tvarkaraštį
+                </button>
+                <button class="medium-margin-vertical" mat-button (click)="savePDF()"><i
+                        class="material-icons">&#xE2C4;</i>PDF versija
                 </button>
             </div>
         </div>

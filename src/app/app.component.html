@@ -1,5 +1,5 @@
-<div class="row">
-    <div class="col-2">
+<div class="panel-grid">
+    <div>
         <div>
             <button mat-button name="workers" (click)="selectedModelName = 'employee'">
                 <i class="material-icons">&#xE853;</i>
@@ -25,14 +25,14 @@
                 Šventės
             </button>
         </div>
-        <!--<div>-->
-        <!--<button mat-button name="calendar" (click)="selectedModelName = 'export_import'">-->
-        <!--<i class="material-icons">&#xE0C3;</i>-->
-        <!--Eksport./Import.-->
-        <!--</button>-->
-        <!--</div>-->
+        <div>
+            <button mat-button name="calendar" (click)="selectedModelName = 'export_import'">
+                <i class="material-icons">&#xE8EF;</i>
+                Bendras vaizdas
+            </button>
+        </div>
     </div>
-    <div class="col-10">
+    <div>
         <div class="content-wrapper-container">
             <app-page-content-wrapper *ngIf="selectedModelName === 'employee'"
                                       [modelName]="selectedModelName"></app-page-content-wrapper>
@@ -40,7 +40,7 @@
                                       [modelName]="selectedModelName"></app-page-content-wrapper>
             <app-page-content-wrapper *ngIf="selectedModelName === 'schedule'"
                                       [modelName]="selectedModelName"></app-page-content-wrapper>
-            <!--<app-export-import-window *ngIf="selectedModelName === 'export_import'"></app-export-import-window>-->
+            <app-export-import-window *ngIf="selectedModelName === 'export_import'"></app-export-import-window>
             <app-calendar-free-day-settings *ngIf="selectedModelName === 'free_days'"></app-calendar-free-day-settings>
         </div>
     </div>

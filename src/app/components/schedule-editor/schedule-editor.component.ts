@@ -8,6 +8,8 @@ import {Subject} from 'rxjs/Subject';
 import {Holiday} from '../../models/holiday';
 import {PeriodTemplate} from '../../models/period-template';
 import {saveAs} from 'file-saver';
+import * as jsPDF from 'jspdf';
+import {DocumentPreviewComponent} from '../document-preview/document-preview.component';
 
 
 @Component({
@@ -557,6 +559,30 @@ export class ScheduleEditorComponent implements OnInit {
     public storeSchedule() {
         var file = new File([JSON.stringify(this.schedule)], this.schedule.id + '.json', {type: 'text/plain;charset=utf-8'});
         saveAs(file);
+    }
+
+
+    public savePDF() {
+        let dialogRef = this.matDialog.open(DocumentPreviewComponent, {
+            data: this.schedule
+        });
+        // var doc = new jsPDF();
+        // doc.text(20, 10, this.schedule.doc._id);
+        // let counter = 2;
+        // for(let workDay of this.schedule.doc.work_days){
+        //     doc.text(20, counter*10, new Date(workDay.date).toDateString());
+        //     doc.text(80, counter*10, workDay.start_time ? workDay.start_time : '');
+        //     doc.text(110, counter*10, workDay.end_time ? workDay.end_time : '');
+        //     if(counter < 30){
+        //         counter++;
+        //     }else{
+        //         doc.addPage()
+        //         counter = 1;
+        //     }
+        // }
+        // doc.save(this.schedule.doc._id+'.pdf');
+
+
     }
 
 }
