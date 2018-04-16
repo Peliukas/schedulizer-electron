@@ -17,7 +17,7 @@
             <mat-divider></mat-divider>
             <div class="row" *ngIf="calendarData">
                 <div class="col-12">
-                    <button (click)="savePDF()">Peržiūra</button>
+                    <button mat-raised-button="" (click)="savePDF()">Peržiūra</button>
                 </div>
                 <div class="col-12">
                     <div *ngFor="let year of calendarData.years">
@@ -63,11 +63,11 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td *ngIf="employee">
+                                            <td *ngIf="employee && employee.month_salary.work_hours">
                                                 {{employee.month_salary.work_hours.ordinary_hours +
                                                 employee.month_salary.work_hours.night_hours | number:"1.2-2"}}
                                             </td>
-                                            <td *ngIf="employee">
+                                            <td *ngIf="employee && employee.month_salary.work_hours">
                                                 {{employee.month_salary.work_hours.ordinary_hours *
                                                 employee.position.pay +
                                                 employee.month_salary.work_hours.night_hours *

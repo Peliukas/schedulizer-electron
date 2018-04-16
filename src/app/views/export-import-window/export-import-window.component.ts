@@ -165,12 +165,6 @@ export class ExportImportWindowComponent implements OnInit {
                                                                             position: employee.doc.position,
                                                                             month_salary: employeeWorkDays[year][month]
                                                                         });
-                                                                        console.log('emp month: ', employeeWorkDays[year][month]);
-                                                                        const monthSalary = employeeWorkDays[year][month].work_hours.ordinary_hours * employee.doc.position.pay +
-                                                                            employeeWorkDays[year][month].work_hours.night_hours * config.night_time_rate +
-                                                                            employeeWorkDays[year][month].work_hours.night_hours * employee.doc.position.pay +
-                                                                            employeeWorkDays[year][month].work_hours.holiday_hours * config.holiday_rate;
-                                                                        console.log('salary: ', monthSalary);
                                                                     } else {
                                                                         this.calendarData['years'][year]['months'][month]['employees'] = [];
                                                                         this.calendarData['years'][year]['months'][month]['employees'].push({
