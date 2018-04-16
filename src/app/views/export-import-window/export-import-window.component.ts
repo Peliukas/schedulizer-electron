@@ -5,6 +5,8 @@ import {FormControl} from '@angular/forms';
 import {Schedule} from '../../models/schedule';
 import {DocumentPreviewComponent} from '../../components/document-preview/document-preview.component';
 import {MatDialog} from '@angular/material';
+import {Configurations} from '../../models/configurations';
+import {Holiday} from '../../models/holiday';
 
 @Component({
     selector: 'app-export-import-window',
@@ -66,93 +68,133 @@ export class ExportImportWindowComponent implements OnInit {
     }
 
     public generateCalendarData() {
-        for (let employee of this.employeeList) {
-            for (let selectedEmployee of this.selectedEmployees) {
-                if (employee.id === selectedEmployee) {
-                    new Schedule().find(employee.doc.schedule_id)
-                        .then(employeeScheduleData => {
-                            let employeeSchedule = new Schedule();
-                            employeeSchedule.data = employeeScheduleData;
-                            let employeeWorkDays = employeeSchedule.getGroupedWorkDays();
-                            console.log('Emp. position', employee.doc.position);
-                            let employeeFullName = employee.doc.firstname + '_' + employee.doc.lastname;
-                            Object.keys(employeeWorkDays).forEach(year => {
-                                if (employeeWorkDays[year] && employeeWorkDays[year].length > 0) {
-                                    if (!this.calendarData['years']) {
-                                        this.calendarData['years'] = [];
-                                        this.calendarData['years'][year] = [];
-                                        this.calendarData['years'][year].year = year;
-                                        Object.keys(employeeWorkDays[year]).forEach(month => {
-                                            if (employeeWorkDays[year][month] && employeeWorkDays[year][month].length > 0) {
-                                                if (this.calendarData['years'][year]['months']) {
-                                                    if (this.calendarData['years'][year]['months'][month]) {
-                                                        if (this.calendarData['years'][year]['months'][month]['employees']) {
-                                                            this.calendarData['years'][year]['months'][month]['employees'] = this.calendarData['years'][year]['months'][month]['employees'].filter(emp => emp.employee_id !== employeeFullName);
-                                                            this.calendarData['years'][year]['months'][month]['employees'].push({
-                                                                employee_id: employeeFullName,
-                                                                firstname: employee.doc.firstname,
-                                                                lastname: employee.doc.lastname,
-                                                                work_days: employeeWorkDays[year][month],
-                                                                position: employee.doc.position,
-                                                                month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
-                                                            });
-                                                        } else {
-                                                            this.calendarData['years'][year]['months'][month]['employees'] = [];
-                                                            this.calendarData['years'][year]['months'][month]['employees'].push({
-                                                                employee_id: employeeFullName,
-                                                                firstname: employee.doc.firstname,
-                                                                lastname: employee.doc.lastname,
-                                                                work_days: employeeWorkDays[year][month],
-                                                                position: employee.doc.position,
-                                                                month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
-                                                            });
-                                                        }
-                                                    } else {
-                                                        this.calendarData['years'][year]['months'][month] = [];
-                                                        this.calendarData['years'][year]['months'][month]['employees'] = [];
-                                                        this.calendarData['years'][year]['months'][month].month = month;
-                                                        this.calendarData['years'][year]['months'][month]['employees'].push({
-                                                            employee_id: employeeFullName,
-                                                            firstname: employee.doc.firstname,
-                                                            lastname: employee.doc.lastname,
-                                                            work_days: employeeWorkDays[year][month],
-                                                            position: employee.doc.position,
-                                                            month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
-                                                        });
-                                                    }
-                                                } else {
-                                                    this.calendarData['years'][year]['months'] = [];
-                                                    this.calendarData['years'][year]['months'][month] = [];
-                                                    this.calendarData['years'][year]['months'][month].month = month;
-                                                    this.calendarData['years'][year]['months'][month]['employees'] = [];
-                                                    this.calendarData['years'][year]['months'][month]['employees'].push({
-                                                        employee_id: employeeFullName,
-                                                        firstname: employee.doc.firstname,
-                                                        lastname: employee.doc.lastname,
-                                                        work_days: employeeWorkDays[year][month],
-                                                        position: employee.doc.position,
-                                                        month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    } else {
-                                        Object.keys(employeeWorkDays[year]).forEach(month => {
-                                            if (employeeWorkDays[year][month] && employeeWorkDays[year][month].length > 0) {
-                                                if (this.calendarData['years'][year]['months']) {
-                                                    if (this.calendarData['years'][year]['months'][month]) {
-                                                        if (this.calendarData['years'][year]['months'][month]['employees']) {
-                                                            if (this.calendarData['years'][year]['months'][month]['employees']) {
-                                                                this.calendarData['years'][year]['months'][month]['employees'] = this.calendarData['years'][year]['months'][month]['employees'].filter(emp => emp.employee_id !== employeeFullName);
+        new Configurations().find('multipliers').then(config => {
+            new Holiday().findAll().then(holidayList => {
+                for (let employee of this.employeeList) {
+                    for (let selectedEmployee of this.selectedEmployees) {
+                        if (employee.id === selectedEmployee) {
+                            new Schedule().find(employee.doc.schedule_id)
+                                .then(employeeScheduleData => {
+                                    let employeeSchedule = new Schedule();
+                                    employeeSchedule.data = employeeScheduleData;
+                                    employeeSchedule.getGroupedWorkDays().then(employeeWorkDays => {
+                                        let employeeFullName = employee.doc.firstname + '_' + employee.doc.lastname;
+                                        Object.keys(employeeWorkDays).forEach(year => {
+                                            if (employeeWorkDays[year] && employeeWorkDays[year].length > 0) {
+                                                if (!this.calendarData['years']) {
+                                                    this.calendarData['years'] = [];
+                                                    this.calendarData['years'][year] = [];
+                                                    this.calendarData['years'][year].year = year;
+                                                    Object.keys(employeeWorkDays[year]).forEach(month => {
+                                                        if (employeeWorkDays[year][month] && employeeWorkDays[year][month].length > 0) {
+                                                            if (this.calendarData['years'][year]['months']) {
+                                                                if (this.calendarData['years'][year]['months'][month]) {
+                                                                    if (this.calendarData['years'][year]['months'][month]['employees']) {
+                                                                        this.calendarData['years'][year]['months'][month]['employees'] = this.calendarData['years'][year]['months'][month]['employees'].filter(emp => emp.employee_id !== employeeFullName);
+                                                                        this.calendarData['years'][year]['months'][month]['employees'].push({
+                                                                            employee_id: employeeFullName,
+                                                                            firstname: employee.doc.firstname,
+                                                                            lastname: employee.doc.lastname,
+                                                                            work_days: employeeWorkDays[year][month],
+                                                                            position: employee.doc.position,
+                                                                            // month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
+                                                                        });
+                                                                    } else {
+                                                                        this.calendarData['years'][year]['months'][month]['employees'] = [];
+                                                                        this.calendarData['years'][year]['months'][month]['employees'].push({
+                                                                            employee_id: employeeFullName,
+                                                                            firstname: employee.doc.firstname,
+                                                                            lastname: employee.doc.lastname,
+                                                                            work_days: employeeWorkDays[year][month],
+                                                                            position: employee.doc.position,
+                                                                            // month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
+                                                                        });
+                                                                    }
+                                                                } else {
+                                                                    this.calendarData['years'][year]['months'][month] = [];
+                                                                    this.calendarData['years'][year]['months'][month]['employees'] = [];
+                                                                    this.calendarData['years'][year]['months'][month].month = month;
+                                                                    this.calendarData['years'][year]['months'][month]['employees'].push({
+                                                                        employee_id: employeeFullName,
+                                                                        firstname: employee.doc.firstname,
+                                                                        lastname: employee.doc.lastname,
+                                                                        work_days: employeeWorkDays[year][month],
+                                                                        position: employee.doc.position,
+                                                                        // month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
+                                                                    });
+                                                                }
+                                                            } else {
+                                                                this.calendarData['years'][year]['months'] = [];
+                                                                this.calendarData['years'][year]['months'][month] = [];
+                                                                this.calendarData['years'][year]['months'][month].month = month;
+                                                                this.calendarData['years'][year]['months'][month]['employees'] = [];
                                                                 this.calendarData['years'][year]['months'][month]['employees'].push({
                                                                     employee_id: employeeFullName,
                                                                     firstname: employee.doc.firstname,
                                                                     lastname: employee.doc.lastname,
                                                                     work_days: employeeWorkDays[year][month],
                                                                     position: employee.doc.position,
-                                                                    month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
+                                                                    // month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
                                                                 });
+                                                            }
+                                                        }
+                                                    });
+                                                } else {
+                                                    Object.keys(employeeWorkDays[year]).forEach(month => {
+                                                        if (employeeWorkDays[year][month] && employeeWorkDays[year][month].length > 0) {
+                                                            if (this.calendarData['years'][year]['months']) {
+                                                                if (this.calendarData['years'][year]['months'][month]) {
+                                                                    if (this.calendarData['years'][year]['months'][month]['employees']) {
+                                                                        if (this.calendarData['years'][year]['months'][month]['employees']) {
+                                                                            this.calendarData['years'][year]['months'][month]['employees'] = this.calendarData['years'][year]['months'][month]['employees'].filter(emp => emp.employee_id !== employeeFullName);
+                                                                            this.calendarData['years'][year]['months'][month]['employees'].push({
+                                                                                employee_id: employeeFullName,
+                                                                                firstname: employee.doc.firstname,
+                                                                                lastname: employee.doc.lastname,
+                                                                                work_days: employeeWorkDays[year][month],
+                                                                                position: employee.doc.position,
+                                                                                // month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
+                                                                            });
+                                                                        } else {
+                                                                            this.calendarData['years'][year]['months'][month]['employees'] = [];
+                                                                            this.calendarData['years'][year]['months'][month]['employees'].push({
+                                                                                employee_id: employeeFullName,
+                                                                                firstname: employee.doc.firstname,
+                                                                                lastname: employee.doc.lastname,
+                                                                                work_days: employeeWorkDays[year][month],
+                                                                                position: employee.doc.position,
+                                                                                // month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
+                                                                            });
+                                                                        }
+                                                                    } else {
+                                                                        this.calendarData['years'][year]['months'][month]['employees'] = [];
+                                                                        this.calendarData['years'][year]['months'][month]['employees'].push({
+                                                                            employee_id: employeeFullName,
+                                                                            firstname: employee.doc.firstname,
+                                                                            lastname: employee.doc.lastname,
+                                                                            work_days: employeeWorkDays[year][month],
+                                                                            position: employee.doc.position,
+                                                                            // month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
+                                                                        });
+
+                                                                    }
+                                                                } else {
+                                                                    this.calendarData['years'][year]['months'][month] = [];
+                                                                    this.calendarData['years'][year]['months'][month]['employees'] = [];
+                                                                    this.calendarData['years'][year]['months'][month].month = month;
+                                                                    this.calendarData['years'][year]['months'][month]['employees'].push({
+                                                                        employee_id: employeeFullName,
+                                                                        firstname: employee.doc.firstname,
+                                                                        lastname: employee.doc.lastname,
+                                                                        work_days: employeeWorkDays[year][month],
+                                                                        position: employee.doc.position,
+                                                                        month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
+                                                                    });
+                                                                }
                                                             } else {
+                                                                this.calendarData['years'][year]['months'] = [];
+                                                                this.calendarData['years'][year]['months'][month] = [];
+                                                                this.calendarData['years'][year]['months'][month].month = month;
                                                                 this.calendarData['years'][year]['months'][month]['employees'] = [];
                                                                 this.calendarData['years'][year]['months'][month]['employees'].push({
                                                                     employee_id: employeeFullName,
@@ -163,56 +205,22 @@ export class ExportImportWindowComponent implements OnInit {
                                                                     month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
                                                                 });
                                                             }
-                                                        } else {
-                                                            this.calendarData['years'][year]['months'][month]['employees'] = [];
-                                                            this.calendarData['years'][year]['months'][month]['employees'].push({
-                                                                employee_id: employeeFullName,
-                                                                firstname: employee.doc.firstname,
-                                                                lastname: employee.doc.lastname,
-                                                                work_days: employeeWorkDays[year][month],
-                                                                position: employee.doc.position,
-                                                                month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
-                                                            });
-
                                                         }
-                                                    } else {
-                                                        this.calendarData['years'][year]['months'][month] = [];
-                                                        this.calendarData['years'][year]['months'][month]['employees'] = [];
-                                                        this.calendarData['years'][year]['months'][month].month = month;
-                                                        this.calendarData['years'][year]['months'][month]['employees'].push({
-                                                            employee_id: employeeFullName,
-                                                            firstname: employee.doc.firstname,
-                                                            lastname: employee.doc.lastname,
-                                                            work_days: employeeWorkDays[year][month],
-                                                            position: employee.doc.position,
-                                                            month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
-                                                        });
-                                                    }
-                                                } else {
-                                                    this.calendarData['years'][year]['months'] = [];
-                                                    this.calendarData['years'][year]['months'][month] = [];
-                                                    this.calendarData['years'][year]['months'][month].month = month;
-                                                    this.calendarData['years'][year]['months'][month]['employees'] = [];
-                                                    this.calendarData['years'][year]['months'][month]['employees'].push({
-                                                        employee_id: employeeFullName,
-                                                        firstname: employee.doc.firstname,
-                                                        lastname: employee.doc.lastname,
-                                                        work_days: employeeWorkDays[year][month],
-                                                        position: employee.doc.position,
-                                                        month_salary: parseInt(employee.doc.position.pay) * employeeWorkDays[year][month].work_hours
                                                     });
                                                 }
                                             }
                                         });
-                                    }
-                                }
-                            });
-                            console.log(this.calendarData);
-                        }, reason => {
+                                    });
 
-                        });
+                                    console.log('calendar data: ', this.calendarData);
+                                }, reason => {
+
+                                });
+                        }
+                    }
                 }
-            }
-        }
+
+            });
+        });
     }
 }

@@ -56,14 +56,6 @@
                             <strong>Darbo dienų skaičius</strong>
                             <span *ngIf="scheduleRef.data">{{scheduleRef.data.work_days.length}}</span>
                         </div>
-                        <div class="flex-space-between">
-                            <strong>Darbo valandų skaičius</strong>
-                            <span *ngIf="employeeWorkingHours">{{employeeWorkingHours | number:'1.2-2'}}</span>
-                        </div>
-                        <div class="flex-space-between">
-                            <strong>Bendras uždarbis</strong>
-                            <span *ngIf="positionRef.data">{{employeeWorkingHours * positionRef.data.pay | number:'1.2-2' }}</span>
-                        </div>
                     </div>
                     <div class="col-12">
                         <h5>
@@ -73,10 +65,11 @@
                             <div *ngFor="let month of year">
                                 <mat-expansion-panel *ngIf="month">
                                     <mat-expansion-panel-header>
-                                        <h5 *ngIf="month">{{month[0].date | date:'yyyy'}} / {{month[0].date |
+                                        <h5 *ngIf="month && month.work_days[0]">{{month.work_days[0].date |
+                                            date:'yyyy'}} / {{month.work_days[0].date |
                                             date:'MMMM'}}</h5>
                                     </mat-expansion-panel-header>
-                                    <div *ngFor="let day of month" class="flex-space-between">
+                                    <div *ngFor="let day of month.work_days" class="flex-space-between">
                                     <span>
                                         {{day.date | date:'mediumDate'}}
                                     </span>
@@ -89,12 +82,27 @@
                                     </div>
                                     <hr *ngIf="month">
                                     <div class="flex-space-between">
-                                        <span *ngIf="month">Darbo valandų per mėnesį</span>
-                                        <strong *ngIf="month">{{month.work_hours | number:'1.2-2'}}</strong>
+                                        <span *ngIf="month">Paprastų darbo valandų per mėnesį</span>
+                                        <strong *ngIf="month && month.work_hours">{{month.work_hours.ordinary_hours |
+                                            number:'1.2-2'}}</strong>
+                                    </div>
+                                    <div class="flex-space-between">
+                                        <span *ngIf="month">Naktinių darbo valandų per mėnesį</span>
+                                        <strong *ngIf="month && month.work_hours">{{month.work_hours.night_hours |
+                                            number:'1.2-2'}}</strong>
+                                    </div>
+                                    <div class="flex-space-between">
+                                        <span *ngIf="month">Darbo valandų švenčių dienomis per mėnesį</span>
+                                        <strong *ngIf="month && month.work_hours">{{month.work_hours.holiday_hours |
+                                            number:'1.2-2'}}</strong>
                                     </div>
                                     <div class="flex-space-between">
                                         <span *ngIf="month">Uždarbis per mėnesį</span>
-                                        <strong *ngIf="month">{{month.work_hours * positionRef.data.pay |
+                                        <strong *ngIf="month && month.work_hours">{{month.work_hours.ordinary_hours *
+                                            positionRef.data.pay +
+                                            month.work_hours.night_hours * configRef.data.night_time_rate +
+                                            month.work_hours.night_hours * positionRef.data.pay +
+                                            month.work_hours.holiday_hours * configRef.data.holiday_rate |
                                             number:'1.2-2'}}</strong>
                                     </div>
                                 </mat-expansion-panel>

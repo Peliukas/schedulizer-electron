@@ -42,8 +42,8 @@ export class Holiday {
 
     public async find(id: any) {
         this.db.get(id)
-            .then(job => {
-                this.data = job;
+            .then(holiday => {
+                this.data = holiday;
             });
         return this.db.get(id);
     }

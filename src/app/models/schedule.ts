@@ -1,4 +1,6 @@
 import PouchDB from 'pouchdb';
+import {Configurations} from './configurations';
+import {Holiday} from './holiday';
 
 export class Schedule {
 
@@ -22,6 +24,7 @@ export class Schedule {
         this.data.work_days = data.work_days;
         this.data.is_private = data.is_private;
         this.data.work_hours_cap = data.work_hours_cap;
+
     }
 
 
@@ -80,7 +83,7 @@ export class Schedule {
             startDateTime.setMinutes(workDay.start_time.substr(3, 2));
             endDateTime.setHours(workDay.end_time.substr(0, 2));
             endDateTime.setMinutes(workDay.end_time.substr(3, 2));
-            totalHours += Math.abs(startDateTime.getTime() - endDateTime.getTime());
+            totalHours += Math.abs(startDateTime.getTime() - endDateTime.getTime()) - this.getBreaksPerMonth(new Date(workDay.date).getMonth());
         }
         totalHours = totalHours / 36e5;
         return totalHours - this.getTotalBreaks();
@@ -107,7 +110,7 @@ export class Schedule {
     public getBreaksPerMonth(month: number) {
         let totalBreaks = 0;
         for (let workDay of this.data.work_days) {
-            if (workDay.date.getMonth() === month) {
+            if (new Date(workDay.date).getMonth() === month) {
                 for (let workDayBreak of workDay) {
                     let startDateTime = new Date(workDay.date);
                     let endDateTime = new Date(workDay.date);
@@ -140,50 +143,77 @@ export class Schedule {
         return totalBreaks;
     }
 
-    public getBreaksByDay(workDay: any) {
-        let totalBreaks = 0;
-        for (let workDayBreak of workDay.breaks) {
-            let startDateTime = new Date(workDay.date);
-            let endDateTime = new Date(workDay.date);
-            startDateTime.setHours(workDayBreak.start.substr(0, 2));
-            startDateTime.setMinutes(workDayBreak.start.substr(3, 2));
-            endDateTime.setHours(workDayBreak.end.substr(0, 2));
-            endDateTime.setMinutes(workDayBreak.end.substr(3, 2));
-            totalBreaks += Math.abs(startDateTime.getTime() - endDateTime.getTime());
-        }
-        totalBreaks = totalBreaks / 36e5;
-        return totalBreaks;
-    }
+    // public getBreaksByDay(workDay: any) {
+    //     let totalBreaks = 0;
+    //     for (let workDayBreak of workDay.breaks) {
+    //         let startDateTime = new Date(workDay.date);
+    //         let endDateTime = new Date(workDay.date);
+    //         startDateTime.setHours(workDayBreak.start.substr(0, 2));
+    //         startDateTime.setMinutes(workDayBreak.start.substr(3, 2));
+    //         endDateTime.setHours(workDayBreak.end.substr(0, 2));
+    //         endDateTime.setMinutes(workDayBreak.end.substr(3, 2));
+    //         totalBreaks += Math.abs(startDateTime.getTime() - endDateTime.getTime());
+    //     }
+    //     totalBreaks = totalBreaks / 36e5;
+    //     return totalBreaks;
+    // }
 
     public getWorkingHoursByDay(workDay: any) {
-        let startDateTime = new Date(workDay.date);
-        let endDateTime = new Date(workDay.date);
-        startDateTime.setHours(workDay.start_time.substr(0, 2));
-        startDateTime.setMinutes(workDay.start_time.substr(3, 2));
-        endDateTime.setHours(workDay.end_time.substr(0, 2));
-        endDateTime.setMinutes(workDay.end_time.substr(3, 2));
-        if (startDateTime.getTime() > endDateTime.getTime()) {
-            startDateTime.setDate(startDateTime.getDate() - 1);
-        }
-        return Math.abs(((startDateTime.getTime() - endDateTime.getTime()) / 36e5) - this.getBreaksByDay(workDay));
+        return new Configurations().find('multipliers').then(configuration => {
+            let startDateTime = new Date(workDay.date);
+            let endDateTime = new Date(workDay.date);
+            startDateTime.setHours(workDay.start_time.substr(0, 2));
+            startDateTime.setMinutes(workDay.start_time.substr(3, 2));
+            endDateTime.setHours(workDay.end_time.substr(0, 2));
+            endDateTime.setMinutes(workDay.end_time.substr(3, 2));
+            if (startDateTime.getTime() > endDateTime.getTime()) {
+                endDateTime.setDate(endDateTime.getDate() + 1);
+            }
+            let totalNightTimeHours = 0;
+            let ordinaryWorkHours = 0;
+            let totalHolidayWorkHours = 0;
+            let currentHour = startDateTime;
+            return new Holiday().findAll().then(holidayList => {
+                while (currentHour <= endDateTime) {
+                    if (currentHour.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) && currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
+                        totalNightTimeHours += 1;
+                    } else {
+                        ordinaryWorkHours += 1;
+                    }
+                    holidayList.rows.forEach(holiday => {
+                        if (currentHour.getMonth() === holiday.doc.holiday_month && currentHour.getDate() === holiday.doc.holiday_day) {
+                            totalHolidayWorkHours += 1;
+                        }
+                    });
+                    currentHour.setHours(currentHour.getHours() + 1);
+                }
+                if (workDay.breaks) {
+                    for (let workDayBreak of workDay.breaks) {
+                        let breakStartTime = new Date(workDay.date);
+                        let breakEndTime = new Date(workDay.date);
+                        breakStartTime.setHours(workDayBreak.start.substr(0, 2));
+                        breakStartTime.setMinutes(workDayBreak.start.substr(3, 2));
+                        breakEndTime.setHours(workDayBreak.end.substr(0, 2));
+                        breakEndTime.setMinutes(workDayBreak.end.substr(3, 2));
+                        let breakTimeInHours = Math.abs((breakStartTime.getTime() - breakEndTime.getTime()) / 36e5);
+                        if (breakStartTime.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) && breakEndTime.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
+                            totalNightTimeHours = totalNightTimeHours - breakTimeInHours;
+                        } else {
+                            ordinaryWorkHours -= breakTimeInHours;
+                        }
+                    }
+                }
+                const workHourSet = {
+                    'ordinary_hours': ordinaryWorkHours,
+                    'night_hours': totalNightTimeHours,
+                    'holiday_hours': totalHolidayWorkHours
+                };
+                return workHourSet;
+            });
+        });
     }
 
-
-    public getSalaryPerDay(workDay: any) {
-        let startDateTime = new Date(workDay.date);
-        let endDateTime = new Date(workDay.date);
-        startDateTime.setHours(workDay.start_time.substr(0, 2));
-        startDateTime.setMinutes(workDay.start_time.substr(3, 2));
-        endDateTime.setHours(workDay.end_time.substr(0, 2));
-        endDateTime.setMinutes(workDay.end_time.substr(3, 2));
-        if (startDateTime.getTime() > endDateTime.getTime()) {
-            startDateTime.setDate(startDateTime.getDate() - 1);
-        }
-        return Math.abs(((startDateTime.getTime() - endDateTime.getTime()) / 36e5) - this.getBreaksByDay(workDay));
-    }
-
-
-    public getGroupedWorkDays() {
+    public async getGroupedWorkDays() {
         let groupedWorkDays = [];
         if (this.data.work_days && this.data.work_days.length > 0) {
             for (let workDay of this.data.work_days) {
@@ -192,19 +222,43 @@ export class Schedule {
                 if (workDay && workDay.start_time) {
                     if (groupedWorkDays[workDayYear]) {
                         if (groupedWorkDays[workDayYear][workDayMonth]) {
-                            groupedWorkDays[workDayYear][workDayMonth].push(workDay);
-                            groupedWorkDays[workDayYear][workDayMonth]['work_hours'] += this.getWorkingHoursByDay(workDay);
+                            this.getWorkingHoursByDay(workDay).then(workDayWorkHours => {
+                                workDay.work_hours = workDayWorkHours;
+                                groupedWorkDays[workDayYear][workDayMonth].work_days.push(workDay);
+                                groupedWorkDays[workDayYear][workDayMonth].work_hours['ordinary_hours'] += workDayWorkHours ? workDayWorkHours.ordinary_hours : 0;
+                                groupedWorkDays[workDayYear][workDayMonth].work_hours['night_hours'] += workDayWorkHours ? workDayWorkHours.night_hours : 0;
+                                groupedWorkDays[workDayYear][workDayMonth].work_hours['holiday_hours'] += workDayWorkHours ? workDayWorkHours.holiday_hours : 0;
+                            });
                         } else {
-                            groupedWorkDays[workDayYear][workDayMonth] = [workDay];
-                            groupedWorkDays[workDayYear][workDayMonth]['work_hours'] = this.getWorkingHoursByDay(workDay);
+                            groupedWorkDays[workDayYear][workDayMonth] = [];
+                            groupedWorkDays[workDayYear][workDayMonth].work_days = [];
+                            this.getWorkingHoursByDay(workDay).then(workDayWorkHours => {
+                                workDay.work_hours = workDayWorkHours;
+                                groupedWorkDays[workDayYear][workDayMonth].work_days.push(workDay);
+                                groupedWorkDays[workDayYear][workDayMonth].work_hours = {
+                                    ordinary_hours: workDayWorkHours ? workDayWorkHours.ordinary_hours : 0,
+                                    night_hours: workDayWorkHours ? workDayWorkHours.night_hours : 0,
+                                    holiday_hours: workDayWorkHours ? workDayWorkHours.holiday_hours : 0
+                                };
+                            });
                         }
                     } else {
                         groupedWorkDays[workDayYear] = [];
-                        groupedWorkDays[workDayYear][workDayMonth] = [workDay];
-                        groupedWorkDays[workDayYear][workDayMonth]['work_hours'] = this.getWorkingHoursByDay(workDay);
+                        groupedWorkDays[workDayYear][workDayMonth] = [];
+                        groupedWorkDays[workDayYear][workDayMonth].work_days = [];
+                        this.getWorkingHoursByDay(workDay).then(workDayWorkHours => {
+                            workDay.work_hours = workDayWorkHours;
+                            groupedWorkDays[workDayYear][workDayMonth].work_days.push(workDay);
+                            groupedWorkDays[workDayYear][workDayMonth].work_hours = {
+                                ordinary_hours: workDayWorkHours ? workDayWorkHours.ordinary_hours : 0,
+                                night_hours: workDayWorkHours ? workDayWorkHours.night_hours : 0,
+                                holiday_hours: workDayWorkHours ? workDayWorkHours.holiday_hours : 0
+                            };
+                        });
                     }
                 }
             }
+            console.log('grouped days: ', groupedWorkDays);
         }
         return groupedWorkDays;
     }

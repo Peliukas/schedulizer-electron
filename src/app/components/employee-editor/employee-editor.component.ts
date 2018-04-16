@@ -5,6 +5,7 @@ import {Position} from '../../models/position';
 import {ConfirmationBoxComponent} from '../confirmation-box/confirmation-box.component';
 import {MatDialog, MatSnackBar} from '@angular/material';
 import {CalendarWrapperComponent} from '../calendar-wrapper/calendar-wrapper.component';
+import {Configurations} from '../../models/configurations';
 
 @Component({
     selector: 'app-employee-editor',
@@ -16,8 +17,11 @@ export class EmployeeEditorComponent implements OnInit {
     @Input() employee: any;
     @Input() bulkActions: any;
     @Output() onEmployeeDeleted: EventEmitter<any> = new EventEmitter();
-    employeeWorkingHours: number = 0;
+    employeeWorkingHours: any;
     employeeWorkingHoursPerMonth: any;
+    totalNightHours: any;
+    totalOrdinaryHours: any;
+    configRef: Configurations;
     scheduleList: any = '';
     positionList: any = '';
 
@@ -31,12 +35,17 @@ export class EmployeeEditorComponent implements OnInit {
     ngOnInit() {
         this.getPositionList();
         this.getScheduleList();
-        if (this.employee.doc.schedule_id) {
-            this.changeSchedule(this.employee.doc.schedule_id);
-        }
-        if (this.employee.doc.position_id) {
-            this.changePosition(this.employee.doc.position_id);
-        }
+        this.configRef = new Configurations();
+        this.configRef.find('multipliers').then(config => {
+            this.configRef.data = config;
+            if (this.employee.doc.schedule_id) {
+                this.changeSchedule(this.employee.doc.schedule_id);
+            }
+            if (this.employee.doc.position_id) {
+                this.changePosition(this.employee.doc.position_id);
+            }
+        });
+
     }
 
 
@@ -102,7 +111,9 @@ export class EmployeeEditorComponent implements OnInit {
                     is_private: schedule.is_private,
                 };
                 this.employeeWorkingHours = this.scheduleRef.getTotalWorkingHours();
-                this.employeeWorkingHoursPerMonth = this.scheduleRef.getGroupedWorkDays();
+                this.scheduleRef.getGroupedWorkDays().then(groupedWorkDayList => {
+                    this.employeeWorkingHoursPerMonth = groupedWorkDayList;
+                });
             });
     }
 
