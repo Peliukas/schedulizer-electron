@@ -19,8 +19,6 @@ export class EmployeeEditorComponent implements OnInit {
     @Output() onEmployeeDeleted: EventEmitter<any> = new EventEmitter();
     employeeWorkingHours: any;
     employeeWorkingHoursPerMonth: any;
-    totalNightHours: any;
-    totalOrdinaryHours: any;
     configRef: Configurations;
     scheduleList: any = '';
     positionList: any = '';

@@ -35,8 +35,8 @@
                                             <td>Uždarbis</td>
                                         </tr>
                                         <tr *ngFor="let employee of month['employees']" class="employee-row ">
-                                            <td>{{employee.firstname}} {{employee.lastname}}</td>
-                                            <td>{{employee.position.job_title}}</td>
+                                            <td *ngIf="employee">{{employee.firstname}} {{employee.lastname}}</td>
+                                            <td *ngIf="employee">{{employee.position.job_title}}</td>
                                             <td *ngFor="let dayNumber of calendarDayNumbers">
                                                 <div *ngFor="let workDay of employee.work_days">
                                                     <div class="common-schedule-work-day-cell"
@@ -63,11 +63,18 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>
-                                                {{employee.work_days.work_hours | number:"1.2-2"}}
+                                            <td *ngIf="employee">
+                                                {{employee.month_salary.work_hours.ordinary_hours +
+                                                employee.month_salary.work_hours.night_hours | number:"1.2-2"}}
                                             </td>
-                                            <td>
-                                                {{employee.month_salary | number:"1.2-2"}}
+                                            <td *ngIf="employee">
+                                                {{employee.month_salary.work_hours.ordinary_hours *
+                                                employee.position.pay +
+                                                employee.month_salary.work_hours.night_hours *
+                                                configRef.data.night_time_rate +
+                                                employee.month_salary.work_hours.night_hours * employee.position.pay +
+                                                employee.month_salary.work_hours.holiday_hours *
+                                                configRef.data.holiday_rate | number:"1.2-2"}}
                                             </td>
                                         </tr>
                                     </table>
