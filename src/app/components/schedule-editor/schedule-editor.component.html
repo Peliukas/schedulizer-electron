@@ -47,7 +47,6 @@
                     <div class="flex-space-between flex-baseline-vertical col-12">
                         <div class="flex">
                             <button mat-raised-button
-                                    [disabled]="!startTimeInputControl.value && !endTimeInputControl.value"
                                     (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
                                 <i class="material-icons">&#xE5CA;</i>
                                 Išsaugoti pakeitimus
@@ -185,14 +184,16 @@
     <div class="col-12">
         <div class="col-6 flex-space-around">
             <span>Maks. dirbamų valandų skaičius: </span>
-            <strong>{{schedule.doc.work_hours_cap}}</strong>
+            <strong>{{schedule.doc.work_hours_cap * 60}}</strong>
         </div>
         <div class="col-6 flex-space-around">
-            <span>Dabartinis valandų skaičius: </span>
+            <span>Liko: </span>
             <strong [class.warning-text]="totalWorkingHours >= schedule.doc.work_hours_cap"
                     [class.success-text]="totalWorkingHours < schedule.doc.work_hours_cap">
-                {{totalWorkingHours | number}}
+                {{ totalWorkingHours.ordinary_hours * 60 + totalWorkingHours.night_hours * 60 +
+                totalWorkingHours.holiday_hours * 60 }}
             </strong>
+            <span>min</span>
         </div>
     </div>
     <div class="col-12">

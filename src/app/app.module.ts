@@ -30,7 +30,8 @@ import {ExportImportWindowComponent} from './views/export-import-window/export-i
 import {HttpModule} from '@angular/http';
 import {Ng2FileInputModule} from 'ng2-file-input';
 import {DocumentPreviewComponent} from './components/document-preview/document-preview.component';
-
+import {TimeConvertPipe} from './pipes/time-convert.pipe';
+import {ElectronService, NgxElectronModule} from 'ngx-electron';
 
 const routes: Routes = [
     {path: 'calendar', component: CalendarWrapperComponent},
@@ -56,7 +57,8 @@ const routes: Routes = [
         LocalVariablesDirective,
         CalendarFreeDaySettingsComponent,
         ExportImportWindowComponent,
-        DocumentPreviewComponent
+        DocumentPreviewComponent,
+        TimeConvertPipe
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -67,13 +69,14 @@ const routes: Routes = [
         HttpModule,
         BrowserModule,
         Ng2FileInputModule.forRoot(),
+        NgxElectronModule,
         BrowserAnimationsModule,
         MatDatepickerModule, MatMenuModule, MatButtonModule, MatCardModule, MatTabsModule, MatStepperModule,
         MatTableModule, MatPaginatorModule, MatInputModule, MatSnackBarModule, MatSortModule, MatCheckboxModule,
         MatSelectModule, MatFormFieldModule, MatSidenavModule, MatGridListModule, MatListModule, MatExpansionModule,
         MatTooltipModule, MatSlideToggleModule, MatChipsModule, MatNativeDateModule
     ],
-    providers: [StorageAdapterService],
+    providers: [StorageAdapterService, ElectronService],
     entryComponents: [CrudWindowComponent, ConfirmationBoxComponent, AddBreakComponent, DocumentPreviewComponent],
     bootstrap: [AppComponent]
 })

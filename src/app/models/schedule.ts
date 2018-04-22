@@ -32,10 +32,12 @@ export class Schedule {
         try {
             this.db.get(this.data._id).then(doc => {
                 this.data._rev = doc._rev;
+                console.log('got doc:', doc);
                 this.db.put(this.data);
             }, cause => {
                 if (cause.status === 404) {
                     this.db.put(this.data);
+                    console.log('CAUSE: ', cause);
                 }
             });
             return true;
@@ -89,23 +91,6 @@ export class Schedule {
         return totalHours - this.getTotalBreaks();
     }
 
-    public getWorkingHoursPerMonth(month: number) {
-        let totalHours = 0;
-        for (let workDay of this.data.work_days) {
-            if (workDay.date.getMonth() === month) {
-                let startDateTime = new Date(workDay.date);
-                let endDateTime = new Date(workDay.date);
-                startDateTime.setHours(workDay.start_time.substr(0, 2));
-                startDateTime.setMinutes(workDay.start_time.substr(3, 2));
-                endDateTime.setHours(workDay.end_time.substr(0, 2));
-                endDateTime.setMinutes(workDay.end_time.substr(3, 2));
-                totalHours += Math.abs(startDateTime.getTime() - endDateTime.getTime());
-            }
-        }
-
-        totalHours = totalHours / 36e5;
-        return totalHours - this.getBreaksPerMonth(month);
-    }
 
     public getBreaksPerMonth(month: number) {
         let totalBreaks = 0;
@@ -143,73 +128,61 @@ export class Schedule {
         return totalBreaks;
     }
 
-    // public getBreaksByDay(workDay: any) {
-    //     let totalBreaks = 0;
-    //     for (let workDayBreak of workDay.breaks) {
-    //         let startDateTime = new Date(workDay.date);
-    //         let endDateTime = new Date(workDay.date);
-    //         startDateTime.setHours(workDayBreak.start.substr(0, 2));
-    //         startDateTime.setMinutes(workDayBreak.start.substr(3, 2));
-    //         endDateTime.setHours(workDayBreak.end.substr(0, 2));
-    //         endDateTime.setMinutes(workDayBreak.end.substr(3, 2));
-    //         totalBreaks += Math.abs(startDateTime.getTime() - endDateTime.getTime());
-    //     }
-    //     totalBreaks = totalBreaks / 36e5;
-    //     return totalBreaks;
-    // }
-
     public getWorkingHoursByDay(workDay: any) {
         return new Configurations().find('multipliers').then(configuration => {
-            let startDateTime = new Date(workDay.date);
-            let endDateTime = new Date(workDay.date);
-            startDateTime.setHours(workDay.start_time.substr(0, 2));
-            startDateTime.setMinutes(workDay.start_time.substr(3, 2));
-            endDateTime.setHours(workDay.end_time.substr(0, 2));
-            endDateTime.setMinutes(workDay.end_time.substr(3, 2));
-            if (startDateTime.getTime() > endDateTime.getTime()) {
-                endDateTime.setDate(endDateTime.getDate() + 1);
-            }
             let totalNightTimeHours = 0;
             let ordinaryWorkHours = 0;
             let totalHolidayWorkHours = 0;
-            let currentHour = startDateTime;
-            return new Holiday().findAll().then(holidayList => {
-                while (currentHour <= endDateTime) {
-                    if (currentHour.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) && currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
-                        totalNightTimeHours += 1;
-                    } else {
-                        ordinaryWorkHours += 1;
-                    }
-                    holidayList.rows.forEach(holiday => {
-                        if (currentHour.getMonth() === holiday.doc.holiday_month && currentHour.getDate() === holiday.doc.holiday_day) {
-                            totalHolidayWorkHours += 1;
-                        }
-                    });
-                    currentHour.setHours(currentHour.getHours() + 1);
+            if (workDay.start_time && workDay.end_time) {
+                let startDateTime = new Date(workDay.date);
+                let endDateTime = new Date(workDay.date);
+                startDateTime.setHours(workDay.start_time.substr(0, 2));
+                startDateTime.setMinutes(workDay.start_time.substr(3, 2));
+                endDateTime.setHours(workDay.end_time.substr(0, 2));
+                endDateTime.setMinutes(workDay.end_time.substr(3, 2));
+                if (startDateTime.getTime() > endDateTime.getTime()) {
+                    endDateTime.setDate(endDateTime.getDate() + 1);
                 }
-                if (workDay.breaks) {
-                    for (let workDayBreak of workDay.breaks) {
-                        let breakStartTime = new Date(workDay.date);
-                        let breakEndTime = new Date(workDay.date);
-                        breakStartTime.setHours(workDayBreak.start.substr(0, 2));
-                        breakStartTime.setMinutes(workDayBreak.start.substr(3, 2));
-                        breakEndTime.setHours(workDayBreak.end.substr(0, 2));
-                        breakEndTime.setMinutes(workDayBreak.end.substr(3, 2));
-                        let breakTimeInHours = Math.abs((breakStartTime.getTime() - breakEndTime.getTime()) / 36e5);
-                        if (breakStartTime.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) && breakEndTime.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
-                            totalNightTimeHours = totalNightTimeHours - breakTimeInHours;
+                let currentHour = startDateTime;
+                return new Holiday().findAll().then(holidayList => {
+                    while (currentHour <= endDateTime) {
+                        if (currentHour.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) && currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
+                            totalNightTimeHours += 1;
                         } else {
-                            ordinaryWorkHours -= breakTimeInHours;
+                            ordinaryWorkHours += 1;
+                        }
+                        holidayList.rows.forEach(holiday => {
+                            if (currentHour.getMonth() === holiday.doc.holiday_month && currentHour.getDate() === holiday.doc.holiday_day) {
+                                totalHolidayWorkHours += 1;
+                            }
+                        });
+                        currentHour.setHours(currentHour.getHours() + 1);
+                    }
+                    if (workDay.breaks) {
+                        for (let workDayBreak of workDay.breaks) {
+                            let breakStartTime = new Date(workDay.date);
+                            let breakEndTime = new Date(workDay.date);
+                            breakStartTime.setHours(workDayBreak.start.substr(0, 2));
+                            breakStartTime.setMinutes(workDayBreak.start.substr(3, 2));
+                            breakEndTime.setHours(workDayBreak.end.substr(0, 2));
+                            breakEndTime.setMinutes(workDayBreak.end.substr(3, 2));
+                            let breakTimeInHours = Math.abs((breakStartTime.getTime() - breakEndTime.getTime()) / 36e5);
+                            if (breakStartTime.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) &&
+                                breakEndTime.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
+                                totalNightTimeHours -= breakTimeInHours;
+                            } else {
+                                ordinaryWorkHours -= breakTimeInHours;
+                            }
                         }
                     }
-                }
-                const workHourSet = {
-                    'ordinary_hours': ordinaryWorkHours,
-                    'night_hours': totalNightTimeHours,
-                    'holiday_hours': totalHolidayWorkHours
-                };
-                return workHourSet;
-            });
+                    const workHourSet = {
+                        'ordinary_hours': ordinaryWorkHours,
+                        'night_hours': totalNightTimeHours,
+                        'holiday_hours': totalHolidayWorkHours
+                    };
+                    return workHourSet;
+                });
+            } else return false;
         });
     }
 

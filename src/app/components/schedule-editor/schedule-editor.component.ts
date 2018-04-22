@@ -38,7 +38,7 @@ export class ScheduleEditorComponent implements OnInit {
     periodStartDateControl: FormControl;
     periodEndDateControl: FormControl;
     refresh: Subject<any> = new Subject();
-    totalWorkingHours: number = 0;
+    totalWorkingHours: any = {};
     newPeriodTemplateName: any = '';
 
     constructor(private snackBar: MatSnackBar, private matDialog: MatDialog) {
@@ -240,7 +240,7 @@ export class ScheduleEditorComponent implements OnInit {
         }
         let combined = tempWorkDayList.concat(scheduleRef.data.work_days);
         this.schedule.doc.work_days = combined;
-        scheduleRef.data.work_days = combined;
+        scheduleRef.data.work_days = this.schedule.doc.work_days;
         scheduleRef.save();
         this.resetSelection();
         this.getCalendarWorkDays();
@@ -250,36 +250,47 @@ export class ScheduleEditorComponent implements OnInit {
 
     public saveScheduleChanges() {
         let scheduleRef = new Schedule();
-        let tempWorkDayList = [];
-        for (let selectedWorkDay of this.selectedWorkDayList) {
-            tempWorkDayList.push({
-                start_time: this.isHoliday ? '' : this.startTimeInputControl.value,
-                end_time: this.isHoliday ? '' : this.endTimeInputControl.value,
-                date: selectedWorkDay.start,
-                breaks: this.isHoliday ? '' : this.breakList,
-                isHoliday: this.isHoliday
-            });
-        }
-        let uniqueWorkDays = [];
-        for (let existingWorkDay of this.schedule.doc.work_days) {
-            let detectedDay = null;
-            for (let tempWorkDay of tempWorkDayList) {
-                if (new Date(tempWorkDay.date).toDateString() === new Date(existingWorkDay.date).toDateString()) {
-                    detectedDay = tempWorkDay;
-                    tempWorkDayList.splice(tempWorkDayList.indexOf(tempWorkDay), 1);
+        if (this.startTimeInputControl.value && this.endTimeInputControl.value) {
+            let tempWorkDayList = [];
+            for (let selectedWorkDay of this.selectedWorkDayList) {
+                tempWorkDayList.push({
+                    start_time: this.isHoliday ? '' : this.startTimeInputControl.value,
+                    end_time: this.isHoliday ? '' : this.endTimeInputControl.value,
+                    date: selectedWorkDay.start,
+                    breaks: this.isHoliday ? '' : this.breakList,
+                    isHoliday: this.isHoliday
+                });
+            }
+            let uniqueWorkDays = [];
+            for (let existingWorkDay of this.schedule.doc.work_days) {
+                let detectedDay = null;
+                for (let tempWorkDay of tempWorkDayList) {
+                    if (new Date(tempWorkDay.date).toDateString() === new Date(existingWorkDay.date).toDateString()) {
+                        detectedDay = tempWorkDay;
+                        tempWorkDayList.splice(tempWorkDayList.indexOf(tempWorkDay), 1);
+                    }
                 }
+                if (!detectedDay) {
+                    detectedDay = existingWorkDay;
+                }
+                uniqueWorkDays.push(detectedDay);
             }
-            if (!detectedDay) {
-                detectedDay = existingWorkDay;
-            }
-            uniqueWorkDays.push(detectedDay);
+            uniqueWorkDays = uniqueWorkDays.concat(tempWorkDayList);
+            this.schedule.doc.work_days = uniqueWorkDays;
         }
-        uniqueWorkDays = uniqueWorkDays.concat(tempWorkDayList);
-        scheduleRef.setValues(this.schedule.doc);
-        scheduleRef.setWorkDays(uniqueWorkDays);
+        // scheduleRef.data = {
+        //     _id: this.schedule.doc.id,
+        //     schedule_name: this.schedule.doc.schedule_name,
+        //     work_hours_cap: this.schedule.doc.work_hours_cap,
+        //     is_private: this.schedule.doc.is_private,
+        //     work_days: this.schedule.doc.work_days
+        // };
+        scheduleRef.data = this.schedule.doc;
+        console.log('saving data: ', this.schedule.doc);
+        console.log('scheduleref: ', scheduleRef);
+
         scheduleRef.save();
         this.snackBar.open('Pakeitimai išsaugoti', 'OK', {duration: 3000});
-        this.schedule.doc = scheduleRef.data;
         this.resetSelection();
         this.getCalendarWorkDays();
         this.selectMultipleDays = false;
@@ -314,7 +325,10 @@ export class ScheduleEditorComponent implements OnInit {
             this.schedule.doc.work_days.push(tempDay);//work day not found, pushing
         }
         scheduleRef.data.work_days = this.schedule.doc.work_days;
-        scheduleRef.save();
+
+        console.log('saving data: ', this.schedule.doc);
+        console.log('scheduleref: ', scheduleRef);
+        // scheduleRef.save();
         this.schedule.doc = scheduleRef.data;
         this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
         this.resetSelection();
@@ -485,19 +499,23 @@ export class ScheduleEditorComponent implements OnInit {
     }
 
     public getTotalWorkingHours() {
-        let totalHours = 0;
+        let totalHours = {
+            night_hours: 0,
+            ordinary_hours: 0,
+            holiday_hours: 0
+        };
+        let scheduleRef = new Schedule();
+        scheduleRef.data = this.schedule.doc;
         for (let workDay of this.schedule.doc.work_days) {
-            if (workDay.start_time && workDay.end_time) {
-                let startDateTime = new Date(workDay.date);
-                let endDateTime = new Date(workDay.date);
-                startDateTime.setHours(workDay.start_time.substr(0, 2));
-                startDateTime.setMinutes(workDay.start_time.substr(3, 2));
-                endDateTime.setHours(workDay.end_time.substr(0, 2));
-                endDateTime.setMinutes(workDay.end_time.substr(3, 2));
-                totalHours += Math.abs(startDateTime.getTime() - endDateTime.getTime());
-            }
+            // const workDayHours = scheduleRef.getWorkingHoursByDay(workDay);
+            scheduleRef.getWorkingHoursByDay(workDay).then(workDayHours => {
+                totalHours.night_hours = totalHours.night_hours + workDayHours.night_hours;
+                totalHours.ordinary_hours = totalHours.ordinary_hours + workDayHours.ordinary_hours;
+                totalHours.holiday_hours = totalHours.holiday_hours + workDayHours.holiday_hours;
+                this.totalWorkingHours = totalHours;
+            });
         }
-        this.totalWorkingHours = totalHours / 36e5;
+
     }
 
     public getPeriodTemplates() {

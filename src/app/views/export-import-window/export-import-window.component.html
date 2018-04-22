@@ -69,8 +69,7 @@
                                             </td>
                                             <td *ngIf="employee && employee.month_salary.work_hours">
                                                 {{employee.month_salary.work_hours.ordinary_hours *
-                                                employee.position.pay +
-                                                employee.month_salary.work_hours.night_hours *
+                                                employee.position.pay + employee.month_salary.work_hours.night_hours *
                                                 configRef.data.night_time_rate +
                                                 employee.month_salary.work_hours.night_hours * employee.position.pay +
                                                 employee.month_salary.work_hours.holiday_hours *

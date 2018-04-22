@@ -123,11 +123,15 @@ export class EmployeeEditorComponent implements OnInit {
                     id: schedule._id,
                     rev: schedule.rev,
                 };
-                this.matDialog.open(CalendarWrapperComponent, {
+                let dialogRef = this.matDialog.open(CalendarWrapperComponent, {
                     height: '95vh',
                     width: '80vw',
                     data: {schedule: tempSchedule}
                 });
+                dialogRef.afterClosed().subscribe(() => {
+                    this.changeSchedule(this.scheduleRef.data.id);
+                });
+
 
             });
     }
