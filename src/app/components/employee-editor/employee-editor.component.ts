@@ -131,8 +131,6 @@ export class EmployeeEditorComponent implements OnInit {
                 dialogRef.afterClosed().subscribe(() => {
                     this.changeSchedule(this.scheduleRef.data.id);
                 });
-
-
             });
     }
 

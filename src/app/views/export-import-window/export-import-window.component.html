@@ -58,6 +58,7 @@
                                                                 <span>
                                                                         {{break.end}}
                                                                     </span>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -65,7 +66,8 @@
                                             </td>
                                             <td *ngIf="employee && employee.month_salary.work_hours">
                                                 {{employee.month_salary.work_hours.ordinary_hours +
-                                                employee.month_salary.work_hours.night_hours | number:"1.2-2"}}
+                                                employee.month_salary.work_hours.night_hours +
+                                                employee.month_salary.work_hours.holiday_hours | number:"1.2-2"}}
                                             </td>
                                             <td *ngIf="employee && employee.month_salary.work_hours">
                                                 {{employee.month_salary.work_hours.ordinary_hours *
