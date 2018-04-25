@@ -1,9 +1,13 @@
 .button-submit {
     width: 100%;
-    background: #05ee1e;
+    background: #465289;
 }
 
-.button-submit span {
+.button-submit span{
     color: white !important;
-    font-weight: 900 !important;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.import-schedule-input{
+    width: 100%;
 }

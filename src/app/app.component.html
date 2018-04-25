@@ -1,34 +1,34 @@
 <div class="panel-grid">
-    <div>
+    <div class="sidebar-navigation-wrapper">
         <div>
-            <button mat-button name="workers" (click)="selectedModelName = 'employee'">
+            <button mat-button name="workers" class="sidebar-navigation-button" (click)="selectedModelName = 'employee'">
                 <i class="material-icons">&#xE853;</i>
-                Darbuotojai
+                <span>Darbuotojai</span>
             </button>
         </div>
         <div>
-            <button mat-button name="positions" (click)="selectedModelName = 'position'">
+            <button mat-button name="positions" class="sidebar-navigation-button" (click)="selectedModelName = 'position'">
                 <i class="material-icons">&#xE8F9;</i>
-                Pareigos
+                <span>Pareigos</span>
             </button>
         </div>
         <div>
-            <button mat-button name="schedules" (click)="selectedModelName = 'schedule'">
+            <button mat-button name="schedules" class="sidebar-navigation-button" (click)="selectedModelName = 'schedule'">
                 <i class="material-icons">&#xE8B5;</i>
-                Tvarkaraščiai
+                <span>Tvarkaraščiai</span>
             </button>
         </div>
         <hr>
         <div>
-            <button mat-button name="calendar" (click)="selectedModelName = 'free_days'">
+            <button mat-button name="calendar" class="sidebar-navigation-button" (click)="selectedModelName = 'free_days'">
                 <i class="material-icons">&#xE916;</i>
-                Šventės
+                <span>Šventės</span>
             </button>
         </div>
         <div>
-            <button mat-button name="calendar" (click)="selectedModelName = 'export_import'">
+            <button mat-button name="calendar" class="sidebar-navigation-button" (click)="selectedModelName = 'export_import'">
                 <i class="material-icons">&#xE8EF;</i>
-                Bendras vaizdas
+                <span>Bendras vaizdas</span>
             </button>
         </div>
     </div>

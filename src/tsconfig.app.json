@@ -7,6 +7,10 @@
     "module": "es2015",
     "types": []
   },
+  "include": [
+    "main.ts",
+    "polyfills.ts"
+  ],
   "exclude": [
     "test.ts",
     "**/*.spec.ts"

@@ -1,3 +1,9 @@
+.sidebar-navigation-button{
+    width: 100%;
+    text-align: left;
+    padding: 10px 0px 10px 25px;
+}
+
 .app-body {
     position: relative;
 }
@@ -6,6 +12,22 @@
     display: grid;
     column-count: 2;
     grid-template-columns: 1fr 6fr;
+    height: 100vh;
+}
+
+.sidebar-navigation-wrapper button i{
+    color: #F2F2F2;
+}
+
+.sidebar-navigation-wrapper button span {
+    color: #F2F2F2;
+    font-size: medium;
+    font-weight: 600;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.sidebar-navigation-wrapper{
+    background: #327389;
 }
 
 .mat-card {

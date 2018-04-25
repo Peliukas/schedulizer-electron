@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div *ngIf="modelName === 'employee'">
+        <div  class="col-12" *ngIf="modelName === 'employee'">
             <h4>Naujas darbuotojas</h4>
             <div [formGroup]="employeeFormControlGroup">
                 <mat-form-field>
@@ -30,13 +30,15 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-checkbox [(ngModel)]="privateSchedule"
-                              (change)="scheduleControl.disabled ? scheduleControl.enable() : scheduleControl.disable()">
-                    Privatus tvarkaraštis
-                </mat-checkbox>
+               <div class="medium-margin-vertical">
+                   <mat-checkbox class="private-schedule-checkbox" [(ngModel)]="privateSchedule"
+                                 (change)="scheduleControl.disabled ? scheduleControl.enable() : scheduleControl.disable()">
+                       Privatus tvarkaraštis
+                   </mat-checkbox>
+               </div>
             </div>
         </div>
-        <div *ngIf="modelName === 'position'">
+        <div  class="col-12" *ngIf="modelName === 'position'">
             <h4>Nauja pareiga</h4>
             <div [formGroup]="positionFormControlGroup">
                 <mat-form-field>
@@ -49,7 +51,7 @@
                 </mat-form-field>
             </div>
         </div>
-        <div *ngIf="modelName === 'schedule'">
+        <div class="col-12" *ngIf="modelName === 'schedule'">
             <h4>Naujas tvarkaraštis</h4>
             <div [formGroup]="scheduleFormControlGroup">
                 <mat-form-field>
@@ -61,10 +63,14 @@
                            placeholder="Maks. dirbamų valandų skaičius">
                 </mat-form-field>
                 <div class="medium-margin-vertical">
-                    <input type="file" #importedSchedule (change)="fileUploaded($event)" placeholder="Importas"/>
+                    <input class="import-schedule-input" type="file" #importedSchedule (change)="fileUploaded($event)" placeholder="Importas"/>
                 </div>
             </div>
         </div>
-        <button mat-button class="button-submit" (click)="addObject()">Pridėti</button>
+        <button mat-button class="button-submit" (click)="addObject()">
+            <span class="">
+                Pridėti
+            </span>
+        </button>
     </div>
 </div>
