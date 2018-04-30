@@ -16,6 +16,5 @@
       "es2017",
       "dom"
     ]
-  },
-  "include": ["file.ts"]
+  }
 }

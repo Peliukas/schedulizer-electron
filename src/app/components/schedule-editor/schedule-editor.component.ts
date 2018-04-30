@@ -328,7 +328,7 @@ export class ScheduleEditorComponent implements OnInit {
 
         console.log('saving data: ', this.schedule.doc);
         console.log('scheduleref: ', scheduleRef);
-        // scheduleRef.save();
+        scheduleRef.save();
         this.schedule.doc = scheduleRef.data;
         this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
         this.resetSelection();
@@ -376,11 +376,11 @@ export class ScheduleEditorComponent implements OnInit {
 
     public getCalendarWorkDays() {
         this.calendarWorkDays = [];
-        let holidayRef = new Holiday().findAll()
+        new Holiday().findAll()
             .then(holidayList => {
                 for (let holiday of holidayList.rows) {
                     let startDate = new Date();
-                    startDate.setMonth(holiday.doc.holiday_month);
+                    startDate.setMonth(holiday.doc.holiday_month - 1);
                     startDate.setDate(holiday.doc.holiday_day);
                     this.calendarWorkDays.push({
                         title: holiday.id,
@@ -464,12 +464,8 @@ export class ScheduleEditorComponent implements OnInit {
 
     public resetSelection() {
         this.selectedCalendarDay = '';
-        this.endTimeInputControl.reset();
         this.endTimeInputControl.enable();
-        this.startTimeInputControl.reset();
         this.startTimeInputControl.enable();
-        this.periodStartDateControl.reset();
-        this.periodEndDateControl.reset();
         this.selectedWorkDayList = [];
         this.breakList = [];
         this.isHoliday = false;

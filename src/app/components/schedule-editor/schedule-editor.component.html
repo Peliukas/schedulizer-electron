@@ -1,69 +1,66 @@
 <div class="row">
     <div class="col-12">
-        <mat-form-field>
-            <input placeholder="Tvarkaraščio pavadinimas" matInput id="schedule_name"
-                   [(ngModel)]="schedule.doc.schedule_name">
-        </mat-form-field>
-        <mat-form-field>
-            <input matInput type="number" placeholder="Maks. dirbamų valandų skaičius"
-                   [(ngModel)]="schedule.doc.work_hours_cap">
-        </mat-form-field>
-
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <mat-card>
+        <mat-card class="schedule-settings-card">
             <mat-card-content>
                 <div class="row">
-                    <h5>Darbo dienos nustatymai</h5>
                     <div class="col-6">
-                        <mat-form-field>
-                            <input matInput (change)="weekDayTimeChange()" [formControl]="startTimeInputControl"
-                                   type="time"
-                                   #startTime
-                                   placeholder="Darbo dienos pradžia">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-6">
-                        <mat-form-field>
-                            <input matInput (change)="weekDayTimeChange()" [formControl]="endTimeInputControl"
-                                   type="time" #endTime
-                                   placeholder="Darbo dienos pabaiga">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-12 flex-space-between flex-center-vertical breaks-and-holiday">
-                        <mat-checkbox [(ngModel)]="isHoliday">Išeiginė</mat-checkbox>
-                        <mat-chip-list #breakChips>
-                            <mat-chip matTooltip="Paspaspausk kad panaikinti"
-                                      (click)="deleteBreak(break.start, break.end)"
-                                      *ngFor="let break of breakList">
-                                <i class="material-icons">&#xE034;</i> {{break.start}} - {{break.end}}
-                            </mat-chip>
-                        </mat-chip-list>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="flex-space-between flex-baseline-vertical col-12">
-                        <div class="flex">
-                            <button mat-raised-button
-                                    (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
-                                <i class="material-icons">&#xE5CA;</i>
-                                Išsaugoti pakeitimus
-                            </button>
-                            <button mat-raised-button (click)="openAddBreakWindow()">
-                                <i class="material-icons">&#xEB44;</i>
-                                Pridėti pertrauką
-                            </button>
-                            <button mat-raised-button
-                                    [disabled]="(selectedWorkDayList.length < 1 && selectMultipleDays) || (!selectedCalendarDay && !selectMultipleDays)"
-                                    (click)="clearCells()">
-                                <i class="material-icons">&#xE14C;</i>
-                                Išvalyti pažymėtas dienas
-                            </button>
+                        <h5>Tvarkaraščio nustatymai</h5>
+                        <div class="col-6">
+                            <mat-form-field>
+                                <input placeholder="Tvarkaraščio pavadinimas" matInput id="schedule_name"
+                                       [(ngModel)]="schedule.doc.schedule_name">
+                            </mat-form-field>
                         </div>
-                        <div>
-                            <button mat-raised-button (click)="deleteSelectedSchedule()">Trinti tvarkaraštį</button>
+                        <div class="col-6">
+                            <mat-form-field>
+                                <input matInput type="number" placeholder="Maks. dirbamų valandų skaičius"
+                                       [(ngModel)]="schedule.doc.work_hours_cap">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12">
+                            <div>
+                                <button mat-raised-button
+                                        (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
+                                    Išsaugoti pakeitimus
+                                </button>
+                                <button mat-raised-button (click)="deleteSelectedSchedule()">Trinti tvarkaraštį</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h5>Darbo dienos nustatymai</h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <input matInput (change)="weekDayTimeChange()" [formControl]="startTimeInputControl"
+                                           type="time"
+                                           #startTime
+                                           placeholder="Darbo dienos pradžia">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field>
+                                    <input matInput (change)="weekDayTimeChange()" [formControl]="endTimeInputControl"
+                                           type="time" #endTime
+                                           placeholder="Darbo dienos pabaiga">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-12">
+                                <button mat-raised-button (click)="openAddBreakWindow()">
+                                    Pridėti pertrauką
+                                </button>
+                                <mat-checkbox class="medium-margin-horizontal" [(ngModel)]="isHoliday">Išeiginė
+                                </mat-checkbox>
+                            </div>
+                            <div class="col-12">
+                                <mat-chip-list #breakChips>
+                                    <mat-chip matTooltip="Paspaspausk kad panaikinti"
+                                              (click)="deleteBreak(break.start, break.end)"
+                                              *ngFor="let break of breakList">
+                                        <i class="material-icons">&#xE034;</i> {{break.start}} - {{break.end}}
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,6 +74,9 @@
                                               (change)="resetSelection()"
                                               [(ngModel)]="selectMultipleDays">Pasirinkti keletą dienų
                             </mat-slide-toggle>
+                            <i (click)="clearCells()" class="material-icons cursor-pointer"
+                               matTooltip="Išvalyti pažymėtas dienas"
+                               *ngIf="(selectedWorkDayList.length > 0 && selectMultipleDays) || (selectedCalendarDay && !selectMultipleDays)">&#xE14C;</i>
                         </div>
                         <button mat-button matTooltip="Atžymėti viską" (click)="unmarkDays()"
                                 *ngIf="selectMultipleDays && selectedWorkDayList">
@@ -88,7 +88,7 @@
         </mat-card>
     </div>
     <div class="col-12">
-        <mat-card *ngIf="weekDaySelectionMode">
+        <mat-card *ngIf="weekDaySelectionMode" class="schedule-period-card">
             <mat-card-content>
                 <div class="row">
                     <h5>Termino konfigūravimas</h5>
@@ -183,17 +183,18 @@
 <div class="row">
     <div class="col-12">
         <div class="col-6 flex-space-around">
-            <span>Maks. dirbamų valandų skaičius: </span>
-            <strong>{{schedule.doc.work_hours_cap * 60}}</strong>
+            <span>Maksimalus darbo laikas: </span>
+            <strong>{{schedule.doc.work_hours_cap * 60}} min</strong>
         </div>
         <div class="col-6 flex-space-around">
             <span>Liko: </span>
-            <strong [class.warning-text]="totalWorkingHours >= schedule.doc.work_hours_cap"
-                    [class.success-text]="totalWorkingHours < schedule.doc.work_hours_cap">
-                {{ totalWorkingHours.ordinary_hours * 60 + totalWorkingHours.night_hours * 60 +
-                totalWorkingHours.holiday_hours * 60 }}
+            <strong [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
+                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
+                    [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
+                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
+                {{schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
+                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)}} min
             </strong>
-            <span>min</span>
         </div>
     </div>
     <div class="col-12">

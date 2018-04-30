@@ -3,3 +3,14 @@
     justify-content: space-between;
     align-items: center;
 }
+
+.model-list-top-bar {
+    padding: 15px 20px 15px 50px;
+    background: #327389;
+    border-left: 2px solid #17596f;
+}
+
+.model-list-body-wrapper {
+    height: 100%;
+    background: #F2F2F2;
+}

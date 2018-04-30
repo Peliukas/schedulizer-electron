@@ -19,10 +19,13 @@
     color: #F2F2F2;
 }
 
+.horizontal-divider {
+    border-bottom: 2px solid #17596f;
+}
+
 .sidebar-navigation-wrapper button span {
     color: #F2F2F2;
     font-size: medium;
-    font-weight: 600;
     font-family: 'Ubuntu', sans-serif;
 }
 
@@ -61,3 +64,4 @@ mat-sidenav button {
 .current-date-label {
     margin: 10px;
 }
+

@@ -6,3 +6,7 @@
 .position-list-item-content .col-6 p {
     line-height: 2.2;
 }
+
+.position-list-item-content {
+    border-top: solid 1px lightgray;
+}

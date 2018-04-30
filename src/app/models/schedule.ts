@@ -24,9 +24,7 @@ export class Schedule {
         this.data.work_days = data.work_days;
         this.data.is_private = data.is_private;
         this.data.work_hours_cap = data.work_hours_cap;
-
     }
-
 
     public save() {
         try {
@@ -46,11 +44,6 @@ export class Schedule {
             return false;
         }
     }
-
-    public setWorkDays(workDays: any) {
-        this.data.work_days = workDays;
-    }
-
 
     public delete() {
         this.db.get(this.data._id).then(doc => {
@@ -152,7 +145,7 @@ export class Schedule {
                             ordinaryWorkHours += 1;
                         }
                         holidayList.rows.forEach(holiday => {
-                            if (currentHour.getMonth() === holiday.doc.holiday_month && currentHour.getDate() === holiday.doc.holiday_day) {
+                            if (currentHour.getMonth() === holiday.doc.holiday_month - 1 && currentHour.getDate() === holiday.doc.holiday_day) {
                                 totalHolidayWorkHours += 1;
                             }
                         });
