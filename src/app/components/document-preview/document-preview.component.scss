@@ -1,3 +1,17 @@
+.employee-selection-list {
+  max-height: 250px;
+  overflow: auto;
+}
+
+.employee-selection-list mat-form-field, table {
+  width: 100%;
+}
+
+.doc-preview-window, /deep/ .doc-preview-window .mat-dialog-container {
+  max-width: 100vw !important;
+  width: 100vw;
+}
+
 .day-cell-header {
   width: 35px;
   text-align: center;
@@ -8,11 +22,7 @@
 }
 
 .common-schedule-work-day-cell, table, table strong, .day-cell-header {
-  font-size: 11px;
-}
-
-.common-schedule-work-day-cell {
-
+  font-size: 9px;
 }
 
 td {
@@ -27,7 +37,7 @@ td {
 }
 
 .break-label {
-  background: #49bb00;
+  background: #5a90e4;
   color: white;
   padding: 2px;
   border-top: solid 2px;
@@ -39,7 +49,7 @@ td {
 }
 
 .work-hours-container {
-  background: #e91405;
+  background: #e65d5d;
   color: white;
   padding: 2px;
   text-align: center;
@@ -50,13 +60,15 @@ td {
 }
 
 .red-square {
-  background: #e91405;
+  background: #e65d5d;
   padding: 3px;
+  font-size: 10px;
   color: white;
 }
 
 .green-square {
-  background: #49bb00;
+  background: #5a90e4;
   padding: 3px;
+  font-size: 10px;
   color: white;
 }

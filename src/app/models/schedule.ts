@@ -148,11 +148,6 @@ export class Schedule {
                                 currentHour.getHours() !== parseInt(configuration.night_time_end.substr(0, 2))) {
                                 totalNightTimeHours += 1;
                             }
-
-                            console.log('current hour: ', currentHour.getHours());
-                            console.log('night time start: ', parseInt(configuration.night_time_start.substr(0, 2)));
-                            console.log('night time end: ', parseInt(configuration.night_time_end.substr(0, 2)));
-                            console.log('total night time hours: ', totalNightTimeHours);
                         }
                         holidayList.rows.forEach(holiday => {
                             if (currentHour.getMonth() === holiday.doc.holiday_month - 1 && currentHour.getDate() === holiday.doc.holiday_day) {

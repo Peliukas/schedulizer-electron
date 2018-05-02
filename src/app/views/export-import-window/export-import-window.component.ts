@@ -231,4 +231,8 @@ export class ExportImportWindowComponent implements OnInit {
 
         });
     }
+
+    public getMonth(month: string) {
+        return parseInt(month) + 1;
+    }
 }
