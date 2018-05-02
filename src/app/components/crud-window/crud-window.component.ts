@@ -37,7 +37,6 @@ export class CrudWindowComponent implements OnInit {
                     '_id': new FormControl(''),
                     'firstname': new FormControl('', [Validators.required]),
                     'lastname': new FormControl('', [Validators.required]),
-                    // 'work_hours_cap': new FormControl('', [Validators.required]),
                     'position_id': new FormControl(''),
                     'schedule_id': new FormControl(''),
                 };
@@ -134,7 +133,11 @@ export class CrudWindowComponent implements OnInit {
             });
         scheduleRef.findAll()
             .then(data => {
-                this.scheduleList = data.rows;
+                this.scheduleList = data.rows.filter(schedule => {
+                    if (!schedule.doc.is_private) {
+                        return schedule;
+                    }
+                });
             });
     }
 
