@@ -29,7 +29,7 @@
 
 .work-day-calendar-cell-time {
     text-align: center;
-    background: #e91405;
+    background: #e65d5d;
 }
 
 .schedule-period-card, .schedule-settings-card {
@@ -84,7 +84,7 @@ mat-chip-list {
 }
 
 .holiday {
-    background: #08a620 !important;
+    background: #5a90e4 !important;
     color: white;
 }
 

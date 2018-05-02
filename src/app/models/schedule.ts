@@ -30,12 +30,10 @@ export class Schedule {
         try {
             this.db.get(this.data._id).then(doc => {
                 this.data._rev = doc._rev;
-                console.log('got doc:', doc);
                 this.db.put(this.data);
             }, cause => {
                 if (cause.status === 404) {
                     this.db.put(this.data);
-                    console.log('CAUSE: ', cause);
                 }
             });
             return true;
@@ -138,11 +136,23 @@ export class Schedule {
                 }
                 let currentHour = startDateTime;
                 return new Holiday().findAll().then(holidayList => {
-                    while (currentHour <= endDateTime) {
-                        if (currentHour.getHours() < parseInt(configuration.night_time_start.substr(0, 2)) && currentHour.getHours() > parseInt(configuration.night_time_end.substr(0, 2))) {
+                    while (currentHour < endDateTime) {
+                        if (
+                            (currentHour.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) &&
+                                currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) ||
+                            (currentHour.getHours() < parseInt(configuration.night_time_start.substr(0, 2)) &&
+                                currentHour.getHours() > parseInt(configuration.night_time_end.substr(0, 2)))) {
                             ordinaryWorkHours += 1;
                         } else {
-                            totalNightTimeHours += 1;
+                            if (currentHour.getHours() !== parseInt(configuration.night_time_start.substr(0, 2)) &&
+                                currentHour.getHours() !== parseInt(configuration.night_time_end.substr(0, 2))) {
+                                totalNightTimeHours += 1;
+                            }
+
+                            console.log('current hour: ', currentHour.getHours());
+                            console.log('night time start: ', parseInt(configuration.night_time_start.substr(0, 2)));
+                            console.log('night time end: ', parseInt(configuration.night_time_end.substr(0, 2)));
+                            console.log('total night time hours: ', totalNightTimeHours);
                         }
                         holidayList.rows.forEach(holiday => {
                             if (currentHour.getMonth() === holiday.doc.holiday_month - 1 && currentHour.getDate() === holiday.doc.holiday_day) {
@@ -150,9 +160,6 @@ export class Schedule {
                             }
                         });
                         currentHour.setHours(currentHour.getHours() + 1);
-                        console.log("night start hour", parseInt(configuration.night_time_start.substr(0, 2)));
-                        console.log("night end hour", parseInt(configuration.night_time_end.substr(0, 2)));
-                        console.log("current hour", currentHour.getHours());
                     }
                     if (workDay.breaks) {
                         for (let workDayBreak of workDay.breaks) {
@@ -227,7 +234,6 @@ export class Schedule {
                     }
                 }
             }
-            console.log('grouped days: ', groupedWorkDays);
         }
         return groupedWorkDays;
     }
