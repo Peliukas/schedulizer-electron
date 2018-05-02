@@ -22,9 +22,8 @@ export class ModelListViewComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.modelName);
         this.bulkActions = false;
-        this.objectList = '';
+        this.objectList = [];
         this.getObjectList();
     }
 
@@ -51,12 +50,10 @@ export class ModelListViewComponent implements OnInit {
                                 publicSchedules.push(schedule);
                             }
                         }
-                        console.log(publicSchedules);
                         this.objectList = publicSchedules;
                     });
                 break;
             default:
-                console.log('object not found!');
         }
 
     }
@@ -72,46 +69,9 @@ export class ModelListViewComponent implements OnInit {
         dialogRef.afterClosed().subscribe(data => {
             if (data && data.data._id) {
                 this.getObjectList();
-                this.snackBar.open('New ' + this.modelName + ' added!', 'OK', {duration: 3000});
-            } else if (data && !data.data._id) {
-                this.snackBar.open('An error occurred', 'OK', {duration: 3000});
+                this.snackBar.open("Naujas įrašas pridėtas sėkmingai!", 'OK', {duration: 3000});
             }
         });
     }
-
-    public deleteSelectedObject(id: any) {
-        let model: any;
-        switch (this.modelName) {
-            case 'employee':
-                model = new Employee();
-                break;
-            case 'position':
-                model = new Position();
-                break;
-            case 'schedule':
-                model = new Schedule();
-                break;
-        }
-        model.find(id)
-            .then(data => {
-                model.setValues(data);
-                let dialogRef = this.matDialog.open(ConfirmationBoxComponent);
-                dialogRef.afterClosed()
-                    .subscribe(answer => {
-                        if (answer === true) {
-                            model.delete();
-                            this.snackBar.open(this.modelName + ' has been removed', 'OK', {duration: 3000});
-                            let tempArray = [...this.objectList];
-                            for (let i = 0; i < tempArray.length; i++) {
-                                if (tempArray[i].id === id) {
-                                    tempArray.splice(i, 1);
-                                    this.objectList = tempArray;
-                                }
-                            }
-                        }
-                    });
-            });
-    }
-
 
 }

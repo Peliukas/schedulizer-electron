@@ -11,16 +11,19 @@
     </mat-card-header>
     <mat-card-content>
         <div class="row">
-            <div class="col-12">
-                <div *ngIf="objectList !== '' && !bulkActions && modelName === 'employee'">
-                    <app-employees-main [employeeList]="objectList" [bulkActions]="bulkActions"></app-employees-main>
+            <div class="col-12" *ngIf="objectList !== []">
+                <div *ngIf="modelName === 'employee'">
+                    <app-employees-main [employeeList]="objectList"></app-employees-main>
                 </div>
-                <div *ngIf="objectList !== '' && !bulkActions && modelName === 'position'">
-                    <app-positions-main [positionList]="objectList" [bulkActions]="bulkActions"></app-positions-main>
+                <div *ngIf="modelName === 'position'">
+                    <app-positions-main [positionList]="objectList"></app-positions-main>
                 </div>
-                <div *ngIf="objectList !== '' && !bulkActions && modelName === 'schedule'">
-                    <app-schedules-main [scheduleList]="objectList" [bulkActions]="bulkActions"></app-schedules-main>
+                <div *ngIf="modelName === 'schedule'">
+                    <app-schedules-main [scheduleList]="objectList"></app-schedules-main>
                 </div>
+            </div>
+            <div class="col-12" *ngIf="objectList.length < 1 ">
+                <h3>Sąrašas tuščias</h3>
             </div>
         </div>
     </mat-card-content>

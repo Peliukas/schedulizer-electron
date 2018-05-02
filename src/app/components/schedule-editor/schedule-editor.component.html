@@ -74,9 +74,10 @@
                                               (change)="resetSelection()"
                                               [(ngModel)]="selectMultipleDays">Pasirinkti keletą dienų
                             </mat-slide-toggle>
-                            <i (click)="clearCells()" class="material-icons cursor-pointer"
-                               matTooltip="Išvalyti pažymėtas dienas"
-                               *ngIf="(selectedWorkDayList.length > 0 && selectMultipleDays) || (selectedCalendarDay && !selectMultipleDays)">&#xE14C;</i>
+                            <button mat-button matTooltip="Išvalyti pažymėtas dienas" (click)="clearCells()">
+                                <i class="material-icons cursor-pointer"
+                                   *ngIf="(selectedWorkDayList.length > 0 && selectMultipleDays) || (selectedCalendarDay && !selectMultipleDays)">&#xE14C;</i>
+                            </button>
                         </div>
                         <button mat-button matTooltip="Atžymėti viską" (click)="unmarkDays()"
                                 *ngIf="selectMultipleDays && selectedWorkDayList">

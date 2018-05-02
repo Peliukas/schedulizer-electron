@@ -139,10 +139,10 @@ export class Schedule {
                 let currentHour = startDateTime;
                 return new Holiday().findAll().then(holidayList => {
                     while (currentHour <= endDateTime) {
-                        if (currentHour.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) && currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
-                            totalNightTimeHours += 1;
-                        } else {
+                        if (currentHour.getHours() < parseInt(configuration.night_time_start.substr(0, 2)) && currentHour.getHours() > parseInt(configuration.night_time_end.substr(0, 2))) {
                             ordinaryWorkHours += 1;
+                        } else {
+                            totalNightTimeHours += 1;
                         }
                         holidayList.rows.forEach(holiday => {
                             if (currentHour.getMonth() === holiday.doc.holiday_month - 1 && currentHour.getDate() === holiday.doc.holiday_day) {
@@ -150,6 +150,9 @@ export class Schedule {
                             }
                         });
                         currentHour.setHours(currentHour.getHours() + 1);
+                        console.log("night start hour", parseInt(configuration.night_time_start.substr(0, 2)));
+                        console.log("night end hour", parseInt(configuration.night_time_end.substr(0, 2)));
+                        console.log("current hour", currentHour.getHours());
                     }
                     if (workDay.breaks) {
                         for (let workDayBreak of workDay.breaks) {

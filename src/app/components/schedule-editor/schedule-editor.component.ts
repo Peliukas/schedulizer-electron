@@ -110,7 +110,6 @@ export class ScheduleEditorComponent implements OnInit {
             });
     }
 
-
     public nextMonth() {
         this.viewDate = new Date(this.viewDate.setMonth(this.viewDate.getMonth() + 1));
     }
@@ -278,17 +277,7 @@ export class ScheduleEditorComponent implements OnInit {
             uniqueWorkDays = uniqueWorkDays.concat(tempWorkDayList);
             this.schedule.doc.work_days = uniqueWorkDays;
         }
-        // scheduleRef.data = {
-        //     _id: this.schedule.doc.id,
-        //     schedule_name: this.schedule.doc.schedule_name,
-        //     work_hours_cap: this.schedule.doc.work_hours_cap,
-        //     is_private: this.schedule.doc.is_private,
-        //     work_days: this.schedule.doc.work_days
-        // };
         scheduleRef.data = this.schedule.doc;
-        console.log('saving data: ', this.schedule.doc);
-        console.log('scheduleref: ', scheduleRef);
-
         scheduleRef.save();
         this.snackBar.open('Pakeitimai išsaugoti', 'OK', {duration: 3000});
         this.resetSelection();
@@ -301,33 +290,32 @@ export class ScheduleEditorComponent implements OnInit {
     public saveWorkDayChanges() {
         let scheduleRef = new Schedule();
         scheduleRef.setValues(this.schedule.doc);
-        let tempDay = {
-            start_time: this.isHoliday ? '' : this.startTimeInputControl.value,
-            end_time: this.isHoliday ? '' : this.endTimeInputControl.value,
-            date: new Date(this.selectedCalendarDay.date),
-            breaks: this.breakList,
-            isHoliday: this.isHoliday
-        };
-        for (let i = 0; i < scheduleRef.data.work_days.length; i++) { //work day exists, set new values
-            if (new Date(scheduleRef.data.work_days[i].date).getDate() === new Date(this.selectedCalendarDay.date).getDate()) {
-                scheduleRef.data.work_days[i] = tempDay;
-                scheduleRef.save();
-                this.schedule.doc = scheduleRef.data;
-                this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
-                this.getCalendarWorkDays();
-                this.refresh.next();
-                return true;
+        if(this.startTimeInputControl.value && this.endTimeInputControl.value){
+            let tempDay = {
+                start_time: this.isHoliday ? '' : this.startTimeInputControl.value,
+                end_time: this.isHoliday ? '' : this.endTimeInputControl.value,
+                date: new Date(this.selectedCalendarDay.date),
+                breaks: this.breakList,
+                isHoliday: this.isHoliday
+            };
+            for (let i = 0; i < scheduleRef.data.work_days.length; i++) {
+                if (new Date(scheduleRef.data.work_days[i].date).getDate() === new Date(this.selectedCalendarDay.date).getDate()) {
+                    scheduleRef.data.work_days[i] = tempDay;
+                    scheduleRef.save();
+                    this.schedule.doc = scheduleRef.data;
+                    this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
+                    this.getCalendarWorkDays();
+                    this.refresh.next();
+                    return true;
+                }
             }
+            if (!this.schedule.doc.work_days) {
+                this.schedule.doc.work_days = [tempDay];
+            } else {
+                this.schedule.doc.work_days.push(tempDay);
+            }
+            scheduleRef.data.work_days = this.schedule.doc.work_days;
         }
-        if (!this.schedule.doc.work_days) {
-            this.schedule.doc.work_days = [tempDay]; //list empty, init new
-        } else {
-            this.schedule.doc.work_days.push(tempDay);//work day not found, pushing
-        }
-        scheduleRef.data.work_days = this.schedule.doc.work_days;
-
-        console.log('saving data: ', this.schedule.doc);
-        console.log('scheduleref: ', scheduleRef);
         scheduleRef.save();
         this.schedule.doc = scheduleRef.data;
         this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
@@ -503,7 +491,6 @@ export class ScheduleEditorComponent implements OnInit {
         let scheduleRef = new Schedule();
         scheduleRef.data = this.schedule.doc;
         for (let workDay of this.schedule.doc.work_days) {
-            // const workDayHours = scheduleRef.getWorkingHoursByDay(workDay);
             scheduleRef.getWorkingHoursByDay(workDay).then(workDayHours => {
                 totalHours.night_hours = totalHours.night_hours + workDayHours.night_hours;
                 totalHours.ordinary_hours = totalHours.ordinary_hours + workDayHours.ordinary_hours;
@@ -567,36 +554,6 @@ export class ScheduleEditorComponent implements OnInit {
                 }
                 this.snackBar.open('Termino šablonas sėkmingai pašalintas', 'OK', {duration: 3000});
             });
-    }
-
-
-    public storeSchedule() {
-        var file = new File([JSON.stringify(this.schedule)], this.schedule.id + '.json', {type: 'text/plain;charset=utf-8'});
-        saveAs(file);
-    }
-
-
-    public savePDF() {
-        let dialogRef = this.matDialog.open(DocumentPreviewComponent, {
-            data: this.schedule
-        });
-        // var doc = new jsPDF();
-        // doc.text(20, 10, this.schedule.doc._id);
-        // let counter = 2;
-        // for(let workDay of this.schedule.doc.work_days){
-        //     doc.text(20, counter*10, new Date(workDay.date).toDateString());
-        //     doc.text(80, counter*10, workDay.start_time ? workDay.start_time : '');
-        //     doc.text(110, counter*10, workDay.end_time ? workDay.end_time : '');
-        //     if(counter < 30){
-        //         counter++;
-        //     }else{
-        //         doc.addPage()
-        //         counter = 1;
-        //     }
-        // }
-        // doc.save(this.schedule.doc._id+'.pdf');
-
-
     }
 
 }
