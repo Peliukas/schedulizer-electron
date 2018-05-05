@@ -169,10 +169,8 @@ export class Schedule {
                                 breakEndTime.getHours() <= parseInt(configuration.night_time_end.substr(0, 2))) ||
                                 (breakStartTime.getHours() <= parseInt(configuration.night_time_start.substr(0, 2)) &&
                                     breakEndTime.getHours() >= parseInt(configuration.night_time_end.substr(0, 2)))) {
-                                console.log('minusing ordinary hours');
                                 ordinaryWorkHours -= breakTimeInSeconds;
                             } else {
-                                console.log('minusing nigh time hours');
                                 totalNightTimeHours -= breakTimeInSeconds;
                             }
                         }

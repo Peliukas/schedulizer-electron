@@ -129,7 +129,7 @@ export class EmployeeEditorComponent implements OnInit {
                     data: {schedule: tempSchedule}
                 });
                 dialogRef.afterClosed().subscribe(() => {
-                    this.changeSchedule(this.scheduleRef.data.id);
+                    this.changeSchedule(schedule._id);
                 });
             });
     }
