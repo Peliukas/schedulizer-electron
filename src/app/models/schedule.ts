@@ -164,12 +164,16 @@ export class Schedule {
                             breakStartTime.setMinutes(workDayBreak.start.substr(3, 2));
                             breakEndTime.setHours(workDayBreak.end.substr(0, 2));
                             breakEndTime.setMinutes(workDayBreak.end.substr(3, 2));
-                            let breakTimeInHours = Math.abs((breakStartTime.getTime() - breakEndTime.getTime()) / 36e5);
-                            if (breakStartTime.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) &&
-                                breakEndTime.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
-                                totalNightTimeHours -= breakTimeInHours;
+                            let breakTimeInSeconds = Math.abs((breakStartTime.getTime() - breakEndTime.getTime()) / 36e5);
+                            if ((breakStartTime.getHours() >= parseInt(configuration.night_time_start.substr(0, 2)) &&
+                                breakEndTime.getHours() <= parseInt(configuration.night_time_end.substr(0, 2))) ||
+                                (breakStartTime.getHours() <= parseInt(configuration.night_time_start.substr(0, 2)) &&
+                                    breakEndTime.getHours() >= parseInt(configuration.night_time_end.substr(0, 2)))) {
+                                console.log('minusing ordinary hours');
+                                ordinaryWorkHours -= breakTimeInSeconds;
                             } else {
-                                ordinaryWorkHours -= breakTimeInHours;
+                                console.log('minusing nigh time hours');
+                                totalNightTimeHours -= breakTimeInSeconds;
                             }
                         }
                     }
