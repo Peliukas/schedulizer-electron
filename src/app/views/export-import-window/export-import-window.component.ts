@@ -83,7 +83,6 @@ export class ExportImportWindowComponent implements OnInit {
                                 employeeSchedule.data = employeeScheduleData;
                                 employeeSchedule.getGroupedWorkDays().then(employeeWorkDays => {
                                     let employeeFullName = employee.doc.firstname + '_' + employee.doc.lastname;
-                                    console.log('employee work days: ', employeeWorkDays);
                                     Object.keys(employeeWorkDays).forEach(year => {
                                         if (employeeWorkDays[year] && employeeWorkDays[year].length > 0) {
                                             if (!this.calendarData['years']) {
@@ -100,7 +99,6 @@ export class ExportImportWindowComponent implements OnInit {
                                                                         employeeWorkDays[year][month].work_hours.night_hours * config.night_time_rate +
                                                                         employeeWorkDays[year][month].work_hours.night_hours * employee.doc.position.pay +
                                                                         employeeWorkDays[year][month].work_hours.holiday_hours * config.holiday_rate;
-                                                                    console.log('salary: ', monthSalary);
                                                                     this.calendarData['years'][year]['months'][month]['employees'].push({
                                                                         employee_id: employeeFullName,
                                                                         firstname: employee.doc.firstname,
@@ -123,7 +121,7 @@ export class ExportImportWindowComponent implements OnInit {
                                                             } else {
                                                                 this.calendarData['years'][year]['months'][month] = [];
                                                                 this.calendarData['years'][year]['months'][month]['employees'] = [];
-                                                                this.calendarData['years'][year]['months'][month].month = month;
+                                                                this.calendarData['years'][year]['months'][month].number = month;
                                                                 this.calendarData['years'][year]['months'][month]['employees'].push({
                                                                     employee_id: employeeFullName,
                                                                     firstname: employee.doc.firstname,
@@ -136,7 +134,7 @@ export class ExportImportWindowComponent implements OnInit {
                                                         } else {
                                                             this.calendarData['years'][year]['months'] = [];
                                                             this.calendarData['years'][year]['months'][month] = [];
-                                                            this.calendarData['years'][year]['months'][month].month = month;
+                                                            this.calendarData['years'][year]['months'][month].number = month;
                                                             this.calendarData['years'][year]['months'][month]['employees'] = [];
                                                             this.calendarData['years'][year]['months'][month]['employees'].push({
                                                                 employee_id: employeeFullName,
@@ -190,7 +188,7 @@ export class ExportImportWindowComponent implements OnInit {
                                                             } else {
                                                                 this.calendarData['years'][year]['months'][month] = [];
                                                                 this.calendarData['years'][year]['months'][month]['employees'] = [];
-                                                                this.calendarData['years'][year]['months'][month].month = month;
+                                                                this.calendarData['years'][year]['months'][month].number = month;
                                                                 this.calendarData['years'][year]['months'][month]['employees'].push({
                                                                     employee_id: employeeFullName,
                                                                     firstname: employee.doc.firstname,
@@ -203,7 +201,7 @@ export class ExportImportWindowComponent implements OnInit {
                                                         } else {
                                                             this.calendarData['years'][year]['months'] = [];
                                                             this.calendarData['years'][year]['months'][month] = [];
-                                                            this.calendarData['years'][year]['months'][month].month = month;
+                                                            this.calendarData['years'][year]['months'][month].number = month;
                                                             this.calendarData['years'][year]['months'][month]['employees'] = [];
                                                             this.calendarData['years'][year]['months'][month]['employees'].push({
                                                                 employee_id: employeeFullName,
@@ -220,8 +218,6 @@ export class ExportImportWindowComponent implements OnInit {
                                         }
                                     });
                                 });
-
-                                console.log('calendar data: ', this.calendarData);
                             }, reason => {
 
                             });

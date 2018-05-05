@@ -16,7 +16,6 @@ export class CalendarWrapperComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.data.schedule);
         this.schedule = this.data.schedule;
     }
 

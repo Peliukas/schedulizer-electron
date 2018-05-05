@@ -11,7 +11,7 @@ export class StorageAdapterService {
     }
 
     public addObject() {
-        var doc = {
+        let doc = {
             '_id': 'mittens',
             'name': 'Mittens',
             'occupation': 'kitten',
@@ -23,14 +23,6 @@ export class StorageAdapterService {
             ]
         };
         this.db.put(doc);
-        console.log('doc added!');
-    }
-
-
-    public getObject() {
-        return this.db.get('mittens').then(data => {
-            console.log(data);
-        });
     }
 
 

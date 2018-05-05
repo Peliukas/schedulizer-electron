@@ -182,7 +182,6 @@ export class ScheduleEditorComponent implements OnInit {
         let workPeriod = [];
         let periodStart = new Date(this.periodStartDateControl.value);
         let periodEnd = new Date(this.periodEndDateControl.value);
-        console.log('weekday list: ', this.weekDayList);
         while (periodStart.toISOString() < periodEnd.toISOString()) {
             for (let weekDay of this.weekDayList) {
                 if (periodStart.getDay() === weekDay.weekDayNumber && weekDay.selected) {

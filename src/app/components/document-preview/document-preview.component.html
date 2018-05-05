@@ -1,13 +1,14 @@
 <div class="row">
     <div class="col-12">
-        <button mat-raised-button (click)="closeAndExport()">Eksportuoti</button>
+        <button mat-raised-button (click)="closeAndExportPDF()">Eksportuoti PDF</button>
+        <button mat-raised-button (click)="closeAndExportXLS()">Eksportuoti XLS</button>
     </div>
     <div class="col-12 doc-body" #docBody>
         <div *ngFor="let year of calendarData.years">
             <div *ngIf="year && year.months">
                 <div *ngFor="let month of year.months">
                     <div *ngIf="month && month.employees">
-                        <h5 class="text-center">{{getMonth(month.month)}}/{{year.year}}</h5>
+                        <h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>
                         <table>
                             <tr>
                                 <td><strong>Darbuotojas(a)</strong></td>

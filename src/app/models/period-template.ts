@@ -39,7 +39,6 @@ export class PeriodTemplate {
             doc._deleted = true;
             return this.db.put(doc);
         }, reason => {
-            console.log('failed to delete: ', reason);
             return reason;
         });
     }

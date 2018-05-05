@@ -33,10 +33,8 @@ export class Employee {
                 this.data._rev = doc._rev;
                 this.db.put(this.data);
             }, cause => {
-                console.log('creating new employee...');
                 this.db.put(this.data);
             });
-            console.log('employee saved!');
             return true;
         } catch (e) {
             console.log(e);

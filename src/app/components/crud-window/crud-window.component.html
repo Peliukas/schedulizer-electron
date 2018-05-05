@@ -10,10 +10,6 @@
                 <mat-form-field>
                     <input matInput [formControlName]="'lastname'" type="text" #lastname required placeholder="Pavardė">
                 </mat-form-field>
-                <!--<mat-form-field>-->
-                <!--<input matInput [formControlName]="'work_hours_cap'" type="number" #work_hours_cap required-->
-                <!--placeholder="Maks. dirbamų valandų skaičius">-->
-                <!--</mat-form-field>-->
             </div>
             <mat-form-field *ngIf="positionList">
                 <mat-select placeholder="Pareigos" [value]="" [formControl]="positionControl">

@@ -76,7 +76,6 @@ export class CrudWindowComponent implements OnInit {
                 if (this.scheduleControl.value) {
                     if (!this.privateSchedule) {
                         this.employeeFormControlGroup.get('schedule_id').setValue(this.scheduleControl.value);
-                        console.log('public schedule: ', this.scheduleControl.value);
                     } else {
                         let schedule = new Schedule();
                         schedule.data._id = this.employeeFormControlGroup.get('firstname').value + '-' + this.employeeFormControlGroup.get('lastname').value;
@@ -84,7 +83,6 @@ export class CrudWindowComponent implements OnInit {
                         schedule.data.is_private = true;
                         schedule.save();
                         this.employeeFormControlGroup.get('schedule_id').setValue(schedule.data._id);
-                        console.log('private schedule: ', schedule);
                     }
                 } else {
                     let schedule = new Schedule();
@@ -93,7 +91,6 @@ export class CrudWindowComponent implements OnInit {
                     schedule.data.is_private = true;
                     schedule.save();
                     this.employeeFormControlGroup.get('schedule_id').setValue(schedule.data._id);
-                    console.log('private schedule: ', schedule);
                 }
                 if (this.employeeFormControlGroup.valid) {
                     let employee = new Employee();
@@ -142,7 +139,6 @@ export class CrudWindowComponent implements OnInit {
     }
 
     public fileUploaded(event: any) {
-        console.log(event.srcElement.files[0]);
         let fileReader = new FileReader();
         fileReader.readAsText(event.srcElement.files[0]);
         fileReader.onload = function () {
@@ -156,7 +152,6 @@ export class CrudWindowComponent implements OnInit {
                 is_private: parsedData.doc.is_private,
                 work_hours_cap: parsedData.doc.work_hours_cap,
             };
-            console.log('saving schedule: ', parsedData);
             scheduleRef.save();
         };
         this.snackBar.open('Tvarkaraštis sėkmingai importuotas', 'OK', {duration: 3000});

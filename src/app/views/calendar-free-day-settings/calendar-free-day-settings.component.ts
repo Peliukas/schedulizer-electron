@@ -41,7 +41,6 @@ export class CalendarFreeDaySettingsComponent implements OnInit {
         holidayRef.findAll()
             .then(data => {
                 this.holidayList = data.rows;
-                console.log(this.holidayList);
             });
     }
 
@@ -61,9 +60,8 @@ export class CalendarFreeDaySettingsComponent implements OnInit {
                 this.configControl.get('night_time_end').setValue(data.night_time_end);
                 this.configControl.get('night_time_rate').setValue(data.night_time_rate);
                 this.configControl.get('holiday_rate').setValue(data.holiday_rate);
-                console.log('config:', data);
             }, reason => {
-                let configsRef = new Configurations();
+                const configsRef = new Configurations();
                 configsRef.data._id = 'multipliers';
                 configsRef.save();
                 console.log(reason);
@@ -84,7 +82,6 @@ export class CalendarFreeDaySettingsComponent implements OnInit {
     }
 
     public addHoliday() {
-        console.log('free day date: ', this.freeDayDateControl);
         let holidayRef = new Holiday();
         if (this.freeDayDateControl.valid) {
             holidayRef.setValues({

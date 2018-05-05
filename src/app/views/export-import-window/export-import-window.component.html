@@ -24,7 +24,7 @@
                         <div *ngIf="year && year.months">
                             <div *ngFor="let month of year.months">
                                 <div *ngIf="month && month.employees">
-                                    <h5 class="text-center">{{getMonth(month.month)}}/{{year.year}}</h5>
+                                    <h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>
                                     <table>
                                         <tr>
                                             <td><strong>Darbuotojas(a)</strong></td>
