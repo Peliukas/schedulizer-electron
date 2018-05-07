@@ -1,5 +1,6 @@
 {
   "name": "Schedulizer",
+  "productName": "Schedulizer",
   "version": "1.0.2",
   "license": "MIT",
   "main": "./main.js",
@@ -79,6 +80,7 @@
     "electron": "^1.8.4",
     "electron-build": "^0.0.3",
     "electron-builder": "^20.10.0",
+    "electron-packager": "^12.0.2",
     "electron-prebuilt": "^1.4.13",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",

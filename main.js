@@ -8,7 +8,11 @@ function createWindow() {
         height: 1200,
         backgroundColor: '#ffffff',
         webPreferences: {
+            webSecurity: false,
             experimentalFeatures: true,
+        },
+        node: {
+            __dirname: false
         },
         icon: `file://${__dirname}/dist/assets/logo.png`
     })
@@ -17,7 +21,7 @@ function createWindow() {
     win.loadURL(`file://${__dirname}/dist/index.html`)
 
     //// uncomment below to open the DevTools.
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 
     // Event when the window is closed.
     win.on('closed', function () {
@@ -44,10 +48,6 @@ app.on('activate', function () {
         createWindow()
     }
 })
-
-app.on('ready', function () {
-    createWindow()
-});
 
 //
 // const isDev = require('electron-is-dev');
