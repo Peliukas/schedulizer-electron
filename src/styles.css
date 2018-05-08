@@ -84,3 +84,7 @@ simple-snack-bar {
 .no-list-style {
     list-style: none;
 }
+
+.gray-card-body {
+    background: #f2f2f2;
+}

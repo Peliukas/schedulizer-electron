@@ -1,37 +1,64 @@
 <div class="row employee-list-item-content">
     <div class="employee-list-item-input-field-container col-12">
-        <div class="col-4">
-            <div class="input-field-wrapper  hidden">
-                <mat-form-field>
-                    <input matInput placeholder="Employee ID" disabled id="employee_id" [(ngModel)]="employee.id">
-                </mat-form-field>
-            </div>
-            <div class="input-field-wrapper">
-                <mat-form-field>
-                    <input matInput placeholder="Vardas" id="employee_firstname"
-                           [(ngModel)]="employee.doc.firstname">
-                </mat-form-field>
-            </div>
-            <div class="input-field-wrapper">
-                <mat-form-field>
-                    <input matInput placeholder="Pavardė" id="employee_lastname"
-                           [(ngModel)]="employee.doc.lastname">
-                </mat-form-field>
-            </div>
-            <div class="input-field-wrapper">
-                <mat-form-field>
-                    <mat-select placeholder="Pareigos" #positionSelect value="{{employee.doc.position_id}}">
-                        <mat-option [value]="''"></mat-option>
-                        <mat-option *ngFor="let position of positionList" [value]="position.id">
-                            {{position.id}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+        <div class="col-5">
+            <mat-card class="gray-card-body">
+                <mat-card-content>
+                    <h5>Darbuotojo nustatymai</h5>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="input-field-wrapper  hidden">
+                                <mat-form-field>
+                                    <input matInput placeholder="Employee ID" disabled id="employee_id"
+                                           [(ngModel)]="employee.id">
+                                </mat-form-field>
+                            </div>
+                            <div class="input-field-wrapper">
+                                <mat-form-field>
+                                    <input matInput placeholder="Vardas" id="employee_firstname"
+                                           [(ngModel)]="employee.doc.firstname">
+                                </mat-form-field>
+                            </div>
+                            <div class="input-field-wrapper">
+                                <mat-form-field>
+                                    <input matInput placeholder="Pavardė" id="employee_lastname"
+                                           [(ngModel)]="employee.doc.lastname">
+                                </mat-form-field>
+                            </div>
+                            <div class="input-field-wrapper">
+                                <mat-form-field>
+                                    <mat-select placeholder="Pareigos" #positionSelect
+                                                value="{{employee.doc.position_id}}">
+                                        <mat-option [value]="''"></mat-option>
+                                        <mat-option *ngFor="let position of positionList" [value]="position.id">
+                                            {{position.id}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button mat-raised-button (click)="saveChanges({
+                                        _id: employee.id,
+                                        firstname: employee.doc.firstname,
+                                        lastname: employee.doc.lastname,
+                                        work_hours_cap: employee.doc.work_hours_cap,
+                                        position_id: positionSelect.selected ? positionSelect.selected.value : '',
+                                        schedule_id: scheduleSelect.selected ? scheduleSelect.selected.value : ''})
+                                  ">
+                                Išsaugoti
+                            </button>
+                            <button (click)="deleteSelectedEmployee(employee.id)" mat-raised-button>
+                                Šalinti
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
         </div>
-        <div class="col-8">
-            <mat-card>
+        <div class="col-7">
+            <mat-card class="gray-card-body">
                 <mat-card-content class="row">
+                    <h5>Tvarkaraštis</h5>
                     <div class="col-12 flex flex-center">
                         <mat-form-field class="employee-schedule-selector">
                             <mat-select placeholder="Tvarkaraštis" #scheduleSelect
@@ -43,12 +70,6 @@
                         </mat-form-field>
                         <div class="show-calendar-window-button">
                             <i matPrefix class="material-icons" (click)="openCalendarWindow()">&#xE254;</i>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="flex-space-between">
-                            <strong>Darbo dienų skaičius</strong>
-                            <span *ngIf="scheduleRef.data">{{scheduleRef.data.work_days.length}}</span>
                         </div>
                     </div>
                     <div class="col-12">
@@ -103,25 +124,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <strong>Darbo dienų skaičius</strong>
+                        <span *ngIf="scheduleRef.data">{{scheduleRef.data.work_days.length}}</span>
+                    </div>
                 </mat-card-content>
             </mat-card>
-        </div>
-        <div class="col-12">
-            <button mat-raised-button
-                    (click)="saveChanges({
-                _id: employee.id,
-                firstname: employee.doc.firstname,
-                lastname: employee.doc.lastname,
-                work_hours_cap: employee.doc.work_hours_cap,
-                position_id: positionSelect.selected ? positionSelect.selected.value : '',
-                schedule_id: scheduleSelect.selected ? scheduleSelect.selected.value : ''})
-          ">
-                <i class="material-icons">&#xE161;</i>
-                Išsaugoti pakeitimus
-            </button>
-            <button (click)="deleteSelectedEmployee(employee.id)" mat-raised-button><i
-                    class="material-icons">&#xE92B;</i>Šalinti darbuotuoją
-            </button>
         </div>
     </div>
 </div>

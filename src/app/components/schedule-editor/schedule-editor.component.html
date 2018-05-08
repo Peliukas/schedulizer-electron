@@ -194,7 +194,7 @@
                     [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
                 totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
                 {{schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)}} min
+                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60) | number}} min
             </strong>
         </div>
     </div>
