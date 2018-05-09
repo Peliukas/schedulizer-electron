@@ -388,6 +388,16 @@ export class ScheduleEditorComponent implements OnInit {
                             start: new Date(workDay.date),
                             color: 'work-day'
                         });
+                        if (workDay.breaks) {
+                            workDay.breaks.forEach(workDayBreak => {
+                                this.calendarWorkDays.push({
+                                    title: workDayBreak.start + ' - ' + workDayBreak.end,
+                                    start: new Date(workDay.date),
+                                    color: 'work-day-break'
+                                });
+
+                            });
+                        }
                     }
                 }
                 this.getTotalWorkingHours();

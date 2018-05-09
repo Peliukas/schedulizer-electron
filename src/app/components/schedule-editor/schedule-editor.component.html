@@ -225,7 +225,7 @@
             </div>
             <div *ngIf="day.events">
                 <div *ngFor="let event of day.events" [class.holiday]="event.color === 'holiday'"
-                     class="work-day-calendar-cell-time">
+                     class="work-day-calendar-cell-time" [class.work-day-break]="event.color === 'work-day-break'">
                     <small>{{ event.title }}</small>
                 </div>
             </div>

@@ -41,6 +41,11 @@
     font-weight: 900;
 }
 
+.work-day-break {
+    background: darkgray;
+    color: white;
+}
+
 .mat-form-field {
     width: 100%;
 }
