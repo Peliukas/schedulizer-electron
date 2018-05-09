@@ -185,7 +185,7 @@
     <div class="col-12">
         <div class="col-6 flex-space-around">
             <span>Maksimalus darbo laikas: </span>
-            <strong>{{schedule.doc.work_hours_cap * 60}} min</strong>
+            <strong>{{schedule.doc.work_hours_cap * 60 | number:'1.2-2'}} min</strong>
         </div>
         <div class="col-6 flex-space-around">
             <span>Liko: </span>
@@ -194,7 +194,7 @@
                     [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
                 totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
                 {{schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60) | number}} min
+                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60) | number:'1.2-2'}} min
             </strong>
         </div>
     </div>
