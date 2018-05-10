@@ -51,7 +51,7 @@ export class DocumentPreviewComponent implements OnInit {
                 for (let month of year.months) {
                     if (month) {
                         data.push([parseInt(month.number) + 1 + '/' + year.year]);
-                        data.push(['Darbuotoja(s)', 'Pareigos', ''].concat(this.calendarDayNumbers).concat(['Darbo valandų', 'Uždarbis']));
+                        data.push(['Darbuotoja(s)', 'Pareigos', ''].concat(this.calendarDayNumbers).concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų', 'Uždarbis']));
                         for (let employee of month.employees) {
                             let tempWorkDays = [];
                             let tempBreaks = [];
@@ -82,7 +82,7 @@ export class DocumentPreviewComponent implements OnInit {
                                 employee.month_salary.work_hours.night_hours * employee.position.pay +
                                 employee.month_salary.work_hours.holiday_hours *
                                 this.config.holiday_rate;
-                            data.push([employee.firstname + ' ' + employee.lastname, employee.position.job_title, 'Darbo laikas'].concat(tempWorkDays).concat([totalWorkHours, totalSalary]));
+                            data.push([employee.firstname + ' ' + employee.lastname, employee.position.job_title, 'Darbo laikas'].concat(tempWorkDays).concat([employee.month_salary.work_hours.ordinary_hours, employee.month_salary.work_hours.night_hours, employee.month_salary.work_hours.holiday_hours, totalWorkHours, totalSalary]));
                             data.push(['', '', 'Pertraukos'].concat(tempBreaks));
                         }
                     }

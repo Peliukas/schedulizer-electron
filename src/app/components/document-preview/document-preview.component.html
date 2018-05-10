@@ -15,7 +15,10 @@
                                 <td><strong>Pareigos</strong></td>
                                 <td *ngFor="let dayNumber of calendarDayNumbers" class="day-cell-header">
                                     <strong>{{dayNumber}}</strong></td>
-                                <td>Darbo valandų</td>
+                                <td>Paprastų</td>
+                                <td>Naktinių</td>
+                                <td>Šventinių</td>
+                                <td>Iš viso valandų</td>
                                 <td>Uždarbis</td>
                             </tr>
                             <tr *ngFor="let employee of month['employees']" class="employee-row ">
@@ -47,6 +50,15 @@
                                             </div>
                                         </div>
                                     </div>
+                                </td>
+                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                    {{employee.month_salary.work_hours.ordinary_hours | number:"1.2-2"}}
+                                </td>
+                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                    {{employee.month_salary.work_hours.night_hours | number:"1.2-2"}}
+                                </td>
+                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                    {{employee.month_salary.work_hours.holiday_hours | number:"1.2-2"}}
                                 </td>
                                 <td *ngIf="employee && employee.month_salary.work_hours">
                                     {{employee.month_salary.work_hours.ordinary_hours +

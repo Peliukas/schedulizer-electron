@@ -42,7 +42,7 @@
 }
 
 .work-day-break {
-    background: darkgray;
+    background: #5a90e4 !important;
     color: white;
 }
 
@@ -89,7 +89,7 @@ mat-chip-list {
 }
 
 .holiday {
-    background: #5a90e4 !important;
+    background: darkgray;
     color: white;
 }
 
