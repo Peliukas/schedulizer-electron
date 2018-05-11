@@ -21,9 +21,9 @@
                             <div>
                                 <button mat-raised-button
                                         (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
-                                    Išsaugoti pakeitimus
+                                    Išsaugoti
                                 </button>
-                                <button mat-raised-button (click)="deleteSelectedSchedule()">Trinti tvarkaraštį</button>
+                                <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
                             </div>
                         </div>
                     </div>
@@ -183,36 +183,41 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <div class="col-6 flex-space-around">
-            <span>Maksimalus darbo laikas: </span>
-            <strong>{{schedule.doc.work_hours_cap * 60 | number:'1.2-2'}} min</strong>
+        <div class="col-6">
+            <div class="flex-space-between">
+                <span>Maksimalus darbo laikas: </span>
+                <strong>{{schedule.doc.work_hours_cap * 60 | number:'1.2-2'}} min</strong>
+            </div>
+            <div class="flex-space-between">
+                <span>Liko: </span>
+                <strong [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
+                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
+                        [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
+                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
+                    {{schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
+                    totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60) | number:'1.2-2'}} min
+                </strong>
+            </div>
         </div>
         <div class="col-6 flex-space-around">
-            <span>Liko: </span>
-            <strong [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
-                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
-                    [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
-                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
-                {{schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60) | number:'1.2-2'}} min
-            </strong>
+            <button mat-button class="previous-month" (click)="previousMonth()"><i
+                    class="material-icons">&#xE314;</i>
+                Praėjęs mėnuo
+            </button>
+            <div class="current-date-label flex-center">
+                <strong *ngIf="viewDate">{{viewDate |
+                    date:"mediumDate"}}</strong>
+            </div>
+            <button mat-button class="next-month" (click)="nextMonth()">Sekantis mėnuo <i
+                    class="material-icons">&#xE315;</i></button>
         </div>
     </div>
     <div class="col-12">
-        <div>
-            <div class="calendar-header flex-space-between">
-                <button mat-button class="previous-month" (click)="previousMonth()"><i
-                        class="material-icons">&#xE314;</i>
-                    Praėjęs mėnuo
-                </button>
-                <div class="current-date-label">
-                    <strong *ngIf="viewDate">{{viewDate |
-                        date:"mediumDate"}}</strong>
-                </div>
-                <button mat-button class="next-month" (click)="nextMonth()">Sekantis mėnuo <i
-                        class="material-icons">&#xE315;</i></button>
-            </div>
-        </div>
+        <!--<div>-->
+        <!--<div class="calendar-header flex-space-between">-->
+        <!---->
+        <!--</div>-->
+        <!--</div>-->
         <ng-template #customCellTemplate let-day="day" let-locale="locale">
             <div *ngIf="selectMultipleDays" #local="appLocalVariables" [appLocalVariables]="{clicked: false}"
                  (click)="local.clicked = !local.clicked" (mouseup)="dayClicked(day)" class="cal-cell-top"
