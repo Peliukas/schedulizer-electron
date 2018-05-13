@@ -1,12 +1,52 @@
 <div class="row">
-    <h4>Pridėti pertrauką</h4>
-    <mat-form-field>
-        <input type="time" matInput #start placeholder="Pradžia">
-    </mat-form-field>
-    <mat-form-field>
-        <input type="time" matInput #end placeholder="Pabaiga">
-    </mat-form-field>
-    <button mat-raised-button *ngIf="start.valueAsDate && end.valueAsDate" (click)="addBreak(start.value, end.value)">
-        Pridėti
-    </button>
+    <h5>Pertraukų redagavimas</h5>
+    <div class="col-6" [formGroup]="breakFormGroup">
+        <mat-form-field>
+            <input type="time" matInput formControlName="start" placeholder="Pradžia">
+        </mat-form-field>
+    </div>
+    <div class="col-6" [formGroup]="breakFormGroup">
+        <mat-form-field>
+            <input type="time" matInput formControlName="end" placeholder="Pabaiga">
+        </mat-form-field>
+    </div>
+    <div class="col-12" *ngIf="breakList.length > 0">
+        <table>
+            <tr>
+                <td>
+                    <strong>
+                        Pradžia
+                    </strong>
+                </td>
+                <td>
+                    <strong>
+                        Pabaiga
+                    </strong>
+                </td>
+            </tr>
+            <tr *ngFor="let breakItem of breakList" class="gray-card-body">
+                <td>
+                    <span>
+                        {{breakItem.start}}
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        {{breakItem.end}}
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-12">
+        <button (click)="addBreak()" matTooltip="Pridėti pertrauką" mat-button>
+            <i class="material-icons">
+                add
+            </i>
+        </button>
+        <button mat-raised-button [disabled]="breakList.length < 1 "
+                (click)="closeWithBreakList()">
+            Išsaugoti
+        </button>
+    </div>
 </div>

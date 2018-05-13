@@ -329,11 +329,13 @@ export class ScheduleEditorComponent implements OnInit {
     }
 
     public openAddBreakWindow() {
-        let dialogRef = this.matDialog.open(AddBreakComponent);
+        let dialogRef = this.matDialog.open(AddBreakComponent, {
+            width: '550px',
+        });
         dialogRef.afterClosed()
             .subscribe(data => {
                 if (data) {
-                    this.breakList.push(data);
+                    this.breakList = data;
                     this.snackBar.open('Pertrauka pridėta', 'OK', {duration: 3000});
                 }
             });
