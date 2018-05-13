@@ -39,14 +39,14 @@
         </table>
     </div>
     <div class="col-12">
+        <button mat-raised-button [disabled]="breakList.length < 1 "
+                (click)="closeWithBreakList()">
+            Išsaugoti
+        </button>
         <button (click)="addBreak()" matTooltip="Pridėti pertrauką" mat-button>
             <i class="material-icons">
                 add
             </i>
-        </button>
-        <button mat-raised-button [disabled]="breakList.length < 1 "
-                (click)="closeWithBreakList()">
-            Išsaugoti
         </button>
     </div>
 </div>

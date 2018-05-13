@@ -93,6 +93,10 @@ mat-chip-list {
     color: white;
 }
 
+.workday-menu-icon {
+    cursor: pointer;
+}
+
 .period-template-button-group button {
     margin-top: 10px;
 }

@@ -17,18 +17,24 @@
                                        [(ngModel)]="schedule.doc.work_hours_cap">
                             </mat-form-field>
                         </div>
-                        <div class="col-12">
-                            <div>
-                                <button mat-raised-button
-                                        (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
-                                    Išsaugoti
-                                </button>
-                                <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
-                            </div>
-                        </div>
                     </div>
                     <div class="col-6">
-                        <h5>Darbo dienos nustatymai</h5>
+                        <h5 class="flex-space-between">Darbo dienos nustatymai
+                            <mat-menu #workDayMenu="matMenu">
+                                <button mat-menu-item (click)="openAddBreakWindow()">
+                                    <i class="material-icons">
+                                        alarm_add
+                                    </i>
+                                    Pertraukų valdymas
+                                </button>
+                                <div class="medium-padding-horizontal">
+                                    <mat-checkbox [(ngModel)]="isHoliday">Išeiginė</mat-checkbox>
+                                </div>
+                            </mat-menu>
+                            <i [matMenuTriggerFor]="workDayMenu" class="material-icons workday-menu-icon">
+                                more_horiz
+                            </i>
+                        </h5>
                         <div class="row">
                             <div class="col-6">
                                 <mat-form-field>
@@ -46,18 +52,11 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-12">
-                                <button mat-raised-button (click)="openAddBreakWindow()">
-                                    Pridėti pertrauką
-                                </button>
-                                <mat-checkbox class="medium-margin-horizontal" [(ngModel)]="isHoliday">Išeiginė
-                                </mat-checkbox>
-                            </div>
-                            <div class="col-12">
                                 <mat-chip-list #breakChips>
-                                    <mat-chip matTooltip="Paspaspausk kad panaikinti"
+                                    <mat-chip matTooltip="Panaikinti pertrauką"
                                               (click)="deleteBreak(break.start, break.end)"
                                               *ngFor="let break of breakList">
-                                        <i class="material-icons">&#xE034;</i> {{break.start}} - {{break.end}}
+                                        <i class="material-icons">alarm</i> {{break.start}} - {{break.end}}
                                     </mat-chip>
                                 </mat-chip-list>
                             </div>
@@ -67,8 +66,15 @@
             </mat-card-content>
             <mat-card-actions>
                 <div class="row">
-                    <div class="col-12 flex-space-between flex-baseline-vertical">
-                        <div>
+                    <div class="col-12">
+                        <div class="col-4">
+                            <button mat-raised-button
+                                    (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
+                                Išsaugoti
+                            </button>
+                            <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
+                        </div>
+                        <div class="col-8 flex-space-between flex-baseline-vertical">
                             <mat-slide-toggle [(ngModel)]="weekDaySelectionMode">Pridėti terminą</mat-slide-toggle>
                             <mat-slide-toggle class="medium-margin-horizontal" [disabled]="weekDaySelectionMode"
                                               (change)="resetSelection()"
@@ -78,11 +84,11 @@
                                 <i class="material-icons cursor-pointer"
                                    *ngIf="(selectedWorkDayList.length > 0 && selectMultipleDays) || (selectedCalendarDay && !selectMultipleDays)">&#xE14C;</i>
                             </button>
+                            <button mat-button matTooltip="Atžymėti viską" (click)="unmarkDays()"
+                                    *ngIf="selectMultipleDays && selectedWorkDayList">
+                                <i class="material-icons">&#xE86A;</i>
+                            </button>
                         </div>
-                        <button mat-button matTooltip="Atžymėti viską" (click)="unmarkDays()"
-                                *ngIf="selectMultipleDays && selectedWorkDayList">
-                            <i class="material-icons">&#xE86A;</i>
-                        </button>
                     </div>
                 </div>
             </mat-card-actions>
@@ -213,11 +219,6 @@
         </div>
     </div>
     <div class="col-12">
-        <!--<div>-->
-        <!--<div class="calendar-header flex-space-between">-->
-        <!---->
-        <!--</div>-->
-        <!--</div>-->
         <ng-template #customCellTemplate let-day="day" let-locale="locale">
             <div *ngIf="selectMultipleDays" #local="appLocalVariables" [appLocalVariables]="{clicked: false}"
                  (click)="local.clicked = !local.clicked" (mouseup)="dayClicked(day)" class="cal-cell-top"
