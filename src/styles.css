@@ -28,6 +28,11 @@ app-root {
     text-align: center;
 }
 
+.flex-center-vertical {
+    display: flex !important;
+    align-items: center !important;
+}
+
 .flex-space-between {
     display: flex;
     justify-content: space-between;

@@ -21,12 +21,15 @@
                     <div class="col-6">
                         <h5 class="flex-space-between">Darbo dienos nustatymai
                             <mat-menu #workDayMenu="matMenu">
-                                <button mat-menu-item (click)="openAddBreakWindow()">
+                                <button mat-menu-item (click)="openAddBreakWindow()" class="flex-center-vertical">
                                     <i class="material-icons">
                                         alarm_add
                                     </i>
                                     Pertraukų valdymas
                                 </button>
+                                <div class="medium-padding-horizontal">
+                                    <mat-checkbox [(ngModel)]="isFullDay">Prailginta diena</mat-checkbox>
+                                </div>
                                 <div class="medium-padding-horizontal">
                                     <mat-checkbox [(ngModel)]="isHoliday">Išeiginė</mat-checkbox>
                                 </div>

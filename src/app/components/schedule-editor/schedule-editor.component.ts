@@ -30,6 +30,7 @@ export class ScheduleEditorComponent implements OnInit {
     calendarWorkDays: any[] = [];
     selectMultipleDays: boolean = false;
     isHoliday: boolean = false;
+    isFullDay: boolean = false;
     weekDaySelectionMode: boolean = false;
     displayPeriodTemplateNameField = false;
     selectedCalendarDay: any = '';
@@ -290,32 +291,78 @@ export class ScheduleEditorComponent implements OnInit {
         let scheduleRef = new Schedule();
         scheduleRef.setValues(this.schedule.doc);
         if(this.startTimeInputControl.value && this.endTimeInputControl.value){
-            let tempDay = {
-                start_time: this.isHoliday ? '' : this.startTimeInputControl.value,
-                end_time: this.isHoliday ? '' : this.endTimeInputControl.value,
-                date: new Date(this.selectedCalendarDay.date),
-                breaks: this.breakList,
-                isHoliday: this.isHoliday
-            };
+            //split days
+            let tempDay: any;
+            let tempDayNext: any;
+            //split breaks
+            let tempDayBreaks = [];
+            let tempNextDayBreaks = [];
+            if (!this.isFullDay) {
+                tempDay = {
+                    start_time: this.isHoliday ? '' : this.startTimeInputControl.value,
+                    end_time: this.isHoliday ? '' : this.endTimeInputControl.value,
+                    date: new Date(this.selectedCalendarDay.date),
+                    breaks: this.breakList,
+                    isHoliday: this.isHoliday
+                };
+            } else {
+                tempDay = {
+                    start_time: this.startTimeInputControl.value,
+                    end_time: '23:59',
+                    date: new Date(this.selectedCalendarDay.date),
+                    breaks: tempDayBreaks,
+                    isHoliday: false
+                };
+                let nextDay = new Date(this.selectedCalendarDay.date);
+                nextDay.setDate(nextDay.getDate() + 1);
+                tempDayNext = {
+                    start_time: '00:00',
+                    end_time: this.endTimeInputControl.value,
+                    date: nextDay,
+                    breaks: tempNextDayBreaks,
+                    isHoliday: false
+                };
+                this.breakList.forEach(breakItem => {
+                    if (parseInt(breakItem.start.split(0, 2)) > parseInt(tempDay.start_time.split(0, 2))) {
+                        tempDayBreaks.push(breakItem);
+                    } else {
+                        tempNextDayBreaks.push(breakItem);
+                    }
+                });
+            }
             for (let i = 0; i < scheduleRef.data.work_days.length; i++) {
-                if (new Date(scheduleRef.data.work_days[i].date).getDate() === new Date(this.selectedCalendarDay.date).getDate()) {
+                if (new Date(scheduleRef.data.work_days[i].date).toDateString() === new Date(this.selectedCalendarDay.date).toDateString()) {
                     scheduleRef.data.work_days[i] = tempDay;
-                    scheduleRef.save();
+                    if (this.isFullDay) {
+                        for (let j = 0; j < scheduleRef.data.work_days.length; j++) {
+                            if (new Date(scheduleRef.data.work_days[j].date).toDateString() === new Date(tempDayNext.date).toDateString()) {
+                                scheduleRef.data.work_days[j] = tempDayNext;
+                                console.log('temp day found:', tempDayNext);
+                            }
+                        }
+                    }
+                    console.log('not a full day');
+                    // scheduleRef.save();
                     this.schedule.doc = scheduleRef.data;
                     this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
                     this.getCalendarWorkDays();
                     this.refresh.next();
                     return true;
                 }
+                console.log('day not found!');
             }
             if (!this.schedule.doc.work_days) {
                 this.schedule.doc.work_days = [tempDay];
+                if (this.isFullDay) {
+                    this.schedule.doc.work_days.push(tempDayNext);
+                }
             } else {
                 this.schedule.doc.work_days.push(tempDay);
+                this.schedule.doc.work_days.push(tempDayNext);
             }
             scheduleRef.data.work_days = this.schedule.doc.work_days;
         }
-        scheduleRef.save();
+        // scheduleRef.save();
         this.schedule.doc = scheduleRef.data;
         this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
         this.resetSelection();
