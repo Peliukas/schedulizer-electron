@@ -260,22 +260,56 @@ export class ScheduleEditorComponent implements OnInit {
                     isHoliday: this.isHoliday
                 });
             }
-            let uniqueWorkDays = [];
-            for (let existingWorkDay of this.schedule.doc.work_days) {
-                let detectedDay = null;
-                for (let tempWorkDay of tempWorkDayList) {
-                    if (new Date(tempWorkDay.date).toDateString() === new Date(existingWorkDay.date).toDateString()) {
-                        detectedDay = tempWorkDay;
-                        tempWorkDayList.splice(tempWorkDayList.indexOf(tempWorkDay), 1);
+            if (!this.isFullDay) {
+                let uniqueWorkDays = [];
+                for (let existingWorkDay of this.schedule.doc.work_days) {
+                    let detectedDay = null;
+                    for (let tempWorkDay of tempWorkDayList) {
+                        if (new Date(tempWorkDay.date).toDateString() === new Date(existingWorkDay.date).toDateString()) {
+                            detectedDay = tempWorkDay;
+                            tempWorkDayList.splice(tempWorkDayList.indexOf(tempWorkDay), 1);
+                        }
                     }
+                    if (!detectedDay) {
+                        detectedDay = existingWorkDay;
+                    }
+                    uniqueWorkDays.push(detectedDay);
                 }
-                if (!detectedDay) {
-                    detectedDay = existingWorkDay;
-                }
-                uniqueWorkDays.push(detectedDay);
+                uniqueWorkDays = uniqueWorkDays.concat(tempWorkDayList);
+                this.schedule.doc.work_days = uniqueWorkDays;
+            } else {
+                tempWorkDayList.forEach(workDay => {
+                    let tempDayBreaks = [];
+                    let tempDayNextBreaks = [];
+                    this.breakList.forEach(breakItem => {
+                        if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(workDay.start_time.substr(0, 2)) &&
+                            (parseInt(breakItem.start.substr(0, 2)) <= 24)) {
+                            tempDayBreaks.push(breakItem);
+                        } else if (parseInt(breakItem.start.substr(0, 2)) >= 0 &&
+                            (parseInt(breakItem.start.substr(0, 2)) <= parseInt(workDay.end_time.substr(0, 2)))) {
+                            tempDayNextBreaks.push(breakItem);
+                        }
+                    });
+                    let tempDay = {
+                        start_time: workDay.start_time,
+                        end_time: '23:59',
+                        date: workDay.date,
+                        breaks: tempDayBreaks,
+                        isHoliday: false
+                    };
+                    let nextDay = new Date(workDay.date);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    let tempDayNext = {
+                        start_time: '00:00',
+                        end_time: workDay.end_time,
+                        date: nextDay,
+                        breaks: tempDayNextBreaks,
+                        isHoliday: false
+                    };
+                    this.schedule.doc.work_days.push(tempDay);
+                    this.schedule.doc.work_days.push(tempDayNext);
+                });
             }
-            uniqueWorkDays = uniqueWorkDays.concat(tempWorkDayList);
-            this.schedule.doc.work_days = uniqueWorkDays;
         }
         scheduleRef.data = this.schedule.doc;
         scheduleRef.save();
@@ -286,11 +320,10 @@ export class ScheduleEditorComponent implements OnInit {
         this.refresh.next();
     }
 
-
     public saveWorkDayChanges() {
         let scheduleRef = new Schedule();
         scheduleRef.setValues(this.schedule.doc);
-        if(this.startTimeInputControl.value && this.endTimeInputControl.value){
+        if (this.startTimeInputControl.value && this.endTimeInputControl.value) {
             //split days
             let tempDay: any;
             let tempDayNext: any;
@@ -323,9 +356,11 @@ export class ScheduleEditorComponent implements OnInit {
                     isHoliday: false
                 };
                 this.breakList.forEach(breakItem => {
-                    if (parseInt(breakItem.start.split(0, 2)) > parseInt(tempDay.start_time.split(0, 2))) {
+                    if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDay.start_time.substr(0, 2)) &&
+                        (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDay.end_time.substr(0, 2)))) {
                         tempDayBreaks.push(breakItem);
-                    } else {
+                    } else if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDayNext.start_time.substr(0, 2)) &&
+                        (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDayNext.end_time.substr(0, 2)))) {
                         tempNextDayBreaks.push(breakItem);
                     }
                 });
@@ -337,19 +372,16 @@ export class ScheduleEditorComponent implements OnInit {
                         for (let j = 0; j < scheduleRef.data.work_days.length; j++) {
                             if (new Date(scheduleRef.data.work_days[j].date).toDateString() === new Date(tempDayNext.date).toDateString()) {
                                 scheduleRef.data.work_days[j] = tempDayNext;
-                                console.log('temp day found:', tempDayNext);
                             }
                         }
                     }
-                    console.log('not a full day');
-                    // scheduleRef.save();
+                    scheduleRef.save();
                     this.schedule.doc = scheduleRef.data;
                     this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
                     this.getCalendarWorkDays();
                     this.refresh.next();
                     return true;
                 }
-                console.log('day not found!');
             }
             if (!this.schedule.doc.work_days) {
                 this.schedule.doc.work_days = [tempDay];
@@ -362,7 +394,7 @@ export class ScheduleEditorComponent implements OnInit {
             }
             scheduleRef.data.work_days = this.schedule.doc.work_days;
         }
-        // scheduleRef.save();
+        scheduleRef.save();
         this.schedule.doc = scheduleRef.data;
         this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
         this.resetSelection();
@@ -383,7 +415,8 @@ export class ScheduleEditorComponent implements OnInit {
             .subscribe(data => {
                 if (data) {
                     this.breakList = data;
-                    this.snackBar.open('Pertrauka pridėta', 'OK', {duration: 3000});
+                    this.breakList.length > 1 ? this.snackBar.open('Pertraukos pridėtos sėkmingai', 'OK', {duration: 3000}) :
+                        this.snackBar.open('Pertrauka pridėta sėkmingai', 'OK', {duration: 3000});
                 }
             });
     }
@@ -515,6 +548,7 @@ export class ScheduleEditorComponent implements OnInit {
         this.selectedWorkDayList = [];
         this.breakList = [];
         this.isHoliday = false;
+        this.isFullDay = false;
         for (let weekDay of this.weekDayList) {
             weekDay.start_time = null;
             weekDay.end_time = null;
