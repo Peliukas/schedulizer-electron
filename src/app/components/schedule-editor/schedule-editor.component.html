@@ -195,7 +195,12 @@
         <div class="col-6">
             <div class="flex-space-between">
                 <span>Maksimalus darbo laikas: </span>
-                <strong>{{schedule.doc.work_hours_cap * 60 | number:'1.2-2'}} min</strong>
+                <strong>
+                    {{schedule.doc.work_hours_cap}} h
+                    <span *ngIf="60 - (schedule.doc.work_hours_cap * 60) % 60 > 0 && 60 - (schedule.doc.work_hours_cap * 60) % 60 < 60">
+                        {{60 - (schedule.doc.work_hours_cap * 60) % 60}} min
+                    </span>
+                </strong>
             </div>
             <div class="flex-space-between">
                 <span>Liko: </span>
@@ -203,8 +208,21 @@
                 totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
                         [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
                 totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
-                    {{schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                    totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60) | number:'1.2-2'}} min
+                    <!--{{schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +-->
+                    <!--totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60) | number:'1.2-2'}} min-->
+                    {{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) | floor}} h
+                    <span *ngIf="60 - ((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
+                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60) != 0 &&
+                        60 - ((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
+                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60) < 60"
+                          [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
+                            totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
+                          [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
+                            totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
+                        {{60 - ((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
+                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60)}} min
+                    </span>
                 </strong>
             </div>
         </div>
@@ -214,8 +232,7 @@
                 Praėjęs mėnuo
             </button>
             <div class="current-date-label flex-center">
-                <strong *ngIf="viewDate">{{viewDate |
-                    date:"mediumDate"}}</strong>
+                <strong *ngIf="viewDate">{{viewDate | date:"mediumDate"}}</strong>
             </div>
             <button mat-button class="next-month" (click)="nextMonth()">Sekantis mėnuo <i
                     class="material-icons">&#xE315;</i></button>

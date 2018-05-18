@@ -131,9 +131,9 @@ export class Schedule {
                 startDateTime.setMinutes(workDay.start_time.substr(3, 2));
                 endDateTime.setHours(workDay.end_time.substr(0, 2));
                 endDateTime.setMinutes(workDay.end_time.substr(3, 2));
-                if (startDateTime.getTime() > endDateTime.getTime()) {
-                    endDateTime.setDate(endDateTime.getDate() + 1);
-                }
+                // if (startDateTime.getTime() > endDateTime.getTime()) {
+                //     endDateTime.setDate(endDateTime.getDate() + 1);
+                // }
                 let currentHour = startDateTime;
                 return new Holiday().findAll().then(holidayList => {
                     while (currentHour < endDateTime) {
@@ -142,20 +142,39 @@ export class Schedule {
                                 currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) ||
                             (currentHour.getHours() < parseInt(configuration.night_time_start.substr(0, 2)) &&
                                 currentHour.getHours() > parseInt(configuration.night_time_end.substr(0, 2)))) {
-                            ordinaryWorkHours += 1;
+                            if (currentHour.getMinutes() > 0) {
+                                ordinaryWorkHours += 1 - currentHour.getMinutes() / 60;
+                            } else if ((currentHour.getHours() === endDateTime.getHours() && endDateTime.getMinutes() > 0)) {
+                                ordinaryWorkHours += 1 - endDateTime.getMinutes() / 60;
+                            } else {
+                                ordinaryWorkHours += 1;
+                            }
                         } else {
                             if (currentHour.getHours() !== parseInt(configuration.night_time_start.substr(0, 2)) &&
                                 currentHour.getHours() !== parseInt(configuration.night_time_end.substr(0, 2))) {
-                                totalNightTimeHours += 1;
+                                if (currentHour.getMinutes() > 0) {
+                                    totalNightTimeHours += 1 - currentHour.getMinutes() / 60;
+                                } else if ((currentHour.getHours() === endDateTime.getHours() && endDateTime.getMinutes() > 0)) {
+                                    totalNightTimeHours += 1 - endDateTime.getMinutes() / 60;
+                                } else {
+                                    totalNightTimeHours += 1;
+                                }
                             }
                         }
                         holidayList.rows.forEach(holiday => {
                             if (currentHour.getMonth() === holiday.doc.holiday_month - 1 && currentHour.getDate() === holiday.doc.holiday_day) {
-                                totalHolidayWorkHours += 1;
+                                if (currentHour.getMinutes() > 0) {
+                                    totalHolidayWorkHours += 1 - currentHour.getMinutes() / 60;
+                                } else if ((currentHour.getHours() === endDateTime.getHours() && endDateTime.getMinutes() > 0)) {
+                                    totalHolidayWorkHours += 1 - endDateTime.getMinutes() / 60;
+                                } else {
+                                    totalHolidayWorkHours += 1;
+                                }
                             }
                         });
                         currentHour.setHours(currentHour.getHours() + 1);
                     }
+
                     if (workDay.breaks) {
                         for (let workDayBreak of workDay.breaks) {
                             let breakStartTime = new Date(workDay.date);
@@ -164,14 +183,14 @@ export class Schedule {
                             breakStartTime.setMinutes(workDayBreak.start.substr(3, 2));
                             breakEndTime.setHours(workDayBreak.end.substr(0, 2));
                             breakEndTime.setMinutes(workDayBreak.end.substr(3, 2));
-                            let breakTimeInSeconds = Math.abs((breakStartTime.getTime() - breakEndTime.getTime()) / 36e5);
+                            let breakTimeInHours = Math.abs((breakStartTime.getTime() - breakEndTime.getTime()) / 36e5);
                             if ((breakStartTime.getHours() >= parseInt(configuration.night_time_start.substr(0, 2)) &&
                                 breakEndTime.getHours() <= parseInt(configuration.night_time_end.substr(0, 2))) ||
                                 (breakStartTime.getHours() <= parseInt(configuration.night_time_start.substr(0, 2)) &&
                                     breakEndTime.getHours() >= parseInt(configuration.night_time_end.substr(0, 2)))) {
-                                ordinaryWorkHours -= breakTimeInSeconds;
+                                ordinaryWorkHours -= breakTimeInHours;
                             } else {
-                                totalNightTimeHours -= breakTimeInSeconds;
+                                totalNightTimeHours -= breakTimeInHours;
                             }
                         }
                     }

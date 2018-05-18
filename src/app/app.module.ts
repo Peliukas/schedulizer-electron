@@ -32,6 +32,8 @@ import {Ng2FileInputModule} from 'ng2-file-input';
 import {DocumentPreviewComponent} from './components/document-preview/document-preview.component';
 import {TimeConvertPipe} from './pipes/time-convert.pipe';
 import {ElectronService, NgxElectronModule} from 'ngx-electron';
+import {NgPipesModule} from 'angular-pipes';
+
 
 const routes: Routes = [
     {path: 'calendar', component: CalendarWrapperComponent},
@@ -65,6 +67,7 @@ const routes: Routes = [
         CalendarModule.forRoot(),
         BrowserModule,
         FormsModule,
+        NgPipesModule,
         ReactiveFormsModule,
         HttpModule,
         BrowserModule,

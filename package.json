@@ -50,6 +50,8 @@
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
     "@ngtools/webpack": "^1.2.4",
+    "angular-pipes": "^7.2.0",
+    "angular2-pipes": "^2.0.1",
     "autoprefixer": "^8.2.0",
     "core-js": "^2.4.1",
     "electron-is-dev": "^0.3.0",

@@ -11,7 +11,6 @@ import {saveAs} from 'file-saver';
 import * as jsPDF from 'jspdf';
 import {DocumentPreviewComponent} from '../document-preview/document-preview.component';
 
-
 @Component({
     selector: 'app-schedule-editor',
     templateUrl: './schedule-editor.component.html',
@@ -54,6 +53,7 @@ export class ScheduleEditorComponent implements OnInit {
         this.periodEndDateControl = new FormControl();
         this.getPeriodTemplates();
         this.refresh.next();
+
     }
 
     public generateWeekDays() {
@@ -132,6 +132,7 @@ export class ScheduleEditorComponent implements OnInit {
                 this.selectedCalendarDay = day;
             }
         }
+        console.log('total hours: ', this.totalWorkingHours);
     }
 
     public addWorkDay(day: any) {
@@ -338,6 +339,15 @@ export class ScheduleEditorComponent implements OnInit {
                     breaks: this.breakList,
                     isHoliday: this.isHoliday
                 };
+                this.breakList.forEach(breakItem => {
+                    if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDay.start_time.substr(0, 2)) &&
+                        (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDay.end_time.substr(0, 2)))) {
+                        tempDayBreaks.push(breakItem);
+                    } else if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDayNext.start_time.substr(0, 2)) &&
+                        (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDayNext.end_time.substr(0, 2)))) {
+                        tempNextDayBreaks.push(breakItem);
+                    }
+                });
             } else {
                 tempDay = {
                     start_time: this.startTimeInputControl.value,
@@ -366,11 +376,11 @@ export class ScheduleEditorComponent implements OnInit {
                 });
             }
             for (let i = 0; i < scheduleRef.data.work_days.length; i++) {
-                if (new Date(scheduleRef.data.work_days[i].date).toDateString() === new Date(this.selectedCalendarDay.date).toDateString()) {
+                if (new Date(scheduleRef.data.work_days[i].date).toISOString() === new Date(this.selectedCalendarDay.date).toISOString()) {
                     scheduleRef.data.work_days[i] = tempDay;
                     if (this.isFullDay) {
                         for (let j = 0; j < scheduleRef.data.work_days.length; j++) {
-                            if (new Date(scheduleRef.data.work_days[j].date).toDateString() === new Date(tempDayNext.date).toDateString()) {
+                            if (new Date(scheduleRef.data.work_days[j].date).toISOString() === new Date(tempDayNext.date).toISOString()) {
                                 scheduleRef.data.work_days[j] = tempDayNext;
                             }
                         }
@@ -390,7 +400,9 @@ export class ScheduleEditorComponent implements OnInit {
                 }
             } else {
                 this.schedule.doc.work_days.push(tempDay);
-                this.schedule.doc.work_days.push(tempDayNext);
+                if (this.isFullDay) {
+                    this.schedule.doc.work_days.push(tempDayNext);
+                }
             }
             scheduleRef.data.work_days = this.schedule.doc.work_days;
         }
@@ -457,8 +469,9 @@ export class ScheduleEditorComponent implements OnInit {
                         color: 'holiday'
                     });
                 }
+                console.log('schedule work days: ', this.schedule.doc.work_days);
                 for (let workDay of this.schedule.doc.work_days) {
-                    if (workDay.isHoliday) {
+                    if (workDay && workDay.isHoliday) {
                         this.calendarWorkDays.push({
                             title: 'Išeiginė',
                             start: new Date(workDay.date),
