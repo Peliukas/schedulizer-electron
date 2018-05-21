@@ -131,9 +131,6 @@ export class Schedule {
                 startDateTime.setMinutes(workDay.start_time.substr(3, 2));
                 endDateTime.setHours(workDay.end_time.substr(0, 2));
                 endDateTime.setMinutes(workDay.end_time.substr(3, 2));
-                // if (startDateTime.getTime() > endDateTime.getTime()) {
-                //     endDateTime.setDate(endDateTime.getDate() + 1);
-                // }
                 let currentHour = startDateTime;
                 return new Holiday().findAll().then(holidayList => {
                     while (currentHour < endDateTime) {

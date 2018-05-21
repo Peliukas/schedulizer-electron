@@ -5,9 +5,6 @@
   "license": "MIT",
   "main": "./main.js",
   "repository": "https://github.com/peliukas/schedulizer-electron.git",
-  "updater": {
-    "url": "https://github.com/peliukas/schedulizer/master/updates.json"
-  },
   "build": {
     "appId": "com.electron.schedulizer",
     "files": [

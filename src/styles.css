@@ -5,6 +5,10 @@ app-root {
     height: 100vh;
 }
 
+h5 {
+    margin: 5px 0;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }
@@ -69,16 +73,16 @@ simple-snack-bar {
 }
 
 .medium-margin-horizontal {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 20px !important;
+    margin-right: 20px !important;
 }
 
 .small-padding-horizontal {
-    padding: 0 10px;
+    padding: 0 10px !important;
 }
 
 .medium-padding-horizontal {
-    padding: 0 20px;
+    padding: 0 20px !important;
 }
 
 .warning-text {
@@ -90,8 +94,12 @@ simple-snack-bar {
 }
 
 .medium-margin-vertical {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.medium-margin-bottom {
+    margin-bottom: 20px !important;
 }
 
 .no-list-style {

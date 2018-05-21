@@ -469,7 +469,6 @@ export class ScheduleEditorComponent implements OnInit {
                         color: 'holiday'
                     });
                 }
-                console.log('schedule work days: ', this.schedule.doc.work_days);
                 for (let workDay of this.schedule.doc.work_days) {
                     if (workDay && workDay.isHoliday) {
                         this.calendarWorkDays.push({

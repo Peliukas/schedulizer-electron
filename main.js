@@ -1,9 +1,4 @@
 const {app, BrowserWindow} = require('electron');
-const updater = require('electron-simple-updater');
-updater.init({
-    checkUpdateOnStart: true,
-    autoDownload: false
-});
 let win;
 
 function createWindow() {
