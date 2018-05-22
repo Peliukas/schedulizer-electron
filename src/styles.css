@@ -9,6 +9,10 @@ h5 {
     margin: 5px 0;
 }
 
+.small-font {
+    font-size: 12px !important;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }
@@ -80,6 +84,11 @@ simple-snack-bar {
 .small-margin-vertical {
     margin-top: 10px !important;
     margin-bottom: 10px !important;
+}
+
+.small-margin-horizontal {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
 }
 
 .small-padding-horizontal {

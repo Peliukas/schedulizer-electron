@@ -36,6 +36,11 @@
                                 </mat-chip-list>
                             </div>
                             <div class="col-12 flex-center-vertical">
+                                <button mat-raised-button
+                                        (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
+                                    Išsaugoti
+                                </button>
+                                <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
                                 <button mat-raised-button (click)="openAddBreakWindow()">
                                     <i class="material-icons">
                                         alarm_add
@@ -43,13 +48,17 @@
                                     Pertraukų valdymas
                                 </button>
                                 <div class="medium-padding-horizontal">
-                                    <mat-checkbox [(ngModel)]="isFullDay">Prailginta diena</mat-checkbox>
+                                    <mat-checkbox [(ngModel)]="isFullDay" class="small-font">Prailginta diena
+                                    </mat-checkbox>
                                 </div>
                                 <div class="medium-padding-horizontal">
-                                    <mat-checkbox [(ngModel)]="isHoliday">Išeiginė</mat-checkbox>
+                                    <mat-checkbox [(ngModel)]="isHoliday" class="small-font">Išeiginė</mat-checkbox>
                                 </div>
-                                <mat-slide-toggle [(ngModel)]="weekDaySelectionMode">Pridėti terminą</mat-slide-toggle>
-                                <mat-slide-toggle class="medium-margin-horizontal" [disabled]="weekDaySelectionMode"
+                                <mat-slide-toggle [(ngModel)]="weekDaySelectionMode" class="small-font">Pridėti
+                                    terminą
+                                </mat-slide-toggle>
+                                <mat-slide-toggle class="medium-margin-horizontal small-font"
+                                                  [disabled]="weekDaySelectionMode"
                                                   (change)="resetSelection()"
                                                   [(ngModel)]="selectMultipleDays">Pasirinkti keletą dienų
                                 </mat-slide-toggle>
@@ -208,7 +217,7 @@
                           [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
                             totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
                         {{((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60 )}} min
+                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60 ) | round}} min
                     </span>
                 </strong>
             </div>
@@ -261,12 +270,5 @@
             </mwl-calendar-month-view>
             <div [class.cal-overlay]="weekDaySelectionMode"></div>
         </div>
-    </div>
-    <div class="col-12">
-        <button mat-raised-button
-                (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
-            Išsaugoti
-        </button>
-        <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
     </div>
 </div>
