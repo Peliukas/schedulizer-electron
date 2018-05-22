@@ -132,7 +132,6 @@ export class ScheduleEditorComponent implements OnInit {
                 this.selectedCalendarDay = day;
             }
         }
-        console.log('total hours: ', this.totalWorkingHours);
     }
 
     public addWorkDay(day: any) {
@@ -293,7 +292,7 @@ export class ScheduleEditorComponent implements OnInit {
                     });
                     let tempDay = {
                         start_time: workDay.start_time,
-                        end_time: '23:59',
+                        end_time: '00:00',
                         date: workDay.date,
                         breaks: tempDayBreaks,
                         isHoliday: false
@@ -351,7 +350,7 @@ export class ScheduleEditorComponent implements OnInit {
             } else {
                 tempDay = {
                     start_time: this.startTimeInputControl.value,
-                    end_time: '23:59',
+                    end_time: '00:00',
                     date: new Date(this.selectedCalendarDay.date),
                     breaks: tempDayBreaks,
                     isHoliday: false
