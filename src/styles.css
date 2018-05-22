@@ -77,6 +77,11 @@ simple-snack-bar {
     margin-right: 20px !important;
 }
 
+.small-margin-vertical {
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
 .small-padding-horizontal {
     padding: 0 10px !important;
 }
@@ -118,4 +123,8 @@ simple-snack-bar {
 
 .mat-card {
     padding: 12px !important;
+}
+
+.settings-tab {
+    height: 115px !important;
 }

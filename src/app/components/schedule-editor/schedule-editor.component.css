@@ -101,6 +101,10 @@ mat-chip-list {
     margin-top: 10px;
 }
 
+/deep/ .mat-tab-body-content {
+    overflow: hidden !important;
+}
+
 /deep/ .mat-option-text {
     width: 100% !important;
 }

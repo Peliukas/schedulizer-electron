@@ -2,26 +2,41 @@
     <div class="col-12">
         <mat-card class="schedule-settings-card">
             <mat-card-content>
-                <div class="row">
-                    <div class="col-6">
-                        <h5>Tvarkaraščio nustatymai</h5>
-                        <div class="col-6">
-                            <mat-form-field>
-                                <input placeholder="Tvarkaraščio pavadinimas" matInput id="schedule_name"
-                                       [(ngModel)]="schedule.doc.schedule_name">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-6">
-                            <mat-form-field>
-                                <input matInput type="number" placeholder="Maks. dirbamų valandų skaičius"
-                                       [(ngModel)]="schedule.doc.work_hours_cap">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <h5 class="flex-space-between">Darbo dienos nustatymai
-                            <mat-menu #workDayMenu="matMenu">
-                                <button mat-menu-item (click)="openAddBreakWindow()" class="flex-center-vertical">
+                <mat-tab-group>
+                    <mat-tab label="Darbo dienos nustatymai" class="settings-tab">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <mat-form-field>
+                                            <input matInput (change)="weekDayTimeChange()"
+                                                   [formControl]="startTimeInputControl"
+                                                   type="time"
+                                                   #startTime
+                                                   placeholder="Darbo dienos pradžia">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-6">
+                                        <mat-form-field>
+                                            <input matInput (change)="weekDayTimeChange()"
+                                                   [formControl]="endTimeInputControl"
+                                                   type="time" #endTime
+                                                   placeholder="Darbo dienos pabaiga">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 small-margin-vertical">
+                                <mat-chip-list #breakChips>
+                                    <mat-chip matTooltip="Panaikinti pertrauką"
+                                              (click)="deleteBreak(break.start, break.end)"
+                                              *ngFor="let break of breakList">
+                                        <i class="material-icons">alarm</i> {{break.start}} - {{break.end}}
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                            <div class="col-12 flex-center-vertical">
+                                <button mat-raised-button (click)="openAddBreakWindow()">
                                     <i class="material-icons">
                                         alarm_add
                                     </i>
@@ -33,39 +48,28 @@
                                 <div class="medium-padding-horizontal">
                                     <mat-checkbox [(ngModel)]="isHoliday">Išeiginė</mat-checkbox>
                                 </div>
-                            </mat-menu>
-                            <i [matMenuTriggerFor]="workDayMenu" class="material-icons workday-menu-icon">
-                                more_horiz
-                            </i>
-                        </h5>
-                        <div class="row">
-                            <div class="col-6">
-                                <mat-form-field>
-                                    <input matInput (change)="weekDayTimeChange()" [formControl]="startTimeInputControl"
-                                           type="time"
-                                           #startTime
-                                           placeholder="Darbo dienos pradžia">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-6">
-                                <mat-form-field>
-                                    <input matInput (change)="weekDayTimeChange()" [formControl]="endTimeInputControl"
-                                           type="time" #endTime
-                                           placeholder="Darbo dienos pabaiga">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-12">
-                                <mat-chip-list #breakChips>
-                                    <mat-chip matTooltip="Panaikinti pertrauką"
-                                              (click)="deleteBreak(break.start, break.end)"
-                                              *ngFor="let break of breakList">
-                                        <i class="material-icons">alarm</i> {{break.start}} - {{break.end}}
-                                    </mat-chip>
-                                </mat-chip-list>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </mat-tab>
+                    <mat-tab label="Tvarkaraščio nustatymai">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="col-6">
+                                    <mat-form-field>
+                                        <input placeholder="Tvarkaraščio pavadinimas" matInput id="schedule_name"
+                                               [(ngModel)]="schedule.doc.schedule_name">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                    <mat-form-field>
+                                        <input matInput type="number" placeholder="Maks. dirbamų valandų skaičius"
+                                               [(ngModel)]="schedule.doc.work_hours_cap">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
             </mat-card-content>
             <mat-card-actions>
                 <div class="row">
@@ -204,24 +208,22 @@
             </div>
             <div class="flex-space-between">
                 <span>Liko: </span>
-                <strong [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
+                <strong *ngIf="schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) > 0 || schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) < 0" [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
                 totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
                         [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
                 totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
-                    <!--{{schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +-->
-                    <!--totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60) | number:'1.2-2'}} min-->
                     {{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
                     totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) | floor}} h
                     <span *ngIf="60 - ((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60) != 0 &&
-                        60 - ((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60) < 60"
+                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60) != 0"
                           [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
                             totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
                           [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
                             totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
-                        {{60 - ((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60)}} min
+                        {{((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
+                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60 )}} min
                     </span>
                 </strong>
             </div>
@@ -256,11 +258,19 @@
                 </div>
             </div>
         </ng-template>
+        <ng-template #customCalendarHeaderTemplate>
+            <div class="flex-space-around">
+                <div *ngFor="let weekDay of weekDayList">
+                    {{weekDay.weekDayName}}
+                </div>
+            </div>
+        </ng-template>
         <div class="row">
             <mwl-calendar-month-view
                     [viewDate]="viewDate"
                     [events]="calendarWorkDays"
                     [cellTemplate]="customCellTemplate"
+                    [headerTemplate]="customCalendarHeaderTemplate"
                     [weekStartsOn]="1"
                     [refresh]="refresh">
             </mwl-calendar-month-view>
