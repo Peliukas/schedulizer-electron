@@ -48,6 +48,19 @@
                                 <div class="medium-padding-horizontal">
                                     <mat-checkbox [(ngModel)]="isHoliday">Išeiginė</mat-checkbox>
                                 </div>
+                                <mat-slide-toggle [(ngModel)]="weekDaySelectionMode">Pridėti terminą</mat-slide-toggle>
+                                <mat-slide-toggle class="medium-margin-horizontal" [disabled]="weekDaySelectionMode"
+                                                  (change)="resetSelection()"
+                                                  [(ngModel)]="selectMultipleDays">Pasirinkti keletą dienų
+                                </mat-slide-toggle>
+                                <button mat-button matTooltip="Išvalyti pažymėtas dienas" (click)="clearCells()">
+                                    <i class="material-icons cursor-pointer"
+                                       *ngIf="(selectedWorkDayList.length > 0 && selectMultipleDays) || (selectedCalendarDay && !selectMultipleDays)">&#xE14C;</i>
+                                </button>
+                                <button mat-button matTooltip="Atžymėti viską" (click)="unmarkDays()"
+                                        *ngIf="selectMultipleDays && selectedWorkDayList">
+                                    <i class="material-icons">&#xE86A;</i>
+                                </button>
                             </div>
                         </div>
                     </mat-tab>
@@ -71,34 +84,6 @@
                     </mat-tab>
                 </mat-tab-group>
             </mat-card-content>
-            <mat-card-actions>
-                <div class="row">
-                    <div class="col-12 medium-margin-bottom">
-                        <div class="col-4">
-                            <button mat-raised-button
-                                    (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
-                                Išsaugoti
-                            </button>
-                            <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
-                        </div>
-                        <div class="col-8 flex-space-between flex-baseline-vertical">
-                            <mat-slide-toggle [(ngModel)]="weekDaySelectionMode">Pridėti terminą</mat-slide-toggle>
-                            <mat-slide-toggle class="medium-margin-horizontal" [disabled]="weekDaySelectionMode"
-                                              (change)="resetSelection()"
-                                              [(ngModel)]="selectMultipleDays">Pasirinkti keletą dienų
-                            </mat-slide-toggle>
-                            <button mat-button matTooltip="Išvalyti pažymėtas dienas" (click)="clearCells()">
-                                <i class="material-icons cursor-pointer"
-                                   *ngIf="(selectedWorkDayList.length > 0 && selectMultipleDays) || (selectedCalendarDay && !selectMultipleDays)">&#xE14C;</i>
-                            </button>
-                            <button mat-button matTooltip="Atžymėti viską" (click)="unmarkDays()"
-                                    *ngIf="selectMultipleDays && selectedWorkDayList">
-                                <i class="material-icons">&#xE86A;</i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </mat-card-actions>
         </mat-card>
     </div>
     <div class="col-12">
@@ -276,5 +261,12 @@
             </mwl-calendar-month-view>
             <div [class.cal-overlay]="weekDaySelectionMode"></div>
         </div>
+    </div>
+    <div class="col-12">
+        <button mat-raised-button
+                (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
+            Išsaugoti
+        </button>
+        <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
     </div>
 </div>
