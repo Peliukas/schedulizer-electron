@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Employee} from '../../models/employee';
 import {Position} from '../../models/position';
 import {FormControl} from '@angular/forms';
@@ -6,6 +6,8 @@ import {Schedule} from '../../models/schedule';
 import {DocumentPreviewComponent} from '../../components/document-preview/document-preview.component';
 import {MatDialog} from '@angular/material';
 import {Configurations} from '../../models/configurations';
+import * as XLSX from 'xlsx';
+import * as jsPDF from 'jspdf';
 
 @Component({
     selector: 'app-export-import-window',
@@ -15,6 +17,9 @@ import {Configurations} from '../../models/configurations';
 export class ExportImportWindowComponent implements OnInit {
 
     configRef: Configurations;
+    config: any;
+    @ViewChild('docBody') docBody;
+    @ViewChild('table') table;
     calendarDayNumbers: any = [];
     selectedEmployees: any = [];
     employeeList: any = [];
@@ -28,21 +33,15 @@ export class ExportImportWindowComponent implements OnInit {
         new Configurations().find('multipliers')
             .then(config => {
                 this.configRef = new Configurations();
+                this.config = config;
                 this.configRef.data = config;
+                for (let i = 1; i < 32; i++) {
+                    this.calendarDayNumbers.push(i);
+                }
                 this.getEmployeeList();
             });
-        for (let i = 1; i < 32; i++) {
-            this.calendarDayNumbers.push(i);
-        }
     }
 
-    public savePDF() {
-        let dialogRef = this.matDialog.open(DocumentPreviewComponent, {
-            data: this.calendarData,
-            width: '100vw',
-            panelClass: 'doc-preview-window'
-        });
-    }
 
     public getEmployeeList() {
         let employeeRef = new Employee();
@@ -230,5 +229,66 @@ export class ExportImportWindowComponent implements OnInit {
 
     public getMonth(month: string) {
         return parseInt(month) + 1;
+    }
+
+    public closeAndExportPDF() {
+        const doc = new jsPDF('p', 'pt', 'a4');
+        doc.addHTML(this.docBody.nativeElement, () => {
+            doc.save('Esksportai.pdf');
+        });
+    }
+
+    public closeAndExportXLS() {
+        /* generate worksheet */
+        let data = [[]];
+        for (let year of this.calendarData.years) {
+            if (year) {
+                for (let month of year.months) {
+                    if (month) {
+                        data.push([parseInt(month.number) + 1 + '/' + year.year]);
+                        data.push(['Darbuotoja(s)', 'Pareigos', ''].concat(this.calendarDayNumbers).concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų', 'Uždarbis']));
+                        for (let employee of month.employees) {
+                            let tempWorkDays = [];
+                            let tempBreaks = [];
+                            for (let calendarDayNumber of this.calendarDayNumbers) {
+                                let found: boolean;
+                                employee.work_days.forEach(workDay => {
+                                    if (calendarDayNumber === new Date(workDay.date).getDate()) {
+                                        tempWorkDays.push(workDay.start_time + ' - ' + workDay.end_time);
+                                        found = true;
+                                        if (workDay.breaks) {
+                                            let tempBreakTime = '';
+                                            workDay.breaks.forEach(breakTime => {
+                                                tempBreakTime += breakTime.start + '-' + breakTime.end + '\n';
+                                            });
+                                            tempBreaks.push(tempBreakTime);
+                                        }
+                                    }
+                                });
+                                if (!found) {
+                                    tempWorkDays.push('');
+                                    tempBreaks.push('');
+                                }
+                            }
+                            const totalWorkHours = employee.month_salary.work_hours.ordinary_hours + employee.month_salary.work_hours.night_hours + employee.month_salary.work_hours.holiday_hours;
+                            const totalSalary = employee.month_salary.work_hours.ordinary_hours *
+                                employee.position.pay + employee.month_salary.work_hours.night_hours *
+                                this.config.night_time_rate +
+                                employee.month_salary.work_hours.night_hours * employee.position.pay +
+                                employee.month_salary.work_hours.holiday_hours *
+                                this.config.holiday_rate;
+                            data.push([employee.firstname + ' ' + employee.lastname, employee.position.job_title, 'Darbo laikas'].concat(tempWorkDays).concat([employee.month_salary.work_hours.ordinary_hours, employee.month_salary.work_hours.night_hours, employee.month_salary.work_hours.holiday_hours, totalWorkHours, totalSalary]));
+                            data.push(['', '', 'Pertraukos'].concat(tempBreaks));
+                        }
+                    }
+                }
+            }
+        }
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+        /* generate workbook and add the worksheet */
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Eksportas');
+        /* save to file */
+        XLSX.writeFile(wb, 'Eksportas.xlsx');
     }
 }
