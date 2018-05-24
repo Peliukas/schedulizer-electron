@@ -41,21 +41,21 @@
                                     Išsaugoti
                                 </button>
                                 <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
-                                <button mat-raised-button (click)="openAddBreakWindow()">
+                                <button mat-raised-button (click)="openAddBreakWindow()" matTooltip="Pertraukos">
                                     <i class="material-icons">
                                         alarm_add
                                     </i>
-                                    Pertraukų valdymas
                                 </button>
                                 <div class="medium-padding-horizontal">
-                                    <mat-checkbox [(ngModel)]="isFullDay" class="small-font">Prailginta diena
+                                    <mat-checkbox [(ngModel)]="isFullDay" class="small-font">
+                                        Prailginta
                                     </mat-checkbox>
                                 </div>
                                 <div class="medium-padding-horizontal">
                                     <mat-checkbox [(ngModel)]="isHoliday" class="small-font">Išeiginė</mat-checkbox>
                                 </div>
-                                <mat-slide-toggle [(ngModel)]="weekDaySelectionMode" class="small-font">Pridėti
-                                    terminą
+                                <mat-slide-toggle [(ngModel)]="weekDaySelectionMode" class="small-font">
+                                    Terminas
                                 </mat-slide-toggle>
                                 <mat-slide-toggle class="medium-margin-horizontal small-font"
                                                   [disabled]="weekDaySelectionMode"

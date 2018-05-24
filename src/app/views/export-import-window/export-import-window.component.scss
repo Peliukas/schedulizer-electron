@@ -22,7 +22,7 @@
 }
 
 .common-schedule-work-day-cell, table, table strong, .day-cell-header {
-  font-size: 9px;
+  font-size: 8px;
 }
 
 
@@ -40,7 +40,7 @@
   text-align: center;
 }
 
-.break-label span {
+.break-label i, .work-hours-container i {
   color: white;
 }
 
@@ -48,10 +48,6 @@
   background: #e65d5d;
   color: white;
   text-align: center;
-}
-
-.work-hours-container span {
-  color: white;
 }
 
 .red-square {

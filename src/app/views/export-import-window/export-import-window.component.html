@@ -20,13 +20,14 @@
                     <button mat-raised-button (click)="closeAndExportPDF()">Eksportuoti PDF</button>
                     <button mat-raised-button (click)="closeAndExportXLS()">Eksportuoti XLS</button>
                 </div>
-                <div class="col-12 doc-body" #docBody>
+                <div class="col-12 doc-body" #docBody id="doc-body">
                     <div *ngFor="let year of calendarData.years">
                         <div *ngIf="year && year.months">
                             <div *ngFor="let month of year.months">
                                 <div *ngIf="month && month.employees">
                                     <h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>
                                     <table>
+                                        <thead>
                                         <tr>
                                             <td><strong>Darbuotojas(a)</strong></td>
                                             <td><strong>Pareigos</strong></td>
@@ -38,6 +39,8 @@
                                             <td>Iš viso valandų</td>
                                             <td>Uždarbis</td>
                                         </tr>
+                                        </thead>
+                                        <tbody>
                                         <tr *ngFor="let employee of month['employees']" class="employee-row ">
                                             <td *ngIf="employee">{{employee.firstname}} {{employee.lastname}}</td>
                                             <td *ngIf="employee">{{employee.position.job_title}}</td>
@@ -46,22 +49,22 @@
                                                     <div class="common-schedule-work-day-cell"
                                                          *ngIf="getDay(workDay.date) === dayNumber">
                                                         <div class="work-hours-container">
-                                                <span>
-                                                    {{workDay.start_time}}
-                                                </span><br>
-                                                            <span>
-                                                    {{workDay.end_time}}
-                                                </span>
+                                                            <strong>
+                                                                {{workDay.start_time}}
+                                                            </strong><br>
+                                                            <strong>
+                                                                {{workDay.end_time}}
+                                                            </strong>
                                                         </div>
                                                         <div *ngIf="workDay.breaks">
                                                             <div *ngFor="let break of workDay.breaks"
                                                                  class="break-label">
-                                                                    <span>
+                                                                <i>
                                                                         {{break.start}}
-                                                                    </span><br>
-                                                                <span>
+                                                                </i><br>
+                                                                <i>
                                                                         {{break.end}}
-                                                                    </span>
+                                                                </i>
 
                                                             </div>
                                                         </div>
@@ -91,10 +94,11 @@
                                                 configRef.data.holiday_rate | number:"1.2-2"}}
                                             </td>
                                         </tr>
+                                        </tbody>
                                     </table>
                                     <div>
                                         <strong class="red-square">Darbo valandos</strong>
-                                        <strong class="green-square">Pertraukos</strong>
+                                        <i class="green-square">Pertraukos</i>
                                     </div>
                                 </div>
                             </div>

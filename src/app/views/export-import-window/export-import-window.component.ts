@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material';
 import {Configurations} from '../../models/configurations';
 import * as XLSX from 'xlsx';
 import * as jsPDF from 'jspdf';
+import printJS from 'print-js';
 
 @Component({
     selector: 'app-export-import-window',
@@ -232,10 +233,79 @@ export class ExportImportWindowComponent implements OnInit {
     }
 
     public closeAndExportPDF() {
-        const doc = new jsPDF('p', 'pt', 'a4');
-        doc.addHTML(this.docBody.nativeElement, () => {
-            doc.save('Esksportai.pdf');
+        // const doc = new jsPDF('p', 'pt', 'a4');
+        // doc.addHTML(this.docBody.nativeElement, () => {
+        //     doc.save('Esksportai.pdf');
+        // });
+        // let data = [];
+        // for (let year of this.calendarData.years) {
+        //     if (year) {
+        //         for (let month of year.months) {
+        //             if (month) {
+        //                 for (let employee of month.employees) {
+        //                     let tempWorkDays = [];
+        //                     // data.push([parseInt(month.number) + 1 + '/' + year.year]);
+        //                     for (let i = 0; i < this.calendarDayNumbers.length; i++) {
+        //                         let found: boolean;
+        //                         employee.work_days.forEach(workDay => {
+        //                             if (this.calendarDayNumbers[i] === new Date(workDay.date).getDate()) {
+        //                                 tempWorkDays[this.calendarDayNumbers[i]] = '<strong class="work-hour-label">' + workDay.start_time + '\n' + workDay.end_time + '</strong>';
+        //                                 found = true;
+        //                                 if (workDay.breaks) {
+        //                                     let tempBreakTime = '';
+        //                                     workDay.breaks.forEach(breakTime => {
+        //                                         tempWorkDays[this.calendarDayNumbers[i]] += '<br><br><span class="break-label">' + breakTime.start + '\n' + breakTime.end + '</span>';
+        //                                     });
+        //                                 }
+        //                             }
+        //                         });
+        //                         if (!found) {
+        //                             tempWorkDays[this.calendarDayNumbers[i]] = ' ';
+        //                         }
+        //                     }
+        //                     const totalWorkHours = employee.month_salary.work_hours.ordinary_hours + employee.month_salary.work_hours.night_hours + employee.month_salary.work_hours.holiday_hours;
+        //                     const totalSalary = employee.month_salary.work_hours.ordinary_hours *
+        //                         employee.position.pay + employee.month_salary.work_hours.night_hours *
+        //                         this.config.night_time_rate +
+        //                         employee.month_salary.work_hours.night_hours * employee.position.pay +
+        //                         employee.month_salary.work_hours.holiday_hours *
+        //                         this.config.holiday_rate;
+        //                     const tempArray = tempWorkDays.concat([employee.month_salary.work_hours.ordinary_hours, employee.month_salary.work_hours.night_hours, employee.month_salary.work_hours.holiday_hours, totalWorkHours, totalSalary]);
+        //                     tempArray['Darbuotoja(s)'] = employee.firstname + ' ' + employee.lastname;
+        //                     tempArray['Pareigos'] = employee.position.job_title;
+        //                     tempArray['Paprastų'] = this.precisionRound(employee.month_salary.work_hours.ordinary_hours, 2);
+        //                     tempArray['Naktinių'] = this.precisionRound(employee.month_salary.work_hours.night_hours, 2);
+        //                     tempArray['Šventinių'] = this.precisionRound(employee.month_salary.work_hours.holiday_hours, 2);
+        //                     tempArray['Viso valandų'] = this.precisionRound(totalWorkHours, 2);
+        //                     tempArray['Uždarbis'] = this.precisionRound(totalSalary, 2);
+        //                     tempArray['Data'] = parseInt(month.number) + 1 + '/' + year.year;
+        //                     data.push(tempArray);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // let changedCalendarDayNumbers = [];
+        // this.calendarDayNumbers.forEach(calendarDayNumber => {
+        //     changedCalendarDayNumbers.push(calendarDayNumber.toString());
+        // });
+        printJS({
+            type: 'html',
+            printable: 'doc-body',
+            style: '*{font-size: 8px; letter-spacing: 0.5px; text-align: center;}'
         });
+        // printJS({
+        //     printable: data,
+        //     properties: ['Data','Darbuotoja(s)', 'Pareigos'].concat(changedCalendarDayNumbers).concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų', 'Uždarbis']),
+        //     type: 'json',
+        //     targetStyles: ['*'],
+        //     style: "*{font-size: 8px;} strong{background: pink!important;} span{background: blue!important;}"
+        // });
+    }
+
+    public precisionRound(number, precision) {
+        var factor = Math.pow(10, precision);
+        return Math.round(number * factor) / factor;
     }
 
     public closeAndExportXLS() {

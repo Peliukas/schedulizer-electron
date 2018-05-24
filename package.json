@@ -65,6 +65,7 @@
     "postcss": "^6.0.21",
     "postcss-url": "^7.3.2",
     "pouchdb": "^6.4.3",
+    "print-js": "^1.0.43",
     "rxjs": "^5.4.2",
     "uglify-es": "^3.3.9",
     "webpack": "^3.11.0",
