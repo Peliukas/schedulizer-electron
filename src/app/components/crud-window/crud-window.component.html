@@ -49,18 +49,26 @@
         </div>
         <div class="col-12" *ngIf="modelName === 'schedule'">
             <h4>Naujas tvarkaraštis</h4>
-            <div [formGroup]="scheduleFormControlGroup">
+            <div [formGroup]="scheduleFormControlGroup" class="flex">
                 <mat-form-field>
                     <input [formControlName]="'schedule_name'" matInput type="text" #schedule_name required
-                           placeholder="Tvarkaraščio pavadinimas">
+                           placeholder="Pavadinimas">
+                </mat-form-field>
+            </div>
+            <h5>Maks. darbo laikas</h5>
+            <div class="flex-space-between">
+                <mat-form-field>
+                    <input matInput [formControl]="workHoursCapHours" type="number" required
+                           placeholder="Val">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput [formControlName]="'work_hours_cap'" type="number" #work_hours_cap required
-                           placeholder="Maks. dirbamų valandų skaičius">
+                    <input matInput [formControl]="workHoursCapMinutes" type="number" required
+                           placeholder="Min">
                 </mat-form-field>
-                <div class="medium-margin-vertical">
-                    <input class="import-schedule-input" type="file" #importedSchedule (change)="fileUploaded($event)" placeholder="Importas"/>
-                </div>
+            </div>
+            <div class="medium-margin-vertical">
+                <input class="import-schedule-input" type="file" #importedSchedule (change)="fileUploaded($event)"
+                       placeholder="Importas"/>
             </div>
         </div>
         <button mat-button class="button-submit" (click)="addObject()">

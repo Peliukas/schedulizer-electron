@@ -18,6 +18,15 @@ export class CrudWindowComponent implements OnInit {
     employeeFormControlGroup: FormGroup;
     positionFormControlGroup: FormGroup;
     scheduleFormControlGroup: FormGroup;
+    workHoursCapHours: FormControl = new FormControl('', [
+        Validators.required,
+        Validators.min(0)
+    ]);
+    workHoursCapMinutes: FormControl = new FormControl('', [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(59)
+    ]);
     privateSchedule = false;
     positionList: any[] = [];
     scheduleList: any[] = [];
@@ -56,8 +65,7 @@ export class CrudWindowComponent implements OnInit {
                     '_id': new FormControl(''),
                     'schedule_name': new FormControl('', [Validators.required]),
                     'work_days': new FormControl(''),
-                    'is_private': new FormControl(''),
-                    'work_hours_cap': new FormControl('', [Validators.required]),
+                    'is_private': new FormControl('')
                 };
                 this.scheduleFormControlGroup = new FormGroup(scheduleFromControls);
                 break;
@@ -111,7 +119,12 @@ export class CrudWindowComponent implements OnInit {
             case 'schedule':
                 this.scheduleFormControlGroup.get('_id').setValue(this.scheduleFormControlGroup.get('schedule_name').value);
                 let schedule = new Schedule();
-                schedule.setValues(this.scheduleFormControlGroup.value);
+                let preSavedValue = this.scheduleFormControlGroup.value;
+                preSavedValue.work_hours_cap = this.workHoursCapHours.value + (this.workHoursCapMinutes.value / 60);
+                console.log('Cap hour: ', this.workHoursCapHours.value);
+                console.log('Cap min: ', this.workHoursCapMinutes.value);
+                console.log('presaved: ', preSavedValue);
+                schedule.setValues(preSavedValue);
                 schedule.save();
                 this.dialogRef.close(schedule);
                 break;
@@ -155,7 +168,6 @@ export class CrudWindowComponent implements OnInit {
             scheduleRef.save();
         };
         this.snackBar.open('Tvarkaraštis sėkmingai importuotas', 'OK', {duration: 3000});
-        // this.dialogRef.close();
     }
 
 

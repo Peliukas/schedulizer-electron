@@ -9,6 +9,8 @@ import {Configurations} from '../../models/configurations';
 import * as XLSX from 'xlsx';
 import * as jsPDF from 'jspdf';
 import printJS from 'print-js';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 @Component({
     selector: 'app-export-import-window',
@@ -233,10 +235,12 @@ export class ExportImportWindowComponent implements OnInit {
     }
 
     public closeAndExportPDF() {
-        // const doc = new jsPDF('p', 'pt', 'a4');
-        // doc.addHTML(this.docBody.nativeElement, () => {
-        //     doc.save('Esksportai.pdf');
-        // });
+        printJS({
+            type: 'html',
+            printable: 'doc-body',
+            documentTitle: 'Tvarkaraščių eksportas',
+            style: '*{font-size: 8px; letter-spacing: 0.5px; text-align: center;}'
+        });
         // let data = [];
         // for (let year of this.calendarData.years) {
         //     if (year) {
@@ -249,7 +253,7 @@ export class ExportImportWindowComponent implements OnInit {
         //                         let found: boolean;
         //                         employee.work_days.forEach(workDay => {
         //                             if (this.calendarDayNumbers[i] === new Date(workDay.date).getDate()) {
-        //                                 tempWorkDays[this.calendarDayNumbers[i]] = '<strong class="work-hour-label">' + workDay.start_time + '\n' + workDay.end_time + '</strong>';
+        //                                 tempWorkDays[this.calendarDayNumbers[i]] = workDay.start_time + '\n' + workDay.end_time + '</strong>';
         //                                 found = true;
         //                                 if (workDay.breaks) {
         //                                     let tempBreakTime = '';
@@ -278,7 +282,7 @@ export class ExportImportWindowComponent implements OnInit {
         //                     tempArray['Šventinių'] = this.precisionRound(employee.month_salary.work_hours.holiday_hours, 2);
         //                     tempArray['Viso valandų'] = this.precisionRound(totalWorkHours, 2);
         //                     tempArray['Uždarbis'] = this.precisionRound(totalSalary, 2);
-        //                     tempArray['Data'] = parseInt(month.number) + 1 + '/' + year.year;
+        //                     // tempArray['Data'] = parseInt(month.number) + 1 + '/' + year.year;
         //                     data.push(tempArray);
         //                 }
         //             }
@@ -289,18 +293,41 @@ export class ExportImportWindowComponent implements OnInit {
         // this.calendarDayNumbers.forEach(calendarDayNumber => {
         //     changedCalendarDayNumbers.push(calendarDayNumber.toString());
         // });
-        printJS({
-            type: 'html',
-            printable: 'doc-body',
-            style: '*{font-size: 8px; letter-spacing: 0.5px; text-align: center;}'
-        });
-        // printJS({
-        //     printable: data,
-        //     properties: ['Data','Darbuotoja(s)', 'Pareigos'].concat(changedCalendarDayNumbers).concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų', 'Uždarbis']),
-        //     type: 'json',
-        //     targetStyles: ['*'],
-        //     style: "*{font-size: 8px;} strong{background: pink!important;} span{background: blue!important;}"
+        // pdfMake.vfs = pdfFonts.pdfMake.vfs;
+        // let headerRow = [];
+        // ['Darbuotoja(s)', 'Pareigos'].concat(changedCalendarDayNumbers.concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų', 'Uždarbis'])).forEach(item => {
+        //     headerRow.push({text: item, style: 'headerItem'});
         // });
+
+        // var dd = {
+        //     content: [
+        //         {
+        //             style: 'outputTable',
+        //             layout: 'lightHorizontalLines', // optional
+        //             table: {
+        //                 // headers are automatically repeated if the table spans over multiple pages
+        //                 // you can declare how many rows should be treated as headers
+        //                 // headerRows: 1,
+        //                 body: [
+        //                     headerRow,
+        //                     data[0],
+        //                     // ['Darbuotoja(s)', 'Pareigos'].concat(changedCalendarDayNumbers.concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų', 'Uždarbis'])),
+        //                     // [ 'Value 1', 'Value 2', 'Value 3', 'Value 4' ],
+        //                 ],
+        //             }
+        //         }
+        //     ],
+        //     styles: {
+        //         outputTable: {
+        //             fontSize: 5,
+        //             margin: [0, 5, 0, 15],
+        //         },
+        //         headerItem: {
+        //             margin: [0, 5, 0, 0],
+        //         }
+        //     }
+        // };
+        // pdfMake.createPdf(dd).download();
     }
 
     public precisionRound(number, precision) {

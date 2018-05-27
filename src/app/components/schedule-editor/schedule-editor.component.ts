@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {FormControl, Validators} from '@angular/forms';
 import {MatDialog, MatSnackBar, MatChipList} from '@angular/material';
 import {Schedule} from '../../models/schedule';
 import {AddBreakComponent} from '../add-break/add-break.component';
@@ -40,6 +40,15 @@ export class ScheduleEditorComponent implements OnInit {
     refresh: Subject<any> = new Subject();
     totalWorkingHours: any = {};
     newPeriodTemplateName: any = '';
+    workHoursCapHours: FormControl = new FormControl('', [
+        Validators.required,
+        Validators.min(0)
+    ]);
+    workHoursCapMinutes: FormControl = new FormControl('', [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(59)
+    ]);
 
     constructor(private snackBar: MatSnackBar, private matDialog: MatDialog) {
     }
@@ -47,6 +56,8 @@ export class ScheduleEditorComponent implements OnInit {
     ngOnInit() {
         this.getCalendarWorkDays();
         this.generateWeekDays();
+        this.workHoursCapHours.setValue(Math.floor(this.schedule.doc.work_hours_cap));
+        this.workHoursCapMinutes.setValue(Math.round((this.schedule.doc.work_hours_cap - Math.floor(this.schedule.doc.work_hours_cap)) * 60));
         this.startTimeInputControl = new FormControl();
         this.endTimeInputControl = new FormControl();
         this.periodStartDateControl = new FormControl();
@@ -240,6 +251,7 @@ export class ScheduleEditorComponent implements OnInit {
         let combined = tempWorkDayList.concat(scheduleRef.data.work_days);
         this.schedule.doc.work_days = combined;
         scheduleRef.data.work_days = this.schedule.doc.work_days;
+        scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
         scheduleRef.save();
         this.resetSelection();
         this.getCalendarWorkDays();
@@ -312,6 +324,7 @@ export class ScheduleEditorComponent implements OnInit {
             }
         }
         scheduleRef.data = this.schedule.doc;
+        scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
         scheduleRef.save();
         this.snackBar.open('Pakeitimai išsaugoti', 'OK', {duration: 3000});
         this.resetSelection();
@@ -384,6 +397,7 @@ export class ScheduleEditorComponent implements OnInit {
                             }
                         }
                     }
+                    scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
                     scheduleRef.save();
                     this.schedule.doc = scheduleRef.data;
                     this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
@@ -405,6 +419,7 @@ export class ScheduleEditorComponent implements OnInit {
             }
             scheduleRef.data.work_days = this.schedule.doc.work_days;
         }
+        scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
         scheduleRef.save();
         this.schedule.doc = scheduleRef.data;
         this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
@@ -529,6 +544,7 @@ export class ScheduleEditorComponent implements OnInit {
                     }
                 }
             }
+            scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
             this.schedule.doc = scheduleRef.data;
             scheduleRef.save();
             this.resetSelection();
@@ -540,6 +556,7 @@ export class ScheduleEditorComponent implements OnInit {
                 for (let workDay of scheduleRef.data.work_days) {
                     if (new Date(workDay.date).toDateString() === new Date(this.selectedCalendarDay.date).toDateString()) {
                         scheduleRef.data.work_days.splice(scheduleRef.data.work_days.indexOf(workDay), 1);
+                        scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
                         scheduleRef.save();
                         this.snackBar.open('Išvalyta', 'OK', {duration: 3000});
                         this.resetSelection();
