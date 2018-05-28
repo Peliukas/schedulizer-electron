@@ -355,10 +355,11 @@ export class ScheduleEditorComponent implements OnInit {
                     if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDay.start_time.substr(0, 2)) &&
                         (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDay.end_time.substr(0, 2)))) {
                         tempDayBreaks.push(breakItem);
-                    } else if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDayNext.start_time.substr(0, 2)) &&
-                        (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDayNext.end_time.substr(0, 2)))) {
-                        tempNextDayBreaks.push(breakItem);
                     }
+                    // else if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDayNext.start_time.substr(0, 2)) &&
+                    //     (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDayNext.end_time.substr(0, 2)))) {
+                    //     tempNextDayBreaks.push(breakItem);
+                    // }
                 });
             } else {
                 tempDay = {

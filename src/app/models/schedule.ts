@@ -140,8 +140,8 @@ export class Schedule {
                     while (currentHour < endDateTime) {
                         if (
                             (currentHour.getHours() > parseInt(configuration.night_time_start.substr(0, 2)) &&
-                                currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) ||
-                            (currentHour.getHours() < parseInt(configuration.night_time_start.substr(0, 2)) &&
+                                currentHour.getHours() <= parseInt(configuration.night_time_end.substr(0, 2))) ||
+                            (currentHour.getHours() <= parseInt(configuration.night_time_start.substr(0, 2)) &&
                                 currentHour.getHours() > parseInt(configuration.night_time_end.substr(0, 2)))) {
                             if (currentHour.getMinutes() > 0) {
                                 ordinaryWorkHours += 1 - currentHour.getMinutes() / 60;

@@ -42,9 +42,11 @@
                                 </button>
                                 <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
                                 <button mat-raised-button (click)="openAddBreakWindow()" matTooltip="Pertraukos">
-                                    <i class="material-icons">
-                                        alarm_add
-                                    </i>
+                                    <i class="material-icons">alarm_add</i>
+                                </button>
+                                <button mat-raised-button matTooltip="Išvalyti pažymėtas dienas" (click)="clearCells()"
+                                        *ngIf="(selectedWorkDayList.length > 0 && selectMultipleDays) || (selectedCalendarDay && !selectMultipleDays)">
+                                    <i class="material-icons cursor-pointer">&#xE14C;</i>
                                 </button>
                                 <div class="medium-padding-horizontal">
                                     <mat-checkbox [(ngModel)]="isFullDay" class="small-font">
@@ -62,10 +64,6 @@
                                                   (change)="resetSelection()"
                                                   [(ngModel)]="selectMultipleDays">Pasirinkti keletą dienų
                                 </mat-slide-toggle>
-                                <button mat-button matTooltip="Išvalyti pažymėtas dienas" (click)="clearCells()">
-                                    <i class="material-icons cursor-pointer"
-                                       *ngIf="(selectedWorkDayList.length > 0 && selectMultipleDays) || (selectedCalendarDay && !selectMultipleDays)">&#xE14C;</i>
-                                </button>
                                 <button mat-button matTooltip="Atžymėti viską" (click)="unmarkDays()"
                                         *ngIf="selectMultipleDays && selectedWorkDayList">
                                     <i class="material-icons">&#xE86A;</i>
@@ -213,8 +211,14 @@
                 totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
                         [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
                 totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
-                    {{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
-                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) | floor}} h
+                    <!-- > 0 -->
+                    <span class="success-text" *ngIf="schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) > 0">{{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) | floor}}</span>
+                    <!-- < 0 -->
+                    <span class="warning-text" *ngIf="schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) < 0">{{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) | ceil}}</span> h
                     <span *ngIf="60 - ((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
                         totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60) != 0"
                           [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
