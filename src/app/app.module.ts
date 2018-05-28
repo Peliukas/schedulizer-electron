@@ -35,6 +35,7 @@ import {ElectronService, NgxElectronModule} from 'ngx-electron';
 import {NgPipesModule} from 'angular-pipes';
 import {UploadWindowComponent} from './components/upload-window/upload-window.component';
 import {ExportSchedulesWindowComponent} from './components/export-schedules-window/export-schedules-window.component';
+import {TimeConversionPipe} from './pipes/time-conversion.pipe';
 
 
 const routes: Routes = [
@@ -64,7 +65,8 @@ const routes: Routes = [
         DocumentPreviewComponent,
         TimeConvertPipe,
         UploadWindowComponent,
-        ExportSchedulesWindowComponent
+        ExportSchedulesWindowComponent,
+        TimeConversionPipe
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -83,7 +85,7 @@ const routes: Routes = [
         MatSelectModule, MatFormFieldModule, MatSidenavModule, MatGridListModule, MatListModule, MatExpansionModule,
         MatTooltipModule, MatSlideToggleModule, MatChipsModule, MatNativeDateModule
     ],
-    providers: [StorageAdapterService, ElectronService],
+    providers: [StorageAdapterService, ElectronService, TimeConversionPipe],
     entryComponents: [CrudWindowComponent, ConfirmationBoxComponent, AddBreakComponent, DocumentPreviewComponent, UploadWindowComponent, ExportSchedulesWindowComponent],
     bootstrap: [AppComponent]
 })

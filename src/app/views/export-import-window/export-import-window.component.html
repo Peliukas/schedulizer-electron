@@ -72,18 +72,22 @@
                                                 </div>
                                             </td>
                                             <td *ngIf="employee && employee.month_salary.work_hours">
-                                                {{employee.month_salary.work_hours.ordinary_hours | number:"1.2-2"}}
+                                                {{employee.month_salary.work_hours.ordinary_hours |
+                                                timeConversion:'toTime'}}
                                             </td>
                                             <td *ngIf="employee && employee.month_salary.work_hours">
-                                                {{employee.month_salary.work_hours.night_hours | number:"1.2-2"}}
+                                                {{employee.month_salary.work_hours.night_hours |
+                                                timeConversion:'toTime'}}
                                             </td>
                                             <td *ngIf="employee && employee.month_salary.work_hours">
-                                                {{employee.month_salary.work_hours.holiday_hours | number:"1.2-2"}}
+                                                {{employee.month_salary.work_hours.holiday_hours |
+                                                timeConversion:'toTime'}}
                                             </td>
                                             <td *ngIf="employee && employee.month_salary.work_hours">
                                                 {{employee.month_salary.work_hours.ordinary_hours +
                                                 employee.month_salary.work_hours.night_hours +
-                                                employee.month_salary.work_hours.holiday_hours | number:"1.2-2"}}
+                                                employee.month_salary.work_hours.holiday_hours |
+                                                timeConversion:'toTime'}}
                                             </td>
                                             <td *ngIf="employee && employee.month_salary.work_hours">
                                                 {{employee.month_salary.work_hours.ordinary_hours *

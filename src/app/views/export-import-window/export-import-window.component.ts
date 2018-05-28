@@ -374,7 +374,7 @@ export class ExportImportWindowComponent implements OnInit {
                                 employee.month_salary.work_hours.night_hours * employee.position.pay +
                                 employee.month_salary.work_hours.holiday_hours *
                                 this.config.holiday_rate;
-                            data.push([employee.firstname + ' ' + employee.lastname, employee.position.job_title, 'Darbo laikas'].concat(tempWorkDays).concat([employee.month_salary.work_hours.ordinary_hours, employee.month_salary.work_hours.night_hours, employee.month_salary.work_hours.holiday_hours, totalWorkHours, totalSalary]));
+                            data.push([employee.firstname + ' ' + employee.lastname, employee.position.job_title, 'Darbo laikas'].concat(tempWorkDays).concat([this.transformTime(employee.month_salary.work_hours.ordinary_hours), this.transformTime(employee.month_salary.work_hours.night_hours), this.transformTime(employee.month_salary.work_hours.holiday_hours), this.transformTime(totalWorkHours), totalSalary]));
                             data.push(['', '', 'Pertraukos'].concat(tempBreaks));
                         }
                     }
@@ -387,5 +387,26 @@ export class ExportImportWindowComponent implements OnInit {
         XLSX.utils.book_append_sheet(wb, ws, 'Eksportas');
         /* save to file */
         XLSX.writeFile(wb, 'Eksportas.xlsx');
+    }
+
+
+    public transformTime(value: any): any {
+        if (value) {
+            console.log('raw dec time: ', value);
+            let timeHours = Math.floor(value);
+            let timeMinutes = Math.round((value - timeHours) * 60);
+            console.log('Hours: ', timeHours);
+            console.log('Minutes: ', timeMinutes);
+            if (timeHours > 0 && timeMinutes > 0) {
+                return timeHours + 'h ' + timeMinutes + 'min';
+            } else if (timeHours > 0 && timeMinutes <= 0) {
+                return timeHours + 'h';
+            } else if (timeHours <= 0 && timeMinutes > 0) {
+                return timeMinutes + 'min';
+            } else {
+                console.log(timeHours + 'h ' + timeMinutes + 'min');
+            }
+        }
+        return '0min';
     }
 }

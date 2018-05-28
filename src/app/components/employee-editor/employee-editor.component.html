@@ -100,17 +100,17 @@
                                     <div class="flex-space-between">
                                         <span *ngIf="month">Paprastų darbo valandų per mėnesį</span>
                                         <strong *ngIf="month && month.work_hours">{{month.work_hours.ordinary_hours |
-                                            number:'1.2-2'}}</strong>
+                                            timeConversion:'toTime'}}</strong>
                                     </div>
                                     <div class="flex-space-between">
                                         <span *ngIf="month">Naktinių darbo valandų per mėnesį</span>
                                         <strong *ngIf="month && month.work_hours">{{month.work_hours.night_hours |
-                                            number:'1.2-2'}}</strong>
+                                            timeConversion:'toTime'}}</strong>
                                     </div>
                                     <div class="flex-space-between">
                                         <span *ngIf="month">Darbo valandų švenčių dienomis per mėnesį</span>
                                         <strong *ngIf="month && month.work_hours">{{month.work_hours.holiday_hours |
-                                            number:'1.2-2'}}</strong>
+                                            timeConversion:'toTime'}}</strong>
                                     </div>
                                     <div class="flex-space-between">
                                         <span *ngIf="month">Uždarbis per mėnesį</span>
@@ -127,7 +127,7 @@
                     </div>
                     <div class="col-12">
                         <strong>Darbo dienų skaičius</strong>
-                        <span *ngIf="scheduleRef.data">{{scheduleRef.data.work_days.length}}</span>
+                        <strong *ngIf="scheduleRef.data">{{scheduleRef.data.work_days.length}}</strong>
                     </div>
                 </mat-card-content>
             </mat-card>
