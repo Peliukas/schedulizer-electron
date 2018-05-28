@@ -5,6 +5,8 @@ import {MatDialog, MatSnackBar} from '@angular/material';
 import {CrudWindowComponent} from '../../components/crud-window/crud-window.component';
 import {ConfirmationBoxComponent} from '../../components/confirmation-box/confirmation-box.component';
 import {Schedule} from '../../models/schedule';
+import {UploadWindowComponent} from '../../components/upload-window/upload-window.component';
+import {ExportSchedulesWindowComponent} from '../../components/export-schedules-window/export-schedules-window.component';
 
 
 @Component({
@@ -74,4 +76,23 @@ export class ModelListViewComponent implements OnInit {
         });
     }
 
+    public openUploadWindow() {
+        let dialogRef = this.matDialog.open(UploadWindowComponent);
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.snackBar.open('Tvarkaraštis sėkmingai importuotas', 'OK', {duration: 3000});
+                this.getObjectList();
+            }
+        });
+    }
+
+    public openExportWindow() {
+        let dialogRef = this.matDialog.open(ExportSchedulesWindowComponent);
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.snackBar.open('Eksportas sėkmingas', 'OK', {duration: 3000});
+                this.getObjectList();
+            }
+        });
+    }
 }

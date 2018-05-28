@@ -93,13 +93,6 @@
                                         </mat-form-field>
                                     </div>
                                 </div>
-                                <!--<div class="col-6">-->
-                                <!--&lt;!&ndash;<mat-form-field>&ndash;&gt;-->
-                                <!--&lt;!&ndash;<input matInput type="number" placeholder="Maks. dirbamų valandų skaičius"&ndash;&gt;-->
-                                <!--&lt;!&ndash;[(ngModel)]="schedule.doc.work_hours_cap">&ndash;&gt;-->
-                                <!--&lt;!&ndash;</mat-form-field>&ndash;&gt;-->
-                                <!---->
-                                <!--</div>-->
                             </div>
                         </div>
                     </mat-tab>
@@ -206,9 +199,9 @@
             <div class="flex-space-between">
                 <span>Maksimalus darbo laikas: </span>
                 <strong>
-                    {{schedule.doc.work_hours_cap | floor}} h
+                    {{workHoursCapHours.value}} h
                     <span *ngIf="60 - (schedule.doc.work_hours_cap * 60) % 60 > 0 && 60 - (schedule.doc.work_hours_cap * 60) % 60 < 60">
-                        {{(schedule.doc.work_hours_cap * 60) % 60}} min
+                        {{workHoursCapMinutes.value}} min
                     </span>
                 </strong>
             </div>

@@ -1,0 +1,18 @@
+<div class="row">
+    <h5>Eksportuoti tvarkaraščius</h5>
+    <div class="col-12">
+        <mat-selection-list #schedules>
+            <mat-list-option (click)="generateDownloadJsonUri(schedules.selectedOptions)"
+                             *ngFor="let schedule of scheduleList" [value]="schedule">
+                {{schedule.id}}
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+    <div class="col-12">
+        <a [href]="downloadJsonHref" download="Tvarkarasciai.txt">
+            <button mat-raised-button>
+                Eksportuoti
+            </button>
+        </a>
+    </div>
+</div>

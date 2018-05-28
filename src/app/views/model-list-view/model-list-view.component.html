@@ -5,6 +5,12 @@
         <i *ngIf="modelName === 'schedule'" class="material-icons">&#xE8B5;</i>
         Pridėti naują
     </button>
+    <button mat-raised-button *ngIf="modelName === 'schedule'" (click)="openUploadWindow()">
+        Importuoti
+    </button>
+    <button mat-raised-button *ngIf="modelName === 'schedule'" (click)="openExportWindow()">
+        Eksportuoti
+    </button>
 </div>
 <mat-card class="model-list-body-wrapper">
     <mat-card-header>

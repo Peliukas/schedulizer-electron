@@ -23,7 +23,6 @@ export class AddBreakComponent implements OnInit {
     }
 
     public addBreak() {
-        console.log(this.breakFormGroup);
         if (this.breakFormGroup.valid) {
             this.breakList.push({start: this.breakFormGroup.get('start').value, end: this.breakFormGroup.get('end').value});
             this.breakFormGroup.reset('start');

@@ -33,6 +33,8 @@ import {DocumentPreviewComponent} from './components/document-preview/document-p
 import {TimeConvertPipe} from './pipes/time-convert.pipe';
 import {ElectronService, NgxElectronModule} from 'ngx-electron';
 import {NgPipesModule} from 'angular-pipes';
+import {UploadWindowComponent} from './components/upload-window/upload-window.component';
+import {ExportSchedulesWindowComponent} from './components/export-schedules-window/export-schedules-window.component';
 
 
 const routes: Routes = [
@@ -60,7 +62,9 @@ const routes: Routes = [
         CalendarFreeDaySettingsComponent,
         ExportImportWindowComponent,
         DocumentPreviewComponent,
-        TimeConvertPipe
+        TimeConvertPipe,
+        UploadWindowComponent,
+        ExportSchedulesWindowComponent
     ],
     imports: [
         RouterModule.forRoot(routes),
@@ -80,7 +84,7 @@ const routes: Routes = [
         MatTooltipModule, MatSlideToggleModule, MatChipsModule, MatNativeDateModule
     ],
     providers: [StorageAdapterService, ElectronService],
-    entryComponents: [CrudWindowComponent, ConfirmationBoxComponent, AddBreakComponent, DocumentPreviewComponent],
+    entryComponents: [CrudWindowComponent, ConfirmationBoxComponent, AddBreakComponent, DocumentPreviewComponent, UploadWindowComponent, ExportSchedulesWindowComponent],
     bootstrap: [AppComponent]
 })
 

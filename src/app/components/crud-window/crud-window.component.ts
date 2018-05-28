@@ -121,9 +121,6 @@ export class CrudWindowComponent implements OnInit {
                 let schedule = new Schedule();
                 let preSavedValue = this.scheduleFormControlGroup.value;
                 preSavedValue.work_hours_cap = this.workHoursCapHours.value + (this.workHoursCapMinutes.value / 60);
-                console.log('Cap hour: ', this.workHoursCapHours.value);
-                console.log('Cap min: ', this.workHoursCapMinutes.value);
-                console.log('presaved: ', preSavedValue);
                 schedule.setValues(preSavedValue);
                 schedule.save();
                 this.dialogRef.close(schedule);
@@ -151,24 +148,6 @@ export class CrudWindowComponent implements OnInit {
             });
     }
 
-    public fileUploaded(event: any) {
-        let fileReader = new FileReader();
-        fileReader.readAsText(event.srcElement.files[0]);
-        fileReader.onload = function () {
-            var dataURL = fileReader.result;
-            let scheduleRef = new Schedule();
-            let parsedData = JSON.parse(dataURL);
-            scheduleRef.data = {
-                _id: parsedData.doc._id,
-                schedule_name: parsedData.doc.schedule_name,
-                work_days: parsedData.doc.work_days,
-                is_private: parsedData.doc.is_private,
-                work_hours_cap: parsedData.doc.work_hours_cap,
-            };
-            scheduleRef.save();
-        };
-        this.snackBar.open('Tvarkaraštis sėkmingai importuotas', 'OK', {duration: 3000});
-    }
 
 
 }

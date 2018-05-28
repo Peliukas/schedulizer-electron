@@ -32,7 +32,8 @@ export class Schedule {
                 this.data._rev = doc._rev;
                 this.db.put(this.data);
             }, cause => {
-                if (cause.status === 404) {
+                console.log('cause: ', cause);
+                if (cause.status === 404 || cause.status === 409) {
                     this.db.put(this.data);
                 }
             });
