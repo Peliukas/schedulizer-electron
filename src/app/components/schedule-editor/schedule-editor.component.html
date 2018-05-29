@@ -261,7 +261,7 @@
                  [class.selected-cell]="day.date === selectedCalendarDay.date">
                 <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
             </div>
-            <div *ngIf="day.events">
+            <div *ngIf="day.events" class="calendar-day-cell-container">
                 <div *ngFor="let event of day.events" [class.holiday]="event.color === 'holiday'"
                      class="work-day-calendar-cell-time" [class.work-day-break]="event.color === 'work-day-break'">
                     <small>{{ event.title }}</small>

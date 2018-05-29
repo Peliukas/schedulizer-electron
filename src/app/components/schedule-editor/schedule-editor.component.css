@@ -30,6 +30,7 @@
 .work-day-calendar-cell-time {
     text-align: center;
     background: #e65d5d;
+    line-height: 1px !important;
 }
 
 .schedule-period-card, .schedule-settings-card {
@@ -111,4 +112,8 @@ mat-chip-list {
 
 /deep/ .mat-option-text {
     width: 100% !important;
+}
+
+/deep/ .cal-month-view .cal-day-cell {
+    min-height: 60px;
 }
