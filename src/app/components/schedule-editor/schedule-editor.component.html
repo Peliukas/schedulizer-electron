@@ -92,6 +92,13 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <button mat-raised-button
+                                        (click)="selectMultipleDays ? saveScheduleChanges() : saveWorkDayChanges()">
+                                    Išsaugoti
+                                </button>
+                                <button mat-raised-button (click)="deleteSelectedSchedule()">Šalinti</button>
+                            </div>
                         </div>
                     </mat-tab>
                 </mat-tab-group>
