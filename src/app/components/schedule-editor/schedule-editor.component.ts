@@ -322,6 +322,15 @@ export class ScheduleEditorComponent implements OnInit {
                     this.schedule.doc.work_days.push(tempDayNext);
                 });
             }
+        } else {
+            //break addition
+            for (let existingWorkDay of this.schedule.doc.work_days) {
+                for (let tempWorkDay of this.selectedWorkDayList) {
+                    if (new Date(tempWorkDay.title).toDateString() === new Date(existingWorkDay.date).toDateString()) {
+                        existingWorkDay.breaks = existingWorkDay.breaks.concat(this.breakList);
+                    }
+                }
+            }
         }
         scheduleRef.data = this.schedule.doc;
         scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
@@ -436,6 +445,7 @@ export class ScheduleEditorComponent implements OnInit {
 
     public openAddBreakWindow() {
         let dialogRef = this.matDialog.open(AddBreakComponent, {
+            data: this.selectedCalendarDay ? this.breakList : [],
             width: '550px',
         });
         dialogRef.afterClosed()

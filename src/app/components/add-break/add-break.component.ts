@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
+import {Component, OnInit, Inject} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -12,10 +12,13 @@ export class AddBreakComponent implements OnInit {
     breakList: any[] = [];
     breakFormGroup: FormGroup;
 
-    constructor(private dialogRef: MatDialogRef<AddBreakComponent>) {
+    constructor(@Inject(MAT_DIALOG_DATA) private data: any, private dialogRef: MatDialogRef<AddBreakComponent>) {
     }
 
     ngOnInit() {
+        if (this.data) {
+            this.breakList = this.data;
+        }
         this.breakFormGroup = new FormGroup({
             'start': new FormControl('', Validators.required),
             'end': new FormControl('', Validators.required),

@@ -114,6 +114,15 @@ mat-chip-list {
     width: 100% !important;
 }
 
+/deep/ .cal-day-number {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
 /deep/ .cal-month-view .cal-day-cell {
-    min-height: 60px;
+    min-height: 50px;
+}
+
+/deep/ .cal-month-view .cal-cell-top {
+    min-height: 30px;
 }
