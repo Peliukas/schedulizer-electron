@@ -58,6 +58,8 @@ export class ExportImportWindowComponent implements OnInit {
                                 employee.doc.position = employeePosition;
                                 result.push(employee);
                             });
+                    } else {
+                        result.push(employee);
                     }
                 }
                 this.employeeList = result;
@@ -106,8 +108,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                         firstname: employee.doc.firstname,
                                                                         lastname: employee.doc.lastname,
                                                                         work_days: employeeWorkDays[year][month].work_days,
-                                                                        position: employee.doc.position,
-                                                                        month_salary: employeeWorkDays[year][month]
+                                                                        position: employee.doc.position ? employee.doc.position : '',
+                                                                        month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                                     });
                                                                 } else {
                                                                     this.calendarData['years'][year]['months'][month]['employees'] = [];
@@ -116,8 +118,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                         firstname: employee.doc.firstname,
                                                                         lastname: employee.doc.lastname,
                                                                         work_days: employeeWorkDays[year][month].work_days,
-                                                                        position: employee.doc.position,
-                                                                        month_salary: employeeWorkDays[year][month]
+                                                                        position: employee.doc.position ? employee.doc.position : '',
+                                                                        month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                                     });
                                                                 }
                                                             } else {
@@ -129,8 +131,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                     firstname: employee.doc.firstname,
                                                                     lastname: employee.doc.lastname,
                                                                     work_days: employeeWorkDays[year][month].work_days,
-                                                                    position: employee.doc.position,
-                                                                    month_salary: employeeWorkDays[year][month]
+                                                                    position: employee.doc.position ? employee.doc.position : '',
+                                                                    month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                                 });
                                                             }
                                                         } else {
@@ -143,8 +145,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                 firstname: employee.doc.firstname,
                                                                 lastname: employee.doc.lastname,
                                                                 work_days: employeeWorkDays[year][month].work_days,
-                                                                position: employee.doc.position,
-                                                                month_salary: employeeWorkDays[year][month]
+                                                                position: employee.doc.position ? employee.doc.position : '',
+                                                                month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                             });
                                                         }
                                                     }
@@ -162,8 +164,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                             firstname: employee.doc.firstname,
                                                                             lastname: employee.doc.lastname,
                                                                             work_days: employeeWorkDays[year][month].work_days,
-                                                                            position: employee.doc.position,
-                                                                            month_salary: employeeWorkDays[year][month]
+                                                                            position: employee.doc.position ? employee.doc.position : '',
+                                                                            month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                                         });
                                                                     } else {
                                                                         this.calendarData['years'][year]['months'][month]['employees'] = [];
@@ -172,8 +174,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                             firstname: employee.doc.firstname,
                                                                             lastname: employee.doc.lastname,
                                                                             work_days: employeeWorkDays[year][month].work_days,
-                                                                            position: employee.doc.position,
-                                                                            month_salary: employeeWorkDays[year][month]
+                                                                            position: employee.doc.position ? employee.doc.position : '',
+                                                                            month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                                         });
                                                                     }
                                                                 } else {
@@ -183,8 +185,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                         firstname: employee.doc.firstname,
                                                                         lastname: employee.doc.lastname,
                                                                         work_days: employeeWorkDays[year][month].work_days,
-                                                                        position: employee.doc.position,
-                                                                        month_salary: employeeWorkDays[year][month].work_hours
+                                                                        position: employee.doc.position ? employee.doc.position : '',
+                                                                        month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                                     });
                                                                 }
                                                             } else {
@@ -196,8 +198,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                     firstname: employee.doc.firstname,
                                                                     lastname: employee.doc.lastname,
                                                                     work_days: employeeWorkDays[year][month].work_days,
-                                                                    position: employee.doc.position,
-                                                                    month_salary: employeeWorkDays[year][month]
+                                                                    position: employee.doc.position ? employee.doc.position : '',
+                                                                    month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                                 });
                                                             }
                                                         } else {
@@ -210,8 +212,8 @@ export class ExportImportWindowComponent implements OnInit {
                                                                 firstname: employee.doc.firstname,
                                                                 lastname: employee.doc.lastname,
                                                                 work_days: employeeWorkDays[year][month].work_days,
-                                                                position: employee.doc.position,
-                                                                month_salary: employeeWorkDays[year][month]
+                                                                position: employee.doc.position ? employee.doc.position : '',
+                                                                month_salary: employeeWorkDays[year][month] ? employeeWorkDays[year][month] : ''
                                                             });
                                                         }
                                                     }

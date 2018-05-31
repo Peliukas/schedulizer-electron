@@ -6,16 +6,24 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class TimeConversionPipe implements PipeTransform {
 
     transform(value: any, args?: any): any {
+        let result = '';
         if (args === 'toTime' && value) {
             let timeHours = Math.floor(value);
             let timeMinutes = Math.round((value - timeHours) * 60);
             if (timeHours > 0 && timeMinutes > 0) {
-                return timeHours + 'h ' + timeMinutes + 'min';
+                result = timeHours + 'h ' + timeMinutes + 'min';
             } else if (timeHours > 0 && timeMinutes <= 0) {
-                return timeHours + 'h';
+                result = timeHours + 'h';
             } else if (timeHours <= 0 && timeMinutes > 0) {
-                return timeMinutes + 'min';
+                result = timeMinutes + 'min';
             }
+            if (timeMinutes === 60) {
+                timeHours += 1;
+                timeMinutes = 0;
+                result = timeHours + 'h ' + timeMinutes + 'min';
+                console.log('setting new result', result);
+            }
+            return result;
         }
         return '0min';
     }

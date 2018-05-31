@@ -27,10 +27,15 @@
     display: none !important;
 }
 
+
 .work-day-calendar-cell-time {
     text-align: center;
     background: #e65d5d;
     line-height: 1px !important;
+}
+
+.work-day-calendar-cell-time small {
+    line-height: 1.2 !important;
 }
 
 .schedule-period-card, .schedule-settings-card {
@@ -124,5 +129,6 @@ mat-chip-list {
 }
 
 /deep/ .cal-month-view .cal-cell-top {
-    min-height: 30px;
+    min-height: 25px;
+    position: relative;
 }

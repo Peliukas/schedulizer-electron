@@ -213,29 +213,32 @@
             <div class="flex-space-between">
                 <span>Liko: </span>
                 <strong *ngIf="schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
-                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) > 0 || schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
-                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) < 0" [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
-                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
+                    totalWorkingHours.night_hours) > 0 || schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours ) < 0" [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
+                totalWorkingHours.night_hours * 60)"
                         [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
-                totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
+                totalWorkingHours.night_hours * 60)">
                     <!-- > 0 -->
                     <span class="success-text" *ngIf="schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
-                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) > 0">{{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
-                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) | floor}}</span>
+                    totalWorkingHours.night_hours) > 0">{{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours ) | floor}}</span>
                     <!-- < 0 -->
                     <span class="warning-text" *ngIf="schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
-                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) < 0">{{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
-                    totalWorkingHours.night_hours + totalWorkingHours.holiday_hours ) | ceil}}</span> h
+                    totalWorkingHours.night_hours ) < 0">{{schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours ) | ceil}}</span> h
                     <span *ngIf="60 - ((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60) != 0"
+                        totalWorkingHours.night_hours * 60)) % 60) != 0"
                           [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
-                            totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)"
+                            totalWorkingHours.night_hours * 60)"
                           [class.warning-text]="schedule.doc.work_hours_cap * 60 < (totalWorkingHours.ordinary_hours * 60 +
-                            totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)">
+                            totalWorkingHours.night_hours * 60)">
                         {{((schedule.doc.work_hours_cap * 60 - (totalWorkingHours.ordinary_hours * 60 +
-                        totalWorkingHours.night_hours * 60 + totalWorkingHours.holiday_hours * 60)) % 60 ) | round}} min
+                        totalWorkingHours.night_hours * 60)) % 60 ) | round}} min
                     </span>
                 </strong>
+            </div>
+            <div class="flex-space-between">
+
             </div>
         </div>
         <div class="col-6 flex-space-around">
@@ -253,18 +256,35 @@
     <div class="col-12">
         <ng-template #customCellTemplate let-day="day" let-locale="locale">
             <div *ngIf="selectMultipleDays" #local="appLocalVariables" [appLocalVariables]="{clicked: false}"
-                 (click)="local.clicked = !local.clicked" (mouseup)="dayClicked(day)" class="cal-cell-top"
+                 (click)="local.clicked = !local.clicked" (mouseup)="dayClicked(day)" class="cal-cell-top row"
                  [class.selected-cell]="local.clicked">
-                <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+                <div class="col-12">
+                    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+                </div>
+                <div class="col-12">
+                    <div *ngIf="day.events && selectMultipleDays" class="calendar-day-cell-container">
+                        <div *ngFor="let event of day.events" [class.holiday]="event.color === 'holiday'"
+                             class="work-day-calendar-cell-time"
+                             [class.work-day-break]="event.color === 'work-day-break'">
+                            <small>{{ event.title }}</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div *ngIf="!selectMultipleDays" (click)="dayClicked(day)" class="cal-cell-top"
+            <div *ngIf="!selectMultipleDays" (click)="dayClicked(day)" class="cal-cell-top row"
                  [class.selected-cell]="day.date === selectedCalendarDay.date">
-                <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
-            </div>
-            <div *ngIf="day.events" class="calendar-day-cell-container">
-                <div *ngFor="let event of day.events" [class.holiday]="event.color === 'holiday'"
-                     class="work-day-calendar-cell-time" [class.work-day-break]="event.color === 'work-day-break'">
-                    <small>{{ event.title }}</small>
+                <div class="col-12">
+                    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+                </div>
+                <div class="col-12">
+                    <div *ngIf="day.events && !selectMultipleDays" (click)="dayClicked(day)"
+                         class="calendar-day-cell-container">
+                        <div *ngFor="let event of day.events" [class.holiday]="event.color === 'holiday'"
+                             class="work-day-calendar-cell-time"
+                             [class.work-day-break]="event.color === 'work-day-break'">
+                            <small>{{ event.title }}</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </ng-template>

@@ -1,6 +1,7 @@
 import PouchDB from 'pouchdb';
 import {Configurations} from './configurations';
 import {Holiday} from './holiday';
+import {start} from 'repl';
 
 export class Schedule {
 
@@ -136,38 +137,47 @@ export class Schedule {
                     endDateTime.setDate(startDateTime.getDate() + 1);
                 }
                 let currentHour = startDateTime;
+                if (currentHour.getMinutes() > 0) {
+                    if (currentHour.getHours() < parseInt(configuration.night_time_start.substr(0, 2)) ||
+                        currentHour.getHours() >= parseInt(configuration.night_time_end.substr(0, 2))) {
+                        ordinaryWorkHours -= currentHour.getMinutes() / 60;
+                    } else if (currentHour.getHours() >= parseInt(configuration.night_time_start.substr(0, 2)) ||
+                        currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
+                        totalNightTimeHours -= currentHour.getMinutes() / 60;
+                    }
+                }
                 return new Holiday().findAll().then(holidayList => {
-                    while (currentHour < endDateTime) {
-                        if (
-                            (currentHour.getHours() >= parseInt(configuration.night_time_start.substr(0, 2)) &&
-                                currentHour.getHours() <= parseInt(configuration.night_time_end.substr(0, 2))) ||
-                            (currentHour.getHours() <= parseInt(configuration.night_time_start.substr(0, 2)) &&
-                                currentHour.getHours() >= parseInt(configuration.night_time_end.substr(0, 2)))) {
-                            if (currentHour.getMinutes() > 0) {
-                                ordinaryWorkHours += 1 - currentHour.getMinutes() / 60;
-                            } else if ((currentHour.getHours() === endDateTime.getHours() && endDateTime.getMinutes() > 0)) {
-                                ordinaryWorkHours += 1 - endDateTime.getMinutes() / 60;
+                    while (currentHour <= endDateTime) {
+                        //ordinary hours
+                        if ((currentHour.getHours() < parseInt(configuration.night_time_start.substr(0, 2)) &&
+                            currentHour.getHours() >= parseInt(configuration.night_time_end.substr(0, 2)))) {
+                            //last hour check for minutes
+                            if (currentHour.getHours() === endDateTime.getHours()) {
+                                if (endDateTime.getMinutes() > 0) {
+                                    ordinaryWorkHours += endDateTime.getMinutes() / 60;
+                                }
                             } else {
                                 ordinaryWorkHours += 1;
                             }
-                        } else {
-                            if (currentHour.getHours() !== parseInt(configuration.night_time_start.substr(0, 2)) &&
-                                currentHour.getHours() !== parseInt(configuration.night_time_end.substr(0, 2))) {
-                                if (currentHour.getMinutes() > 0) {
-                                    totalNightTimeHours += 1 - currentHour.getMinutes() / 60;
-                                } else if ((currentHour.getHours() === endDateTime.getHours() && endDateTime.getMinutes() > 0)) {
-                                    totalNightTimeHours += 1 - endDateTime.getMinutes() / 60;
-                                } else {
-                                    totalNightTimeHours += 1;
+                        }
+                        //night hours
+                        else if (currentHour.getHours() >= parseInt(configuration.night_time_start.substr(0, 2)) ||
+                            currentHour.getHours() < parseInt(configuration.night_time_end.substr(0, 2))) {
+                            //last hour check for minutes
+                            if ((currentHour.getHours() === endDateTime.getHours())) {
+                                if (endDateTime.getMinutes() > 0) {
+                                    totalNightTimeHours += endDateTime.getMinutes() / 60;
                                 }
+                            } else {
+                                totalNightTimeHours += 1;
                             }
                         }
                         holidayList.rows.forEach(holiday => {
                             if (currentHour.getMonth() === holiday.doc.holiday_month - 1 && currentHour.getDate() === holiday.doc.holiday_day) {
                                 if (currentHour.getMinutes() > 0) {
-                                    totalHolidayWorkHours += 1 - currentHour.getMinutes() / 60;
+                                    totalHolidayWorkHours += currentHour.getMinutes() / 60;
                                 } else if ((currentHour.getHours() === endDateTime.getHours() && endDateTime.getMinutes() > 0)) {
-                                    totalHolidayWorkHours += 1 - endDateTime.getMinutes() / 60;
+                                    totalHolidayWorkHours += endDateTime.getMinutes() / 60;
                                 } else {
                                     totalHolidayWorkHours += 1;
                                 }
@@ -175,7 +185,6 @@ export class Schedule {
                         });
                         currentHour.setHours(currentHour.getHours() + 1);
                     }
-
                     if (workDay.breaks) {
                         for (let workDayBreak of workDay.breaks) {
                             let breakStartTime = new Date(workDay.date);

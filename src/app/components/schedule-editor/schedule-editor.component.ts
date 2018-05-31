@@ -318,6 +318,9 @@ export class ScheduleEditorComponent implements OnInit {
                         breaks: tempDayNextBreaks,
                         isHoliday: false
                     };
+                    if (!this.schedule.doc.work_days) {
+                        this.schedule.doc.work_days = [];
+                    }
                     this.schedule.doc.work_days.push(tempDay);
                     this.schedule.doc.work_days.push(tempDayNext);
                 });
@@ -582,8 +585,8 @@ export class ScheduleEditorComponent implements OnInit {
 
     public resetSelection() {
         this.selectedCalendarDay = '';
-        this.endTimeInputControl.enable();
-        this.startTimeInputControl.enable();
+        this.endTimeInputControl.reset('');
+        this.startTimeInputControl.reset('');
         this.selectedWorkDayList = [];
         this.breakList = [];
         this.isHoliday = false;

@@ -13,6 +13,7 @@ export class ExportSchedulesWindowComponent implements OnInit {
 
     scheduleList: any[];
     downloadJsonHref: any;
+    deleteExported: boolean = false;
 
     constructor(private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<ExportSchedulesWindowComponent>) {
     }
@@ -28,16 +29,22 @@ export class ExportSchedulesWindowComponent implements OnInit {
         let selectedScheduleList = [];
         selectedOptions.selected.forEach(item => {
             selectedScheduleList.push(item.value.doc);
-            let temp = new Schedule();
-            temp.data = item.value.doc;
-            temp.delete();
         });
         if (selectedScheduleList.length > 0) {
             var theJSON = JSON.stringify(selectedScheduleList);
             var uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
             this.downloadJsonHref = uri;
         }
-        this.dialogRef.close(true);
+    }
+
+    public downloadFile(selectedOptions: any) {
+        if (this.deleteExported) {
+            selectedOptions.selected.forEach(item => {
+                let temp = new Schedule();
+                temp.data = item.value.doc;
+                temp.delete();
+            });
+        }
     }
 
 }

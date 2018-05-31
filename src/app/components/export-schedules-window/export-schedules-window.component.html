@@ -9,10 +9,11 @@
         </mat-selection-list>
     </div>
     <div class="col-12">
-        <a [href]="downloadJsonHref" download="Tvarkarasciai.txt">
+        <a [href]="downloadJsonHref" download="Tvarkarasciai.txt" (click)="downloadFile()">
             <button mat-raised-button>
                 Eksportuoti
             </button>
         </a>
+        <mat-checkbox [(ngModel)]="deleteExported">Šalinti pažymėtus po eksporto</mat-checkbox>
     </div>
 </div>
