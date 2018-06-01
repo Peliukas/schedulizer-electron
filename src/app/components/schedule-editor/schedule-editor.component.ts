@@ -289,6 +289,7 @@ export class ScheduleEditorComponent implements OnInit {
                 }
                 uniqueWorkDays = uniqueWorkDays.concat(tempWorkDayList);
                 this.schedule.doc.work_days = uniqueWorkDays;
+                console.log("temp workday list: ", uniqueWorkDays);
             } else {
                 tempWorkDayList.forEach(workDay => {
                     let tempDayBreaks = [];
@@ -343,6 +344,7 @@ export class ScheduleEditorComponent implements OnInit {
         this.getCalendarWorkDays();
         this.selectMultipleDays = false;
         this.refresh.next();
+        console.log("end result: ", scheduleRef.data.work_days);
     }
 
     public saveWorkDayChanges() {
@@ -363,16 +365,6 @@ export class ScheduleEditorComponent implements OnInit {
                     breaks: this.breakList,
                     isHoliday: this.isHoliday
                 };
-                this.breakList.forEach(breakItem => {
-                    if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDay.start_time.substr(0, 2)) &&
-                        (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDay.end_time.substr(0, 2)))) {
-                        tempDayBreaks.push(breakItem);
-                    }
-                    // else if (parseInt(breakItem.start.substr(0, 2)) >= parseInt(tempDayNext.start_time.substr(0, 2)) &&
-                    //     (parseInt(breakItem.start.substr(0, 2)) <= parseInt(tempDayNext.end_time.substr(0, 2)))) {
-                    //     tempNextDayBreaks.push(breakItem);
-                    // }
-                });
             } else {
                 tempDay = {
                     start_time: this.startTimeInputControl.value,
@@ -414,6 +406,7 @@ export class ScheduleEditorComponent implements OnInit {
                     scheduleRef.save();
                     this.schedule.doc = scheduleRef.data;
                     this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
+                    this.resetSelection();
                     this.getCalendarWorkDays();
                     this.refresh.next();
                     return true;
@@ -436,8 +429,8 @@ export class ScheduleEditorComponent implements OnInit {
         scheduleRef.save();
         this.schedule.doc = scheduleRef.data;
         this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
-        this.resetSelection();
         this.getCalendarWorkDays();
+        this.resetSelection();
         this.refresh.next();
     }
 

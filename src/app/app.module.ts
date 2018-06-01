@@ -36,6 +36,7 @@ import {NgPipesModule} from 'angular-pipes';
 import {UploadWindowComponent} from './components/upload-window/upload-window.component';
 import {ExportSchedulesWindowComponent} from './components/export-schedules-window/export-schedules-window.component';
 import {TimeConversionPipe} from './pipes/time-conversion.pipe';
+import { PDFExportModule } from '@progress/kendo-angular-pdf-export'
 
 
 const routes: Routes = [
@@ -79,6 +80,7 @@ const routes: Routes = [
         BrowserModule,
         Ng2FileInputModule.forRoot(),
         NgxElectronModule,
+        PDFExportModule,
         BrowserAnimationsModule,
         MatDatepickerModule, MatMenuModule, MatButtonModule, MatCardModule, MatTabsModule, MatStepperModule,
         MatTableModule, MatPaginatorModule, MatInputModule, MatSnackBarModule, MatSortModule, MatCheckboxModule,
