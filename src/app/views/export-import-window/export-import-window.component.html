@@ -17,98 +17,103 @@
             <mat-divider></mat-divider>
             <div class="row" *ngIf="calendarData">
                 <div class="col-12">
-                    <button mat-raised-button (click)="closeAndExportPDF()">Eksportuoti PDF</button>
+                    <button mat-raised-button (click)="pdf.saveAs('Eksportas.pdf')">Eksportuoti PDF</button>
                     <button mat-raised-button (click)="closeAndExportXLS()">Eksportuoti XLS</button>
                 </div>
-                <div class="col-12 doc-body" #docBody id="doc-body">
-                    <div *ngFor="let year of calendarData.years">
-                        <div *ngIf="year && year.months">
-                            <div *ngFor="let month of year.months">
-                                <div *ngIf="month && month.employees">
-                                    <h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>
-                                    <table>
-                                        <thead>
-                                        <tr>
-                                            <td><strong>Darbuotojas(a)</strong></td>
-                                            <td><strong>Pareigos</strong></td>
-                                            <td *ngFor="let dayNumber of calendarDayNumbers" class="day-cell-header">
-                                                <strong>{{dayNumber}}</strong></td>
-                                            <td>Paprastų</td>
-                                            <td>Naktinių</td>
-                                            <td>Šventinių</td>
-                                            <td>Iš viso valandų</td>
-                                            <td>Uždarbis</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr *ngFor="let employee of month['employees']" class="employee-row ">
-                                            <td *ngIf="employee">{{employee.firstname}} {{employee.lastname}}</td>
-                                            <td *ngIf="employee">{{employee.position.job_title}}</td>
-                                            <td *ngFor="let dayNumber of calendarDayNumbers">
-                                                <div *ngFor="let workDay of employee.work_days">
-                                                    <div class="common-schedule-work-day-cell"
-                                                         *ngIf="getDay(workDay.date) === dayNumber">
-                                                        <div class="work-hours-container">
-                                                            <strong>
-                                                                {{workDay.start_time}}
-                                                            </strong><br>
-                                                            <strong>
-                                                                {{workDay.end_time}}
-                                                            </strong>
-                                                        </div>
-                                                        <div *ngIf="workDay.breaks">
-                                                            <div *ngFor="let break of workDay.breaks"
-                                                                 class="break-label">
-                                                                <i>
+                <kendo-pdf-export #pdf>
+                    <div class="col-12 doc-body" #docBody id="doc-body">
+                        <div *ngFor="let year of calendarData.years">
+                            <div *ngIf="year && year.months">
+                                <div *ngFor="let month of year.months">
+                                    <div *ngIf="month && month.employees">
+                                        <h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <td><strong>Darbuotojas(a)</strong></td>
+                                                <td><strong>Pareigos</strong></td>
+                                                <td *ngFor="let dayNumber of calendarDayNumbers"
+                                                    class="day-cell-header">
+                                                    <strong>{{dayNumber}}</strong></td>
+                                                <td>Paprastų</td>
+                                                <td>Naktinių</td>
+                                                <td>Šventinių</td>
+                                                <td>Iš viso valandų</td>
+                                                <td>Uždarbis</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr *ngFor="let employee of month['employees']" class="employee-row ">
+                                                <td *ngIf="employee">{{employee.firstname}} {{employee.lastname}}</td>
+                                                <td *ngIf="employee">{{employee.position.job_title}}</td>
+                                                <td *ngFor="let dayNumber of calendarDayNumbers">
+                                                    <div *ngFor="let workDay of employee.work_days">
+                                                        <div class="common-schedule-work-day-cell"
+                                                             *ngIf="getDay(workDay.date) === dayNumber">
+                                                            <div class="work-hours-container">
+                                                                <strong>
+                                                                    {{workDay.start_time}}
+                                                                </strong><br>
+                                                                <strong>
+                                                                    {{workDay.end_time}}
+                                                                </strong>
+                                                            </div>
+                                                            <div *ngIf="workDay.breaks">
+                                                                <div *ngFor="let break of workDay.breaks"
+                                                                     class="break-label">
+                                                                    <i>
                                                                         {{break.start}}
-                                                                </i><br>
-                                                                <i>
+                                                                    </i><br>
+                                                                    <i>
                                                                         {{break.end}}
-                                                                </i>
+                                                                    </i>
 
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td *ngIf="employee && employee.month_salary.work_hours">
-                                                {{employee.month_salary.work_hours.ordinary_hours |
-                                                timeConversion:'toTime'}}
-                                            </td>
-                                            <td *ngIf="employee && employee.month_salary.work_hours">
-                                                {{employee.month_salary.work_hours.night_hours |
-                                                timeConversion:'toTime'}}
-                                            </td>
-                                            <td *ngIf="employee && employee.month_salary.work_hours">
-                                                {{employee.month_salary.work_hours.holiday_hours |
-                                                timeConversion:'toTime'}}
-                                            </td>
-                                            <td *ngIf="employee && employee.month_salary.work_hours">
-                                                {{employee.month_salary.work_hours.ordinary_hours +
-                                                employee.month_salary.work_hours.night_hours +
-                                                employee.month_salary.work_hours.holiday_hours |
-                                                timeConversion:'toTime'}}
-                                            </td>
-                                            <td *ngIf="employee && employee.month_salary.work_hours">
-                                                {{employee.month_salary.work_hours.ordinary_hours *
-                                                employee.position.pay + employee.month_salary.work_hours.night_hours *
-                                                configRef.data.night_time_rate +
-                                                employee.month_salary.work_hours.night_hours * employee.position.pay +
-                                                employee.month_salary.work_hours.holiday_hours *
-                                                configRef.data.holiday_rate | number:"1.2-2"}}
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <div>
-                                        <strong class="red-square">Darbo valandos</strong>
-                                        <i class="green-square">Pertraukos</i>
+                                                </td>
+                                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                                    {{employee.month_salary.work_hours.ordinary_hours |
+                                                    timeConversion:'toTime'}}
+                                                </td>
+                                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                                    {{employee.month_salary.work_hours.night_hours |
+                                                    timeConversion:'toTime'}}
+                                                </td>
+                                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                                    {{employee.month_salary.work_hours.holiday_hours |
+                                                    timeConversion:'toTime'}}
+                                                </td>
+                                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                                    {{employee.month_salary.work_hours.ordinary_hours +
+                                                    employee.month_salary.work_hours.night_hours +
+                                                    employee.month_salary.work_hours.holiday_hours |
+                                                    timeConversion:'toTime'}}
+                                                </td>
+                                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                                    {{employee.month_salary.work_hours.ordinary_hours *
+                                                    employee.position.pay + employee.month_salary.work_hours.night_hours
+                                                    *
+                                                    configRef.data.night_time_rate +
+                                                    employee.month_salary.work_hours.night_hours * employee.position.pay
+                                                    +
+                                                    employee.month_salary.work_hours.holiday_hours *
+                                                    configRef.data.holiday_rate | number:"1.2-2"}}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div>
+                                            <strong class="red-square">Darbo valandos</strong>
+                                            <i class="green-square">Pertraukos</i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </kendo-pdf-export>
             </div>
         </mat-card-content>
     </mat-card>
