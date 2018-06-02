@@ -16,9 +16,6 @@ export class AddBreakComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.data) {
-            this.breakList = this.data;
-        }
         this.breakFormGroup = new FormGroup({
             'start': new FormControl('', Validators.required),
             'end': new FormControl('', Validators.required),
