@@ -106,7 +106,7 @@ export class CrudWindowComponent implements OnInit {
                     employee.save();
                     this.dialogRef.close(employee);
                 } else {
-                    this.snackBar.open('Užpildykite visus reikiamus laukus', 'OK', {duration: 3000});
+                    this.snackBar.open('Užpildykite visus reikiamus laukus', 'OK', {duration: 3000, verticalPosition: 'top'});
                 }
                 break;
             case 'position':

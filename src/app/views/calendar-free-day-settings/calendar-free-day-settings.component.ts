@@ -76,7 +76,7 @@ export class CalendarFreeDaySettingsComponent implements OnInit {
                 configRef.data._rev = configuration._rev;
                 configRef.data._id = 'multipliers';
                 configRef.save();
-                this.snackBar.open('Pakeitimai sėkmingai išsaugoti', 'OK', {duration: 3000});
+                this.snackBar.open('Pakeitimai sėkmingai išsaugoti', 'OK', {duration: 3000, verticalPosition: 'top'});
             });
 
     }
@@ -104,7 +104,11 @@ export class CalendarFreeDaySettingsComponent implements OnInit {
                         this.holidayList.splice(i, 1);
                     }
                 }
-                this.snackBar.open('Šventė ' + id + ' pašalinta', 'OK', {duration: 3000});
+                this.snackBar.open('Šventė ' + id + ' pašalinta', 'OK', {duration: 3000,, verticalPosition
+            :
+                'top';
+            })
+                ;
             });
     }
 

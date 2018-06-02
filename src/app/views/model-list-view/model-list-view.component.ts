@@ -71,7 +71,11 @@ export class ModelListViewComponent implements OnInit {
         dialogRef.afterClosed().subscribe(data => {
             if (data && data.data._id) {
                 this.getObjectList();
-                this.snackBar.open("Naujas įrašas pridėtas sėkmingai!", 'OK', {duration: 3000});
+                this.snackBar.open('Naujas įrašas pridėtas sėkmingai!', 'OK', {duration: 3000,, verticalPosition
+            :
+                'top';
+            })
+                ;
             }
         });
     }
@@ -80,7 +84,7 @@ export class ModelListViewComponent implements OnInit {
         let dialogRef = this.matDialog.open(UploadWindowComponent);
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                this.snackBar.open('Tvarkaraštis sėkmingai importuotas', 'OK', {duration: 3000});
+                this.snackBar.open('Tvarkaraštis sėkmingai importuotas', 'OK', {duration: 3000, verticalPosition: 'top'});
                 this.getObjectList();
             }
         });
@@ -90,7 +94,7 @@ export class ModelListViewComponent implements OnInit {
         let dialogRef = this.matDialog.open(ExportSchedulesWindowComponent);
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                this.snackBar.open('Eksportas sėkmingas', 'OK', {duration: 3000});
+                this.snackBar.open('Eksportas sėkmingas', 'OK', {duration: 3000, verticalPosition: 'top'});
                 this.getObjectList();
             }
         });

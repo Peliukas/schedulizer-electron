@@ -30,7 +30,7 @@ export class PositionsMainComponent implements OnInit {
                         if (answer === true) {
                             position.delete();
                             this.refreshList(position.data);
-                            this.snackBar.open('An position has been removed', 'OK', {duration: 3000});
+                            this.snackBar.open('Pareiga pašalinta', 'OK', {duration: 3000, verticalPosition: 'top'});
                         }
                     });
             });
@@ -41,8 +41,8 @@ export class PositionsMainComponent implements OnInit {
         let position = new Position();
         position.setValues(changes);
         position.save() === true ?
-            this.snackBar.open('Changes saved!', 'OK', {duration: 3000}) :
-            this.snackBar.open('Something went wrong', 'OK', {duration: 3000});
+            this.snackBar.open('Pakeitimai išsaugoti', 'OK', {duration: 3000, verticalPosition: 'top'}) :
+            this.snackBar.open('Įvyko klaida', 'OK', {duration: 3000, verticalPosition: 'top'});
     }
 
     public refreshList(event: any) {

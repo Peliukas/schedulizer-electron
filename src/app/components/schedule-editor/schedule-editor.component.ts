@@ -116,7 +116,10 @@ export class ScheduleEditorComponent implements OnInit {
                         if (answer === true) {
                             scheduleRef.delete();
                             this.onScheduleDelete.emit(scheduleRef.data);
-                            this.snackBar.open('Tvarkaraštis ' + this.schedule.id + ' pašalintas', 'OK', {duration: 3000});
+                            this.snackBar.open('Tvarkaraštis ' + this.schedule.id + ' pašalintas', 'OK', {
+                                duration: 3000,
+                                verticalPosition: 'top'
+                            });
                         }
                     });
             });
@@ -256,7 +259,7 @@ export class ScheduleEditorComponent implements OnInit {
         this.resetSelection();
         this.getCalendarWorkDays();
         this.refresh.next();
-        this.snackBar.open('Terminas pridėtas', 'OK', {duration: 3000});
+        this.snackBar.open('Terminas pridėtas', 'OK', {duration: 3000, verticalPosition: 'top'});
     }
 
     public saveScheduleChanges() {
@@ -339,7 +342,7 @@ export class ScheduleEditorComponent implements OnInit {
         scheduleRef.data = this.schedule.doc;
         scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
         scheduleRef.save();
-        this.snackBar.open('Pakeitimai išsaugoti', 'OK', {duration: 3000});
+        this.snackBar.open('Pakeitimai išsaugoti', 'OK', {duration: 3000, verticalPosition: 'top'});
         this.resetSelection();
         this.getCalendarWorkDays();
         this.selectMultipleDays = false;
@@ -405,7 +408,7 @@ export class ScheduleEditorComponent implements OnInit {
                     scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
                     scheduleRef.save();
                     this.schedule.doc = scheduleRef.data;
-                    this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
+                    this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000, verticalPosition: 'top'});
                     this.resetSelection();
                     this.getCalendarWorkDays();
                     this.refresh.next();
@@ -428,7 +431,7 @@ export class ScheduleEditorComponent implements OnInit {
         scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
         scheduleRef.save();
         this.schedule.doc = scheduleRef.data;
-        this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000});
+        this.snackBar.open('Darbo diena išsaugota', 'OK', {duration: 3000, verticalPosition: 'top'});
         this.getCalendarWorkDays();
         this.resetSelection();
         this.refresh.next();
@@ -448,8 +451,11 @@ export class ScheduleEditorComponent implements OnInit {
             .subscribe(data => {
                 if (data) {
                     this.breakList = data;
-                    this.breakList.length > 1 ? this.snackBar.open('Pertraukos pridėtos sėkmingai', 'OK', {duration: 3000}) :
-                        this.snackBar.open('Pertrauka pridėta sėkmingai', 'OK', {duration: 3000});
+                    this.breakList.length > 1 ? this.snackBar.open('Pertraukos pridėtos sėkmingai', 'OK', {
+                            duration: 3000,
+                            verticalPosition: 'top'
+                        }) :
+                        this.snackBar.open('Pertrauka pridėta sėkmingai', 'OK', {duration: 3000, verticalPosition: 'top'});
                 }
             });
     }
@@ -557,7 +563,7 @@ export class ScheduleEditorComponent implements OnInit {
             this.resetSelection();
             this.getCalendarWorkDays();
             this.refresh.next();
-            this.snackBar.open('Išvalyta', 'OK', {duration: 3000});
+            this.snackBar.open('Išvalyta', 'OK', {duration: 3000, verticalPosition: 'top'});
         } else {
             if (this.selectedCalendarDay.events) {
                 for (let workDay of scheduleRef.data.work_days) {
@@ -565,7 +571,7 @@ export class ScheduleEditorComponent implements OnInit {
                         scheduleRef.data.work_days.splice(scheduleRef.data.work_days.indexOf(workDay), 1);
                         scheduleRef.data.work_hours_cap = this.workHoursCapHours.value + this.workHoursCapMinutes.value / 60;
                         scheduleRef.save();
-                        this.snackBar.open('Išvalyta', 'OK', {duration: 3000});
+                        this.snackBar.open('Išvalyta', 'OK', {duration: 3000, verticalPosition: 'top'});
                         this.resetSelection();
                         this.schedule.doc = scheduleRef.data;
                         this.getCalendarWorkDays();
@@ -602,7 +608,7 @@ export class ScheduleEditorComponent implements OnInit {
                 for (let j = 0; j < this.schedule.doc.work_days[i].breaks.length; j++) {
                     if (this.schedule.doc.work_days[i].breaks[j].start === breakStart && this.schedule.doc.work_days[i].breaks[j].end === breakEnd) {
                         this.schedule.doc.work_days[i].breaks.splice(j, 1);
-                        this.snackBar.open('Pertrauka pašalinta', 'OK', {duration: 3000});
+                        this.snackBar.open('Pertrauka pašalinta', 'OK', {duration: 3000, verticalPosition: 'top'});
                     }
                 }
             }
@@ -648,7 +654,7 @@ export class ScheduleEditorComponent implements OnInit {
         periodTemplateRef.save();
         this.getPeriodTemplates();
         this.displayPeriodTemplateNameField = false;
-        this.snackBar.open('Termino šablonas sėkmingai pridėtas', 'OK', {duration: 3000});
+        this.snackBar.open('Termino šablonas sėkmingai pridėtas', 'OK', {duration: 3000, verticalPosition: 'top'});
     }
 
     public applyPeriodTemplate(periodTemplateID: any) {
@@ -679,7 +685,7 @@ export class ScheduleEditorComponent implements OnInit {
                         break;
                     }
                 }
-                this.snackBar.open('Termino šablonas sėkmingai pašalintas', 'OK', {duration: 3000});
+                this.snackBar.open('Termino šablonas sėkmingai pašalintas', 'OK', {duration: 3000, verticalPosition: 'top'});
             });
     }
 

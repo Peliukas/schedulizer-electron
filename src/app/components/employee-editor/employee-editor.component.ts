@@ -58,7 +58,7 @@ export class EmployeeEditorComponent implements OnInit {
                         if (answer === true) {
                             employee.delete();
                             this.onEmployeeDeleted.emit(employee.data);
-                            this.snackBar.open('Darbuotojas pašalintas', 'OK', {duration: 3000});
+                            this.snackBar.open('Darbuotojas pašalintas', 'OK', {duration: 3000, verticalPosition: 'top'});
                         }
                     });
             });
@@ -86,8 +86,8 @@ export class EmployeeEditorComponent implements OnInit {
         employee.find(changes._id).then(data => {
             employee.data = changes;
             employee.save() === true ?
-                this.snackBar.open('Pakeitimai išsaugoti', 'OK', {duration: 3000}) :
-                this.snackBar.open('Nepavyko išsaugoti', 'OK', {duration: 3000});
+                this.snackBar.open('Pakeitimai išsaugoti', 'OK', {duration: 3000, verticalPosition: 'top'}) :
+                this.snackBar.open('Nepavyko išsaugoti', 'OK', {duration: 3000, verticalPosition: 'top'});
         });
     }
 
