@@ -30,17 +30,17 @@
                                         <h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>
                                         <table>
                                             <thead>
-                                            <tr>
+                                            <tr class="schedule-tab-header">
                                                 <td><strong>Darbuotojas(a)</strong></td>
                                                 <td><strong>Pareigos</strong></td>
                                                 <td *ngFor="let dayNumber of calendarDayNumbers"
                                                     class="day-cell-header">
                                                     <strong>{{dayNumber}}</strong></td>
-                                                <td>Paprastų</td>
-                                                <td>Naktinių</td>
-                                                <td>Šventinių</td>
-                                                <td>Iš viso valandų</td>
-                                                <td *ngIf="displaySalary">Uždarbis</td>
+                                                <td>Paprastu</td>
+                                                <td>Naktiniu</td>
+                                                <td>Sventiniu</td>
+                                                <td>Is viso</td>
+                                                <td *ngIf="displaySalary">Uzdarbis</td>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -106,8 +106,9 @@
                                             </tbody>
                                         </table>
                                         <div>
-                                            <strong class="red-square">Darbo valandos</strong>
-                                            <i class="green-square">Pertraukos</i>
+                                            <strong class="red-square medium-padding-horizontal"> Darbo
+                                                valandos </strong>
+                                            <i class="green-square medium-padding-horizontal"> Pertraukos </i>
                                         </div>
                                     </div>
                                 </div>
