@@ -236,6 +236,11 @@
                         totalWorkingHours.night_hours * 60)) % 60 ) | round}} min
                     </span>
                 </strong>
+                <strong *ngIf="schedule.doc.work_hours_cap - (totalWorkingHours.ordinary_hours +
+                    totalWorkingHours.night_hours ) == 0" [class.success-text]="schedule.doc.work_hours_cap * 60  >= (totalWorkingHours.ordinary_hours * 60 +
+                            totalWorkingHours.night_hours * 60)">
+                    Užpildyta
+                </strong>
             </div>
             <div class="flex-space-between">
 

@@ -21,7 +21,6 @@ export class TimeConversionPipe implements PipeTransform {
                 timeHours += 1;
                 timeMinutes = 0;
                 result = timeHours + 'h ' + timeMinutes + 'min';
-                console.log('setting new result', result);
             }
             return result;
         }
