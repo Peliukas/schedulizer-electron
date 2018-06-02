@@ -28,6 +28,7 @@ export class ExportImportWindowComponent implements OnInit {
     employeeList: any = [];
     calendarData: any = [];
     employeeSelectorControl: FormControl = new FormControl();
+    displaySalary: boolean = true;
 
     constructor(private matDialog: MatDialog) {
     }
@@ -250,7 +251,11 @@ export class ExportImportWindowComponent implements OnInit {
                 for (let month of year.months) {
                     if (month) {
                         data.push([parseInt(month.number) + 1 + '/' + year.year]);
-                        data.push(['Darbuotoja(s)', 'Pareigos', ''].concat(this.calendarDayNumbers).concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų', 'Uždarbis']));
+                        if (this.displaySalary) {
+                            data.push(['Darbuotoja(s)', 'Pareigos', ''].concat(this.calendarDayNumbers).concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų', 'Uždarbis']));
+                        } else {
+                            data.push(['Darbuotoja(s)', 'Pareigos', ''].concat(this.calendarDayNumbers).concat(['Paprastų', 'Naktinių', 'Šventinių', 'Viso valandų']));
+                        }
                         for (let employee of month.employees) {
                             let tempWorkDays = [];
                             let tempBreaks = [];
@@ -281,7 +286,11 @@ export class ExportImportWindowComponent implements OnInit {
                                 employee.month_salary.work_hours.night_hours * employee.position.pay +
                                 employee.month_salary.work_hours.holiday_hours *
                                 this.config.holiday_rate;
-                            data.push([employee.firstname + ' ' + employee.lastname, employee.position.job_title, 'Darbo laikas'].concat(tempWorkDays).concat([this.transformTime(employee.month_salary.work_hours.ordinary_hours), this.transformTime(employee.month_salary.work_hours.night_hours), this.transformTime(employee.month_salary.work_hours.holiday_hours), this.transformTime(totalWorkHours), totalSalary]));
+                            if (this.displaySalary) {
+                                data.push([employee.firstname + ' ' + employee.lastname, employee.position.job_title, 'Darbo laikas'].concat(tempWorkDays).concat([this.transformTime(employee.month_salary.work_hours.ordinary_hours), this.transformTime(employee.month_salary.work_hours.night_hours), this.transformTime(employee.month_salary.work_hours.holiday_hours), this.transformTime(totalWorkHours), totalSalary]));
+                            } else {
+                                data.push([employee.firstname + ' ' + employee.lastname, employee.position.job_title, 'Darbo laikas'].concat(tempWorkDays).concat([this.transformTime(employee.month_salary.work_hours.ordinary_hours), this.transformTime(employee.month_salary.work_hours.night_hours), this.transformTime(employee.month_salary.work_hours.holiday_hours), this.transformTime(totalWorkHours)]));
+                            }
                             data.push(['', '', 'Pertraukos'].concat(tempBreaks));
                         }
                     }
@@ -302,16 +311,12 @@ export class ExportImportWindowComponent implements OnInit {
             console.log('raw dec time: ', value);
             let timeHours = Math.floor(value);
             let timeMinutes = Math.round((value - timeHours) * 60);
-            console.log('Hours: ', timeHours);
-            console.log('Minutes: ', timeMinutes);
             if (timeHours > 0 && timeMinutes > 0) {
                 return timeHours + 'h ' + timeMinutes + 'min';
             } else if (timeHours > 0 && timeMinutes <= 0) {
                 return timeHours + 'h';
             } else if (timeHours <= 0 && timeMinutes > 0) {
                 return timeMinutes + 'min';
-            } else {
-                console.log(timeHours + 'h ' + timeMinutes + 'min');
             }
         }
         return '0min';

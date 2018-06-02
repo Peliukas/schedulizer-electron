@@ -19,6 +19,7 @@
                 <div class="col-12">
                     <button mat-raised-button (click)="pdf.saveAs('Eksportas.pdf')">Eksportuoti PDF</button>
                     <button mat-raised-button (click)="closeAndExportXLS()">Eksportuoti XLS</button>
+                    <mat-checkbox [(ngModel)]="displaySalary">Rodyti uždarbį</mat-checkbox>
                 </div>
                 <kendo-pdf-export #pdf>
                     <div class="col-12 doc-body" #docBody id="doc-body">
@@ -39,7 +40,7 @@
                                                 <td>Naktinių</td>
                                                 <td>Šventinių</td>
                                                 <td>Iš viso valandų</td>
-                                                <td>Uždarbis</td>
+                                                <td *ngIf="displaySalary">Uždarbis</td>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -91,7 +92,7 @@
                                                     employee.month_salary.work_hours.holiday_hours |
                                                     timeConversion:'toTime'}}
                                                 </td>
-                                                <td *ngIf="employee && employee.month_salary.work_hours">
+                                                <td *ngIf="employee && employee.month_salary.work_hours && displaySalary">
                                                     {{employee.month_salary.work_hours.ordinary_hours *
                                                     employee.position.pay + employee.month_salary.work_hours.night_hours
                                                     *
