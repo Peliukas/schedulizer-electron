@@ -71,11 +71,7 @@ export class ModelListViewComponent implements OnInit {
         dialogRef.afterClosed().subscribe(data => {
             if (data && data.data._id) {
                 this.getObjectList();
-                this.snackBar.open('Naujas įrašas pridėtas sėkmingai!', 'OK', {duration: 3000,, verticalPosition
-            :
-                'top';
-            })
-                ;
+                this.snackBar.open('Naujas įrašas pridėtas sėkmingai!', 'OK', {duration: 3000, verticalPosition: 'top'});
             }
         });
     }

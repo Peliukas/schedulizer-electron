@@ -104,11 +104,7 @@ export class CalendarFreeDaySettingsComponent implements OnInit {
                         this.holidayList.splice(i, 1);
                     }
                 }
-                this.snackBar.open('Šventė ' + id + ' pašalinta', 'OK', {duration: 3000,, verticalPosition
-            :
-                'top';
-            })
-                ;
+                this.snackBar.open('Šventė ' + id + ' pašalinta', 'OK', {duration: 3000, verticalPosition: 'top'});
             });
     }
 
