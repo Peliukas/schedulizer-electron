@@ -264,7 +264,7 @@ export class ScheduleEditorComponent implements OnInit {
 
     public saveScheduleChanges() {
         let scheduleRef = new Schedule();
-        if (this.startTimeInputControl.value && this.endTimeInputControl.value) {
+        if ((this.startTimeInputControl.value && this.endTimeInputControl.value) || this.isHoliday) {
             let tempWorkDayList = [];
             for (let selectedWorkDay of this.selectedWorkDayList) {
                 tempWorkDayList.push({
@@ -353,7 +353,7 @@ export class ScheduleEditorComponent implements OnInit {
     public saveWorkDayChanges() {
         let scheduleRef = new Schedule();
         scheduleRef.setValues(this.schedule.doc);
-        if (this.startTimeInputControl.value && this.endTimeInputControl.value) {
+        if ((this.startTimeInputControl.value && this.endTimeInputControl.value) || this.isHoliday) {
             //split days
             let tempDay: any;
             let tempDayNext: any;
@@ -689,4 +689,17 @@ export class ScheduleEditorComponent implements OnInit {
             });
     }
 
+    public clearDays() {
+        let dialogRef = this.matDialog.open(ConfirmationBoxComponent);
+        dialogRef.afterClosed().subscribe(answer => {
+            if (answer) {
+                let scheduleRef = new Schedule();
+                this.schedule.doc.work_days = [];
+                scheduleRef.data = this.schedule.doc;
+                this.getCalendarWorkDays();
+                scheduleRef.save();
+                this.snackBar.open('Dienos sėkmingai išvalytos', 'OK', {duration: 3000, verticalPosition: 'top'});
+            }
+        });
+    }
 }

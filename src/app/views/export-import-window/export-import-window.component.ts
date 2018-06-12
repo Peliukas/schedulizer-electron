@@ -7,9 +7,6 @@ import {DocumentPreviewComponent} from '../../components/document-preview/docume
 import {MatDialog} from '@angular/material';
 import {Configurations} from '../../models/configurations';
 import * as XLSX from 'xlsx';
-import * as jsPDF from 'jspdf';
-import printJS from 'print-js';
-import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 @Component({
