@@ -28,7 +28,9 @@
                                 <div *ngFor="let month of year.months">
                                     <div *ngIf="month && month.employees">
                                         <!--<h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>-->
-                                        <h5 class="text-center">{{month['employees'][0].work_days[0].date |
+                                        <h5 class="text-center"
+                                            *ngIf="month.employees[0] && month.employees[0].work_days && month.employees[0].work_days[0]">
+                                            {{month['employees'][0].work_days[0].date |
                                             lithuanizeMonth:"month-year"}}</h5>
                                         <table>
                                             <thead>
