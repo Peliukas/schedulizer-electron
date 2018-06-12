@@ -31,7 +31,7 @@
                                         <h5 class="text-center"
                                             *ngIf="month.employees[0] && month.employees[0].work_days && month.employees[0].work_days[0]">
                                             {{month['employees'][0].work_days[0].date |
-                                            lithuanizeMonth:"month-year"}}</h5>
+                                            lithuanizeMonth:"month-year-latin"}}</h5>
                                         <table>
                                             <thead>
                                             <tr class="schedule-tab-header">
@@ -43,8 +43,8 @@
                                                 <td>Paprastu</td>
                                                 <td>Naktiniu</td>
                                                 <td>Sventiniu</td>
-                                                <td>Is viso</td>
-                                                <td *ngIf="displaySalary">Uzdarbis</td>
+                                                <td>Suma</td>
+                                                <td *ngIf="displaySalary">Uždarbis</td>
                                             </tr>
                                             </thead>
                                             <tbody>

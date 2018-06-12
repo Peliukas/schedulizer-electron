@@ -8,6 +8,13 @@ import {MatDialog} from '@angular/material';
 import {Configurations} from '../../models/configurations';
 import * as XLSX from 'xlsx';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import {defineFont} from '@progress/kendo-drawing/pdf';
+
+defineFont({
+    'OpenSans|Bold': '/fonts/OpenSans-Bold.ttf',
+    'OpenSans|Bold|Italic': '/fonts/OpenSans-BoldItalic.ttf',
+    'OpenSans|Italic': '/fonts/OpenSans-Italic.ttf'
+});
 
 @Component({
     selector: 'app-export-import-window',
@@ -42,7 +49,6 @@ export class ExportImportWindowComponent implements OnInit {
                 this.getEmployeeList();
             });
     }
-
 
     public getEmployeeList() {
         let employeeRef = new Employee();
