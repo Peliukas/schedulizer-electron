@@ -82,12 +82,11 @@
                                 <mat-expansion-panel *ngIf="month">
                                     <mat-expansion-panel-header>
                                         <h5 *ngIf="month && month.work_days[0]">{{month.work_days[0].date |
-                                            date:'yyyy'}} / {{month.work_days[0].date |
-                                            date:'MMMM'}}</h5>
+                                            lithuanizeMonth:"month-year"}}</h5>
                                     </mat-expansion-panel-header>
                                     <div *ngFor="let day of month.work_days" class="flex-space-between">
                                     <span>
-                                        {{day.date | date:'mediumDate'}}
+                                        {{day.date  | lithuanizeMonth}}
                                     </span>
                                         <strong *ngIf="!day.isHoliday">
                                             {{day.start_time}} - {{day.end_time}}

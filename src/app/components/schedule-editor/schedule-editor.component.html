@@ -252,7 +252,7 @@
                 Praėjęs mėnuo
             </button>
             <div class="current-date-label flex-center">
-                <strong *ngIf="viewDate">{{viewDate | date:"mediumDate"}}</strong>
+                <strong *ngIf="viewDate">{{viewDate | lithuanizeMonth:"month-year"}}</strong>
             </div>
             <button mat-button class="next-month" (click)="nextMonth()">Sekantis mėnuo <i
                     class="material-icons">&#xE315;</i></button>

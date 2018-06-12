@@ -27,7 +27,9 @@
                             <div *ngIf="year && year.months">
                                 <div *ngFor="let month of year.months">
                                     <div *ngIf="month && month.employees">
-                                        <h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>
+                                        <!--<h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>-->
+                                        <h5 class="text-center">{{month['employees'][0].work_days[0].date |
+                                            lithuanizeMonth:"month-year"}}</h5>
                                         <table>
                                             <thead>
                                             <tr class="schedule-tab-header">
