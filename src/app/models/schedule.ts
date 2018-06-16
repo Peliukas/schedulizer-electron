@@ -177,14 +177,9 @@ export class Schedule {
                                 if (currentHour.getHours() === endDateTime.getHours() - 1) {
                                     if (startDateTime.getMinutes() > 0) {
                                         totalHolidayWorkHours -= startDateTime.getMinutes() / 60;
-
-                                        console.log('holiday miunutes after start: ', startDateTime.getMinutes());
-                                        console.log('holiday total hours after start: ', totalHolidayWorkHours);
                                     }
                                     if (endDateTime.getMinutes() > 0) {
                                         totalHolidayWorkHours += endDateTime.getMinutes() / 60;
-                                        console.log('holiday miunutes after end: ', startDateTime.getMinutes());
-                                        console.log('holiday total hours after end: ', totalHolidayWorkHours);
                                     }
                                 }
                                 if (currentHour.getHours() != endDateTime.getHours()) {

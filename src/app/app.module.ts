@@ -38,6 +38,7 @@ import {ExportSchedulesWindowComponent} from './components/export-schedules-wind
 import {TimeConversionPipe} from './pipes/time-conversion.pipe';
 import {PDFExportModule} from '@progress/kendo-angular-pdf-export';
 import {LithuanizeMonthPipe} from './pipes/lithuanize-month.pipe';
+import {LithuanianCharacterTransformPipe} from './pipes/lithuanian-character-transform.pipe';
 
 
 const routes: Routes = [
@@ -69,7 +70,8 @@ const routes: Routes = [
         UploadWindowComponent,
         ExportSchedulesWindowComponent,
         TimeConversionPipe,
-        LithuanizeMonthPipe
+        LithuanizeMonthPipe,
+        LithuanianCharacterTransformPipe
     ],
     imports: [
         RouterModule.forRoot(routes),
