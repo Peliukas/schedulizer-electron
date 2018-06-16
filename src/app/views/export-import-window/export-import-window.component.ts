@@ -9,6 +9,7 @@ import {Configurations} from '../../models/configurations';
 import * as XLSX from 'xlsx';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import {defineFont} from '@progress/kendo-drawing/pdf';
+import * as pdf from 'html-pdf';
 
 defineFont({
     'OpenSans|Bold': '/fonts/OpenSans-Bold.ttf',

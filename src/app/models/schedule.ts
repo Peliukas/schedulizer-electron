@@ -174,11 +174,20 @@ export class Schedule {
                         }
                         holidayList.rows.forEach(holiday => {
                             if (currentHour.getMonth() === holiday.doc.holiday_month - 1 && currentHour.getDate() === holiday.doc.holiday_day) {
-                                if (currentHour.getMinutes() > 0) {
-                                    totalHolidayWorkHours += currentHour.getMinutes() / 60;
-                                } else if ((currentHour.getHours() === endDateTime.getHours() && endDateTime.getMinutes() > 0)) {
-                                    totalHolidayWorkHours += endDateTime.getMinutes() / 60;
-                                } else {
+                                if (currentHour.getHours() === endDateTime.getHours() - 1) {
+                                    if (startDateTime.getMinutes() > 0) {
+                                        totalHolidayWorkHours -= startDateTime.getMinutes() / 60;
+
+                                        console.log('holiday miunutes after start: ', startDateTime.getMinutes());
+                                        console.log('holiday total hours after start: ', totalHolidayWorkHours);
+                                    }
+                                    if (endDateTime.getMinutes() > 0) {
+                                        totalHolidayWorkHours += endDateTime.getMinutes() / 60;
+                                        console.log('holiday miunutes after end: ', startDateTime.getMinutes());
+                                        console.log('holiday total hours after end: ', totalHolidayWorkHours);
+                                    }
+                                }
+                                if (currentHour.getHours() != endDateTime.getHours()) {
                                     totalHolidayWorkHours += 1;
                                 }
                             }
