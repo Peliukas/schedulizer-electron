@@ -181,6 +181,18 @@ export class Schedule {
                                     if (endDateTime.getMinutes() > 0) {
                                         totalHolidayWorkHours += endDateTime.getMinutes() / 60;
                                     }
+                                    if (workDay.breaks) {
+                                        workDay.breaks.forEach(workDayBreak => {
+                                            let breakStartTime = new Date(workDay.date);
+                                            let breakEndTime = new Date(workDay.date);
+                                            breakStartTime.setHours(workDayBreak.start.substr(0, 2));
+                                            breakStartTime.setMinutes(workDayBreak.start.substr(3, 2));
+                                            breakEndTime.setHours(workDayBreak.end.substr(0, 2));
+                                            breakEndTime.setMinutes(workDayBreak.end.substr(3, 2));
+                                            let breakTimeInHours = Math.abs((breakStartTime.getTime() - breakEndTime.getTime()) / 36e5);
+                                            totalHolidayWorkHours -= breakTimeInHours;
+                                        });
+                                    }
                                 }
                                 if (currentHour.getHours() != endDateTime.getHours()) {
                                     totalHolidayWorkHours += 1;
