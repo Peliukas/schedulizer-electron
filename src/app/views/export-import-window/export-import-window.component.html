@@ -17,16 +17,20 @@
             <mat-divider></mat-divider>
             <div class="row" *ngIf="calendarData">
                 <div class="col-12">
-                    <button mat-raised-button (click)="pdf.saveAs('Eksportas.pdf')">Eksportuoti PDF</button>
+                    <button mat-raised-button
+                            (click)="scheduleGroupNameInput.value ? pdf.saveAs(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '_' + scheduleGroupNameInput.value + '.pdf') : pdf.saveAs(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '.pdf')">
+                        Eksportuoti PDF
+                    </button>
                     <button mat-raised-button (click)="closeAndExportXLS()">Eksportuoti XLS</button>
                     <mat-checkbox [(ngModel)]="displaySalary">Rodyti uždarbį</mat-checkbox>
                 </div>
                 <kendo-pdf-export #pdf>
                     <div class="col-12">
-                        <h5 class="text-right no-margin">Patvirtinta</h5>
+                        <h3 class="text-right no-margin">Patvirtinta</h3>
                         <div class="flex-center">
                             <mat-form-field>
-                                <input matInput type="text" class="text-center">
+                                <input matInput type="text" #scheduleGroupNameInput
+                                       class="text-center schedule-group-name-input">
                             </mat-form-field>
                         </div>
                         <h5 class="text-center">Darbo laiko grafikas</h5>

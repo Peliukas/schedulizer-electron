@@ -89,7 +89,7 @@ export class LithuanizeMonthPipe implements PipeTransform {
             }
             return value.getFullYear() + ', ' + lithuanianMonth;
         } else {
-            switch (value.getMonth()) {
+            switch (value.getMonth() + 1) {
                 case 1:
                     lithuanianMonth = 'Sausio';
                     break;

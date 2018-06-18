@@ -34,6 +34,7 @@ export class ExportImportWindowComponent implements OnInit {
     calendarData: any = [];
     employeeSelectorControl: FormControl = new FormControl();
     displaySalary: boolean = true;
+    today: Date = new Date();
 
     constructor(private matDialog: MatDialog) {
     }
