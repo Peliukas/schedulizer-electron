@@ -36,6 +36,10 @@ h5 {
     text-align: center;
 }
 
+.text-right {
+    text-align: right;
+}
+
 .flex-center-vertical {
     display: flex !important;
     align-items: center !important;
@@ -118,6 +122,10 @@ simple-snack-bar {
 
 .no-list-style {
     list-style: none;
+}
+
+.no-margin {
+    margin: 0;
 }
 
 .gray-card-body {
