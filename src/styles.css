@@ -138,10 +138,15 @@ simple-snack-bar {
     font-size: 12px;
 }
 
+
 .mat-card {
     padding: 12px !important;
 }
 
 .settings-tab {
     height: 115px !important;
+}
+
+.fullwidth {
+    width: 100%;
 }

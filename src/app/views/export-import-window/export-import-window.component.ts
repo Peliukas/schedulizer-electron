@@ -33,8 +33,11 @@ export class ExportImportWindowComponent implements OnInit {
     employeeList: any = [];
     calendarData: any = [];
     employeeSelectorControl: FormControl = new FormControl();
+    monthSelectorControl: FormControl = new FormControl();
     displaySalary: boolean = true;
     today: Date = new Date();
+    monthNumbers: any[] = [];
+    selectedMonths: any[] = [];
 
     constructor(private matDialog: MatDialog) {
     }
@@ -47,6 +50,12 @@ export class ExportImportWindowComponent implements OnInit {
                 this.configRef.data = config;
                 for (let i = 1; i < 32; i++) {
                     this.calendarDayNumbers.push(i);
+                }
+                for (let i = 0; i <= 12; i++) {
+                    this.monthNumbers[i] = {
+                        number: i + 1,
+                        selected: false
+                    };
                 }
                 this.getEmployeeList();
             });
@@ -79,6 +88,31 @@ export class ExportImportWindowComponent implements OnInit {
 
     public employeeSelectionChange() {
         this.selectedEmployees = this.employeeSelectorControl.value;
+        this.generateCalendarData();
+    }
+
+    public changeSelectedMonth() {
+        this.selectedMonths = this.monthSelectorControl.value;
+        for (let i = 0; i <= 12; i++) {
+            this.monthNumbers[i] = {
+                number: i + 1,
+                selected: false
+            };
+        }
+        for (let selectedMonth of this.selectedMonths) {
+            this.monthNumbers[selectedMonth - 1].selected = !this.monthNumbers[selectedMonth].selected;
+            if (selectedMonth === 12) {
+                for (let i = 0; i <= 12; i++) {
+                    this.monthNumbers[i] = {
+                        number: i + 1,
+                        selected: true
+                    };
+                }
+                this.generateCalendarData();
+                return;
+            }
+        }
+        console.log('selected months: ', this.monthNumbers);
         this.generateCalendarData();
     }
 

@@ -3,12 +3,22 @@
         <mat-card-content>
             <h4>Eksportavimas</h4>
             <div class="row">
-                <div class="col-12 employee-selection-list" *ngIf="employeeList">
-                    <mat-form-field>
+                <div class="col-8 employee-selection-list" *ngIf="employeeList">
+                    <mat-form-field class="fullwidth">
                         <mat-select (valueChange)="employeeSelectionChange()" placeholder="Pasirinkite darbuotojus"
                                     [formControl]="employeeSelectorControl" multiple>
                             <mat-option *ngFor="let employee of employeeList" [value]="employee.id">
                                 {{employee.doc.firstname}} {{employee.doc.lastname}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-form-field class="fullwidth" *ngIf="monthNumbers.length > 0">
+                        <mat-select placeholder="Atvaizduoti mėnesius" multiple
+                                    [formControl]="monthSelectorControl" (valueChange)="changeSelectedMonth()">
+                            <mat-option *ngFor="let monthNumber of monthNumbers" [value]="monthNumber.number">
+                                {{monthNumber.number | lithuanizeMonth:"number-to-lt-month"}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -22,9 +32,10 @@
                         Eksportuoti PDF
                     </button>
                     <button mat-raised-button (click)="closeAndExportXLS()">Eksportuoti XLS</button>
-                    <mat-checkbox [(ngModel)]="displaySalary">Rodyti uždarbį</mat-checkbox>
+                    <mat-checkbox class="medium-margin-horizontal" [(ngModel)]="displaySalary">Rodyti uždarbį
+                    </mat-checkbox>
                 </div>
-                <kendo-pdf-export #pdf>
+                <kendo-pdf-export #pdf *ngIf="selectedEmployees.length > 0">
                     <div class="col-12">
                         <h3 class="text-right no-margin">Patvirtinta</h3>
                         <div class="flex-center">
@@ -39,10 +50,13 @@
                         <div *ngFor="let year of calendarData.years">
                             <div *ngIf="year && year.months">
                                 <div *ngFor="let month of year.months">
-                                    <div *ngIf="month && month.employees">
-                                        <!--<h5 class="text-center">{{getMonth(month.number)}}/{{year.year}}</h5>-->
-                                        <h5 class="text-center"
-                                            *ngIf="month.employees[0] && month.employees[0].work_days && month.employees[0].work_days[0]">
+                                    <div *ngIf="month &&
+                                    month.employees &&
+                                    month.employees[0] &&
+                                    month.employees[0].work_days &&
+                                    month.employees[0].work_days[0] &&
+                                    monthNumbers[month.employees[0].work_days[0].date | lithuanizeMonth:'month-from-string' ].selected">
+                                        <h5 class="text-center">
                                             {{month['employees'][0].work_days[0].date |
                                             lithuanizeMonth:"month-year-latin"}}</h5>
                                         <table>
