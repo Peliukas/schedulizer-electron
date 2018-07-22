@@ -55,27 +55,18 @@ export class ExportImportWindowComponent implements OnInit {
                 for (let i = 1; i < 32; i++) {
                     this.calendarDayNumbers.push(i);
                 }
-                for (let i = 0; i <= 12; i++) {
+                let tempMonthNumbers = [];
+                for (let i = 0; i <= 11; i++) {
                     this.monthNumbers[i] = {
                         number: i + 1,
-                        selected: false
+                        selected: true
                     };
+                    tempMonthNumbers.push(this.monthNumbers[i].number);
                 }
+                this.monthSelectorControl.setValue(tempMonthNumbers);
                 this.getEmployeeList();
             });
     }
-
-    // public exportPDF(){
-    //     const pdf = new jsPDF('l', 'pt', 'a4');
-    //     pdf.addPage();
-    //     pdf.setPage(1);
-    //     pdf.addHTML(this.pdfBody.nativeElement).then( result => {
-    //         console.log(result);
-    //         var img = result.toDataURL("image/png");
-    //         pdf.addImage(img, 'PNG', 10, 10, 810, parseInt(result.height) * .7);
-    //         pdf.save('web.pdf');
-    //     });
-    // }
 
     public getEmployeeList() {
         let employeeRef = new Employee();
@@ -109,7 +100,7 @@ export class ExportImportWindowComponent implements OnInit {
 
     public changeSelectedMonth() {
         this.selectedMonths = this.monthSelectorControl.value;
-        for (let i = 0; i <= 12; i++) {
+        for (let i = 0; i <= 11; i++) {
             this.monthNumbers[i] = {
                 number: i + 1,
                 selected: false
@@ -128,7 +119,6 @@ export class ExportImportWindowComponent implements OnInit {
                 return;
             }
         }
-        console.log('selected months: ', this.monthNumbers);
         this.generateCalendarData();
     }
 
