@@ -28,19 +28,20 @@
             <div class="row" *ngIf="calendarData">
                 <div class="col-12">
                     <button mat-raised-button
-                            (click)="scheduleGroupNameInput.value ? pdf.saveAs(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '_' + scheduleGroupNameInput.value + '.pdf') : pdf.saveAs(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '.pdf')">
+                            (click)="documentName ? pdfBody.saveAs(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '_' + documentName + '.pdf') : pdfBody.saveAs(today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + '.pdf')">
                         Eksportuoti PDF
                     </button>
                     <button mat-raised-button (click)="closeAndExportXLS()">Eksportuoti XLS</button>
                     <mat-checkbox class="medium-margin-horizontal" [(ngModel)]="displaySalary">Rodyti uždarbį
                     </mat-checkbox>
                 </div>
-                <kendo-pdf-export #pdf *ngIf="selectedEmployees.length > 0">
+                <kendo-pdf-export class="col-12" #pdfBody *ngIf="selectedEmployees.length > 0">
                     <div class="col-12">
                         <h3 class="text-right no-margin">Patvirtinta</h3>
                         <div class="flex-center">
                             <mat-form-field>
-                                <input matInput type="text" #scheduleGroupNameInput
+                                <input matInput type="text"
+                                       [(ngModel)]="documentName"
                                        class="text-center schedule-group-name-input">
                             </mat-form-field>
                         </div>
@@ -58,7 +59,7 @@
                                     monthNumbers[month.employees[0].work_days[0].date | lithuanizeMonth:'month-from-string' ].selected">
                                         <h5 class="text-center">
                                             {{month['employees'][0].work_days[0].date |
-                                            lithuanizeMonth:"month-year-latin"}}</h5>
+                                            lithuanizeMonth:"month-year"}}</h5>
                                         <table>
                                             <thead>
                                             <tr class="schedule-tab-header">
@@ -67,21 +68,20 @@
                                                 <td *ngFor="let dayNumber of calendarDayNumbers"
                                                     class="day-cell-header">
                                                     <strong>{{dayNumber}}</strong></td>
-                                                <td>Paprastu</td>
-                                                <td>Naktiniu</td>
-                                                <td>Sventiniu</td>
-                                                <td>Suma</td>
-                                                <td *ngIf="displaySalary">Uzdarbis</td>
+                                                <td><strong>Paprastos</strong></td>
+                                                <td><strong>Naktinės</strong></td>
+                                                <td><strong>Šventinės</strong></td>
+                                                <td><strong>Suma</strong></td>
+                                                <td *ngIf="displaySalary"><strong>Uždarbis</strong></td>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr *ngFor="let employee of month['employees']" class="employee-row ">
-                                                <td *ngIf="employee">{{employee.firstname |
-                                                    lithuanianCharacterTransform:'toLatin'}} {{employee.lastname|
-                                                    lithuanianCharacterTransform:'toLatin'}}
+                                                <td class="employee-name-label" *ngIf="employee">
+                                                    <strong>{{employee.firstname }} {{employee.lastname}}</strong>
                                                 </td>
-                                                <td *ngIf="employee">{{employee.position.job_title |
-                                                    lithuanianCharacterTransform:'toLatin'}}
+                                                <td class="employee-position-label" *ngIf="employee">
+                                                    <strong>{{employee.position.job_title}}</strong>
                                                 </td>
                                                 <td *ngFor="let dayNumber of calendarDayNumbers">
                                                     <div *ngFor="let workDay of employee.work_days">

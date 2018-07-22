@@ -22,7 +22,8 @@
         "styles.css"
       ],
       "scripts": [
-        "../node_modules/file-saver/FileSaver.js"
+        "../node_modules/file-saver/FileSaver.js",
+        "../node_modules/html2canvas/dist/html2canvas.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

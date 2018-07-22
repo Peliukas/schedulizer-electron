@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {Employee} from '../../models/employee';
 import {Position} from '../../models/position';
 import {FormControl} from '@angular/forms';
@@ -9,12 +9,12 @@ import {Configurations} from '../../models/configurations';
 import * as XLSX from 'xlsx';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import {defineFont} from '@progress/kendo-drawing/pdf';
-import * as pdf from 'html-pdf';
 
 defineFont({
-    'OpenSans|Bold': '/fonts/OpenSans-Bold.ttf',
-    'OpenSans|Bold|Italic': '/fonts/OpenSans-BoldItalic.ttf',
-    'OpenSans|Italic': '/fonts/OpenSans-Italic.ttf'
+    'LiberationSans|Bold': '../../../assets/fonts/liberationsans/LiberationSans-Bold.ttf',
+    'LiberationSans|Bold|Italic': '../../../assets/fonts/liberationsans/LiberationSans-BoldItalic.ttf',
+    'LiberationSans|Italic': '../../../assets/fonts/liberationsans/LiberationSans-Italic.ttf',
+    'LiberationSans|Regular': '../../../assets/fonts/liberationsans/LiberationSans-Regular.ttf',
 });
 
 @Component({
@@ -22,11 +22,13 @@ defineFont({
     templateUrl: './export-import-window.component.html',
     styleUrls: ['./export-import-window.component.scss']
 })
+
+
 export class ExportImportWindowComponent implements OnInit {
 
     configRef: Configurations;
     config: any;
-    @ViewChild('docBody') docBody;
+    @ViewChild('pdfBody') pdfBody: ElementRef;
     @ViewChild('table') table;
     calendarDayNumbers: any = [];
     selectedEmployees: any = [];
@@ -38,6 +40,8 @@ export class ExportImportWindowComponent implements OnInit {
     today: Date = new Date();
     monthNumbers: any[] = [];
     selectedMonths: any[] = [];
+    documentName: string = '';
+
 
     constructor(private matDialog: MatDialog) {
     }
@@ -60,6 +64,18 @@ export class ExportImportWindowComponent implements OnInit {
                 this.getEmployeeList();
             });
     }
+
+    // public exportPDF(){
+    //     const pdf = new jsPDF('l', 'pt', 'a4');
+    //     pdf.addPage();
+    //     pdf.setPage(1);
+    //     pdf.addHTML(this.pdfBody.nativeElement).then( result => {
+    //         console.log(result);
+    //         var img = result.toDataURL("image/png");
+    //         pdf.addImage(img, 'PNG', 10, 10, 810, parseInt(result.height) * .7);
+    //         pdf.save('web.pdf');
+    //     });
+    // }
 
     public getEmployeeList() {
         let employeeRef = new Employee();
@@ -347,7 +363,6 @@ export class ExportImportWindowComponent implements OnInit {
 
     public transformTime(value: any): any {
         if (value) {
-            console.log('raw dec time: ', value);
             let timeHours = Math.floor(value);
             let timeMinutes = Math.round((value - timeHours) * 60);
             if (timeHours > 0 && timeMinutes > 0) {
@@ -360,4 +375,5 @@ export class ExportImportWindowComponent implements OnInit {
         }
         return '0min';
     }
+
 }
