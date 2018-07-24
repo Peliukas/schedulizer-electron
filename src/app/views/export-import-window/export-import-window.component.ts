@@ -11,10 +11,10 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import {defineFont} from '@progress/kendo-drawing/pdf';
 
 defineFont({
-    'LiberationSans|Bold': '../../../assets/fonts/liberationsans/LiberationSans-Bold.ttf',
-    'LiberationSans|Bold|Italic': '../../../assets/fonts/liberationsans/LiberationSans-BoldItalic.ttf',
-    'LiberationSans|Italic': '../../../assets/fonts/liberationsans/LiberationSans-Italic.ttf',
-    'LiberationSans|Regular': '../../../assets/fonts/liberationsans/LiberationSans-Regular.ttf',
+    'LiberationSans|Bold': './assets/fonts/liberationsans/LiberationSans-Bold.ttf',
+    'LiberationSans|Bold|Italic': '/assets/fonts/liberationsans/LiberationSans-BoldItalic.ttf',
+    'LiberationSans|Italic': '/assets/fonts/liberationsans/LiberationSans-Italic.ttf',
+    'LiberationSans|Regular': '/assets/fonts/liberationsans/LiberationSans-Regular.ttf',
 });
 
 @Component({
@@ -67,6 +67,10 @@ export class ExportImportWindowComponent implements OnInit {
                 this.getEmployeeList();
             });
     }
+
+    // public savePDF(){
+    //     this.pdfBody.nativeElement.saveAs('my-file');
+    // }
 
     public getEmployeeList() {
         let employeeRef = new Employee();

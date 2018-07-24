@@ -1,19 +1,28 @@
 <div class="row">
     <h5>Eksportuoti tvarkaraščius</h5>
     <div class="col-12">
-        <mat-selection-list #schedules>
-            <mat-list-option (click)="generateDownloadJsonUri(schedules.selectedOptions)"
+        <mat-checkbox class="right" labelPosition="before"
+                      (click)="allSelected ? schedules.deselectAll() : schedules.selectAll()" [(ngModel)]="allSelected">
+            {{allSelected ? 'Atžymėti ' : 'Pažymėti '}}visus
+        </mat-checkbox>
+    </div>
+    <div class="col-12">
+        <mat-divider></mat-divider>
+        <mat-selection-list #schedules [formControl]="scheduleSelectionListControl">
+            <mat-list-option (click)="generateDownloadJsonUri()"
                              *ngFor="let schedule of scheduleList" [value]="schedule">
                 {{schedule.id}}
             </mat-list-option>
         </mat-selection-list>
+        <mat-divider></mat-divider>
     </div>
-    <div class="col-12">
+    <div class="col-12 small-margin-vertical">
         <a [href]="downloadJsonHref" download="Tvarkarasciai.txt" (click)="downloadFile()">
             <button mat-raised-button>
                 Eksportuoti
             </button>
         </a>
-        <mat-checkbox [(ngModel)]="deleteExported">Šalinti pažymėtus po eksporto</mat-checkbox>
+        <mat-checkbox labelPosition="before" class="right" [(ngModel)]="deleteExported">Šalinti po eksportavimo
+        </mat-checkbox>
     </div>
 </div>

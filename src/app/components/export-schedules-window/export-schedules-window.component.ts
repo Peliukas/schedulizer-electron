@@ -3,6 +3,7 @@ import {Schedule} from '../../models/schedule';
 import {DomSanitizer} from '@angular/platform-browser';
 import {UploadWindowComponent} from '../upload-window/upload-window.component';
 import {MatDialogRef} from '@angular/material';
+import {FormControl} from '@angular/forms';
 
 @Component({
     selector: 'app-export-schedules-window',
@@ -14,6 +15,8 @@ export class ExportSchedulesWindowComponent implements OnInit {
     scheduleList: any[];
     downloadJsonHref: any;
     deleteExported: boolean = false;
+    scheduleSelectionListControl: FormControl = new FormControl();
+    allSelected: boolean = false;
 
     constructor(private sanitizer: DomSanitizer, public dialogRef: MatDialogRef<ExportSchedulesWindowComponent>) {
     }
@@ -25,9 +28,9 @@ export class ExportSchedulesWindowComponent implements OnInit {
         });
     }
 
-    generateDownloadJsonUri(selectedOptions: any) {
+    generateDownloadJsonUri() {
         let selectedScheduleList = [];
-        selectedOptions.selected.forEach(item => {
+        this.scheduleSelectionListControl.value.forEach(item => {
             selectedScheduleList.push(item.value.doc);
         });
         if (selectedScheduleList.length > 0) {
