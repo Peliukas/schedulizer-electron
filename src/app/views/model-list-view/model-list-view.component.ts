@@ -97,6 +97,7 @@ export class ModelListViewComponent implements OnInit {
             .subscribe(result => {
                 if (result) {
                     new Schedule().findAll().then(scheduleList => {
+                        let tempScheduleList = [];
                         scheduleList.rows.forEach(schedule => {
                             let tempSchedule = new Schedule();
                             tempSchedule.data = {
@@ -107,9 +108,19 @@ export class ModelListViewComponent implements OnInit {
                                 work_days: []
                             };
                             tempSchedule.save();
+                            schedule.doc = {
+                                _id: schedule.id,
+                                schedule_name: schedule.doc.schedule_name,
+                                work_hours_cap: '',
+                                is_private: schedule.doc.is_private,
+                                work_days: []
+                            };
+                            if (!tempSchedule.data.is_private) {
+                                tempScheduleList.push(schedule);
+                            }
                         });
-                        this.getObjectList();
-                        this.matSnackBar.open('Ketvirtis sekmingai pridėtas', 'OK', {duration: 3000});
+                        this.matSnackBar.open('Ketvirtis sekmingai pradėtas', 'OK', {duration: 3000});
+                        this.objectList = tempScheduleList;
                     });
                 }
             });

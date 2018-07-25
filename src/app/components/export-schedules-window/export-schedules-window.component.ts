@@ -28,7 +28,7 @@ export class ExportSchedulesWindowComponent implements OnInit {
         });
     }
 
-    generateDownloadJsonUri(selectedOptions: MatListOption[]) {
+    generateDownloadJsonUri(selectedOptions: any) {
         console.log(selectedOptions.selected);
         let selectedScheduleList = [];
         selectedOptions.selected.forEach(item => {
