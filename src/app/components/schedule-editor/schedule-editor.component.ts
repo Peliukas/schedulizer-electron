@@ -40,6 +40,7 @@ export class ScheduleEditorComponent implements OnInit {
     refresh: Subject<any> = new Subject();
     totalWorkingHours: any = {};
     newPeriodTemplateName: any = '';
+    presetTimeSelection: boolean = true;
     workHoursCapHours: FormControl = new FormControl('', [
         Validators.required,
         Validators.min(0)

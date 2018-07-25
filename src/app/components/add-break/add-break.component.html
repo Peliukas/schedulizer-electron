@@ -1,13 +1,33 @@
 <div class="row">
     <h5>Pertraukų redagavimas</h5>
-    <div class="col-6" [formGroup]="breakFormGroup">
+    <div class="col-12">
+        <mat-slide-toggle [(ngModel)]="presetTimeSelection" class="small-font">
+            Valandų pasirinkimas
+        </mat-slide-toggle>
+    </div>
+    <div class="col-6">
         <mat-form-field>
-            <input type="time" matInput formControlName="start" placeholder="Pradžia">
+            <input type="time" *ngIf="!presetTimeSelection" matInput [formControl]="start" placeholder="Pradžia">
+            <mat-select *ngIf="presetTimeSelection"
+                        matInput
+                        [formControl]="start"
+                        placeholder="Pradžia">
+                <mat-option value="7:30">7:30</mat-option>
+                <mat-option value="8:00">8:00</mat-option>
+            </mat-select>
         </mat-form-field>
     </div>
-    <div class="col-6" [formGroup]="breakFormGroup">
+    <div class="col-6">
         <mat-form-field>
-            <input type="time" matInput formControlName="end" placeholder="Pabaiga">
+            <input type="time" *ngIf="!presetTimeSelection" matInput [formControl]="end" placeholder="Pabaiga">
+            <mat-select *ngIf="presetTimeSelection"
+                        matInput
+                        [formControl]="end"
+                        placeholder="Pabaiga">
+                <mat-option value="8:00">8:00</mat-option>
+                <mat-option value="18:00">18:00</mat-option>
+                <mat-option value="20:00">20:00</mat-option>
+            </mat-select>
         </mat-form-field>
     </div>
     <div class="col-12" *ngIf="breakList.length > 0">

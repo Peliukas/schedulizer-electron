@@ -9,19 +9,41 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <mat-form-field>
-                                            <input matInput (change)="weekDayTimeChange()"
+                                            <input *ngIf="!presetTimeSelection"
+                                                   matInput (change)="weekDayTimeChange()"
                                                    [formControl]="startTimeInputControl"
                                                    type="time"
                                                    #startTime
                                                    placeholder="Darbo dienos pradžia">
+                                            <mat-select *ngIf="presetTimeSelection"
+                                                        matInput (change)="weekDayTimeChange()"
+                                                        [formControl]="startTimeInputControl"
+                                                        #startTime
+                                                        placeholder="Darbo dienos pradžia">
+                                                <mat-option value="12:00">12:00</mat-option>
+                                                <mat-option value="12:30">12:30</mat-option>
+                                                <mat-option value="15:30">15:30</mat-option>
+                                                <mat-option value="16:30">16:30</mat-option>
+                                            </mat-select>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-6">
                                         <mat-form-field>
-                                            <input matInput (change)="weekDayTimeChange()"
+                                            <input *ngIf="!presetTimeSelection"
+                                                   matInput (change)="weekDayTimeChange()"
                                                    [formControl]="endTimeInputControl"
                                                    type="time" #endTime
                                                    placeholder="Darbo dienos pabaiga">
+                                            <mat-select *ngIf="presetTimeSelection"
+                                                        matInput (change)="weekDayTimeChange()"
+                                                        [formControl]="endTimeInputControl"
+                                                        #endTime
+                                                        placeholder="Darbo dienos pabaiga">
+                                                <mat-option value="12:30">12:30</mat-option>
+                                                <mat-option value="13:00">13:00</mat-option>
+                                                <mat-option value="16:00">16:00</mat-option>
+                                                <mat-option value="17:00">17:00</mat-option>
+                                            </mat-select>
                                         </mat-form-field>
                                     </div>
                                 </div>
@@ -63,6 +85,9 @@
                                                   [disabled]="weekDaySelectionMode"
                                                   (change)="resetSelection()"
                                                   [(ngModel)]="selectMultipleDays">Pasirinkti keletą dienų
+                                </mat-slide-toggle>
+                                <mat-slide-toggle [(ngModel)]="presetTimeSelection" class="small-font">
+                                    Valandų pasirinkimas
                                 </mat-slide-toggle>
                                 <button mat-button matTooltip="Atžymėti viską" (click)="unmarkDays()"
                                         *ngIf="selectMultipleDays && selectedWorkDayList">

@@ -10,23 +10,21 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 export class AddBreakComponent implements OnInit {
 
     breakList: any[] = [];
-    breakFormGroup: FormGroup;
+    start: FormControl = new FormControl();
+    end: FormControl = new FormControl();
+    presetTimeSelection: boolean = true;
 
     constructor(@Inject(MAT_DIALOG_DATA) private data: any, private dialogRef: MatDialogRef<AddBreakComponent>) {
     }
 
     ngOnInit() {
-        this.breakFormGroup = new FormGroup({
-            'start': new FormControl('', Validators.required),
-            'end': new FormControl('', Validators.required),
-        });
     }
 
     public addBreak() {
-        if (this.breakFormGroup.valid) {
-            this.breakList.push({start: this.breakFormGroup.get('start').value, end: this.breakFormGroup.get('end').value});
-            this.breakFormGroup.reset('start');
-            this.breakFormGroup.reset('end');
+        if (this.start.value && this.end.value) {
+            this.breakList.push({start: this.start.value, end: this.end.value});
+            this.start.reset('start');
+            this.end.reset('end');
         }
     }
 
