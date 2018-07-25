@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Schedule} from '../../models/schedule';
 import {DomSanitizer} from '@angular/platform-browser';
 import {UploadWindowComponent} from '../upload-window/upload-window.component';
-import {MatDialogRef} from '@angular/material';
+import {MatDialogRef, MatListOption} from '@angular/material';
 import {FormControl} from '@angular/forms';
 
 @Component({
@@ -28,9 +28,10 @@ export class ExportSchedulesWindowComponent implements OnInit {
         });
     }
 
-    generateDownloadJsonUri() {
+    generateDownloadJsonUri(selectedOptions: MatListOption[]) {
+        console.log(selectedOptions.selected);
         let selectedScheduleList = [];
-        this.scheduleSelectionListControl.value.forEach(item => {
+        selectedOptions.selected.forEach(item => {
             selectedScheduleList.push(item.value.doc);
         });
         if (selectedScheduleList.length > 0) {

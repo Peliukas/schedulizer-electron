@@ -1,16 +1,21 @@
-<div class="model-list-top-bar">
+<div class="model-list-top-bar flex-space-between">
     <button mat-raised-button (click)="showAddObjectModal()">
         <i *ngIf="modelName === 'employee'" class="material-icons">&#xE853;</i>
         <i *ngIf="modelName === 'position'" class="material-icons">&#xE8F9;</i>
         <i *ngIf="modelName === 'schedule'" class="material-icons">&#xE8B5;</i>
         Pridėti naują
     </button>
-    <button mat-raised-button *ngIf="modelName === 'schedule'" (click)="openUploadWindow()">
-        Importuoti
-    </button>
-    <button mat-raised-button *ngIf="modelName === 'schedule'" (click)="openExportWindow()">
-        Eksportuoti
-    </button>
+    <div *ngIf="modelName === 'schedule'">
+        <button mat-raised-button (click)="openUploadWindow()">
+            Importuoti
+        </button>
+        <button mat-raised-button (click)="openExportWindow()">
+            Eksportuoti
+        </button>
+        <button mat-raised-button (click)="purgeSchedules()">
+            Naujas ketvirtis
+        </button>
+    </div>
 </div>
 <mat-card class="model-list-body-wrapper">
     <mat-card-header>

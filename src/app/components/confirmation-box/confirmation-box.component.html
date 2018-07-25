@@ -1,5 +1,6 @@
 <div>
     <h4>Patvirtinkite veiksmą</h4>
+    <p *ngIf="message">{{message}}</p>
     <button mat-raised-button (click)="closeWithChoice('yes')">Patvirtinti</button>
     <button mat-raised-button (click)="closeWithChoice('no')">Atšaukti</button>
 </div>

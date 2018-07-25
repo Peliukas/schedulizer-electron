@@ -20,7 +20,7 @@ export class ModelListViewComponent implements OnInit {
     bulkActions: boolean;
     @Input() modelName: string;
 
-    constructor(private matDialog: MatDialog, private snackBar: MatSnackBar) {
+    constructor(private matDialog: MatDialog, private snackBar: MatSnackBar, private matSnackBar: MatSnackBar) {
     }
 
     ngOnInit() {
@@ -84,6 +84,36 @@ export class ModelListViewComponent implements OnInit {
                 this.getObjectList();
             }
         });
+    }
+
+    public purgeSchedules() {
+
+        let dialogRef = this.matDialog.open(ConfirmationBoxComponent, {
+            data: {
+                message: 'Dėmesio! Ši operacija anuliuos visus tvarkaraščius. Ar norite testi?'
+            }
+        });
+        dialogRef.afterClosed()
+            .subscribe(result => {
+                if (result) {
+                    new Schedule().findAll().then(scheduleList => {
+                        scheduleList.rows.forEach(schedule => {
+                            let tempSchedule = new Schedule();
+                            tempSchedule.data = {
+                                _id: schedule.id,
+                                schedule_name: schedule.doc.schedule_name,
+                                work_hours_cap: '',
+                                is_private: schedule.doc.is_private,
+                                work_days: []
+                            };
+                            tempSchedule.save();
+                        });
+                        this.getObjectList();
+                        this.matSnackBar.open('Ketvirtis sekmingai pridėtas', 'OK', {duration: 3000});
+                    });
+                }
+            });
+
     }
 
     public openExportWindow() {
