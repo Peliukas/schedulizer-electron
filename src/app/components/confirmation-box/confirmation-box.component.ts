@@ -14,8 +14,8 @@ export class ConfirmationBoxComponent implements OnInit {
     message: String;
 
     constructor(private dialogRef: MatDialogRef<ConfirmationBoxComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        if (data.message) {
-            this.message = data.message;
+        if (this.data) {
+            this.message = this.data.message;
         }
     }
 
