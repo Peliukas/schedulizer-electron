@@ -35,7 +35,7 @@
                     <mat-checkbox class="medium-margin-horizontal" [(ngModel)]="displaySalary">Rodyti uždarbį
                     </mat-checkbox>
                 </div>
-                <kendo-pdf-export class="col-12" #pdfBody *ngIf="selectedEmployees.length > 0">
+                <kendo-pdf-export class="col-12" #pdfBody *ngIf="selectedEmployees.length > 0 && calendarDataLoaded">
                     <div class="col-12">
                         <h3 class="text-right no-margin">Patvirtinta</h3>
                         <div class="flex-center">

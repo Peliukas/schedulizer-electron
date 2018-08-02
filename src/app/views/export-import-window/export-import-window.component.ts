@@ -41,7 +41,7 @@ export class ExportImportWindowComponent implements OnInit {
     monthNumbers: any[] = [];
     selectedMonths: any[] = [];
     documentName: string = '';
-
+    calendarDataLoaded: boolean = false;
 
     constructor(private matDialog: MatDialog) {
     }
@@ -67,10 +67,6 @@ export class ExportImportWindowComponent implements OnInit {
                 this.getEmployeeList();
             });
     }
-
-    // public savePDF(){
-    //     this.pdfBody.nativeElement.saveAs('my-file');
-    // }
 
     public getEmployeeList() {
         let employeeRef = new Employee();
@@ -127,6 +123,7 @@ export class ExportImportWindowComponent implements OnInit {
     }
 
     public generateCalendarData() {
+        this.calendarDataLoaded = false;
         new Configurations().find('multipliers').then(config => {
             for (let employee of this.employeeList) {
                 for (let selectedEmployee of this.selectedEmployees) {
@@ -272,13 +269,11 @@ export class ExportImportWindowComponent implements OnInit {
                                         }
                                     });
                                 });
-                            }, reason => {
-
                             });
                     }
                 }
             }
-
+            this.calendarDataLoaded = true;
         });
     }
 

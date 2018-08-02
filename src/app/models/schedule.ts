@@ -33,9 +33,10 @@ export class Schedule {
                 this.data._rev = doc._rev;
                 this.db.put(this.data);
             }, cause => {
-                console.log('cause: ', cause);
                 if (cause.status === 404 || cause.status === 409) {
                     this.db.put(this.data);
+                }else{
+                    console.log('cause: ', cause);
                 }
             });
             return true;
@@ -122,6 +123,7 @@ export class Schedule {
     }
 
     public getWorkingHoursByDay(workDay: any) {
+        console.log("work day: ",workDay);
         return new Configurations().find('multipliers').then(configuration => {
             let totalNightTimeHours = 0;
             let ordinaryWorkHours = 0;
@@ -225,6 +227,7 @@ export class Schedule {
                         'night_hours': totalNightTimeHours,
                         'holiday_hours': totalHolidayWorkHours
                     };
+                    // console.log("workHourSet: ", workHourSet);
                     return workHourSet;
                 });
             } else return false;
